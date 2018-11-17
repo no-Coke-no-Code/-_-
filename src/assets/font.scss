@@ -1,0 +1,23 @@
+@font-face{
+    font-family: 'hemaShop';
+    /* 为毛这里好端端要用绝对路径呢？？ */
+    src: url('/src/assets/font/hemaShop/iconfont.eot') format('embedded-opentype');
+    src:url("/src/assets/font/hemaShop/iconfont.woff") format('woff'),
+         url("/src/assets/font/hemaShop/iconfont.ttf") format('truetype'),
+         url("/src/assets/font/hemaShop/iconfont.svg") format('svg');
+}
+
+[class^="icon_"]
+{
+    font-family: 'hemaShop';
+}
+
+
+/* .icon_password::before
+{
+    content: "\e8a3";
+}
+.icon_admin::before
+{
+    content: "\e625";
+} */
