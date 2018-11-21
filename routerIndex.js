@@ -114,12 +114,13 @@ module.exports = () => {
 
     // 后台管理商品信息功能
     route.post("/goodMange",(req,res) => {
+        var sql = "";
+        var sqlParams = "";
         let requestData = "";
         req.on('data',(chunk) => {
             requestData += chunk;
         });
         req.on('end',() => {
-            let sql = "";
             requestData = JSON.parse(requestData);
             // 通过判断传过来的method来判断算需要进行的操作
             switch(requestData.method){
@@ -128,7 +129,7 @@ module.exports = () => {
                 case "searchGood":
                     if(requestData.ifAll)
                     {
-                        let sql = "SELECT * FROM good";
+                        sql = "SELECT * FROM good";
                         connection.query(sql,(err,data) => {
                             if(err)
                             {
@@ -138,6 +139,7 @@ module.exports = () => {
                             {
                                 console.log(JSON.parse(JSON.stringify(data)));
                                 res.send(JSON.parse(JSON.stringify(data)));
+                                // res.end();
                             }
                         });
                     }
@@ -182,25 +184,25 @@ module.exports = () => {
                             }
                             else
                             {
-                                res.json({
-                                    "state":"success",
-                                    "responseData":JSON.parse(JSON.stringify(data))
-                                });
+                                res.send(JSON.parse(JSON.stringify(data)));
                                 console.log(JSON.parse(JSON.stringify(data)));
                             }
                         });
                     }
                 break;
                 case "addGood":
-                    console.log("增加接口");
-                    res.json({
-                        "state":"done"
-                    });
-                break;
-                case "deleteGood":
-                    console.log("删除接口");
-                    sql = "DELETE FROM good WHERE good_id=?";
-                    sqlParams = [requestData.good_id];
+                // 增加商品接口
+                    console.log(requestData.addGoodForm);
+                    sql = "INSERT INTO good SET ?";
+                    sqlParams = {
+                        good_name:requestData.addGoodForm.name,
+                        good_price:requestData.addGoodForm.price,
+                        category_name:requestData.addGoodForm.type,
+                        good_imgurl:requestData.addGoodForm.imgurl,
+                        good_detail:requestData.addGoodForm.detail,
+                        good_unit:requestData.addGoodForm.unit,
+                        good_from:requestData.addGoodForm.from,
+                    };
                     connection.query(sql,sqlParams,(err,data) => {
                         if(err)
                         {
@@ -208,15 +210,47 @@ module.exports = () => {
                         }
                         else
                         {
-                            console.log("成功删除数据");
+                            console.log(data);
+                            console.log("增加操作已完成");
                         }
                     });
                 break;
+                // 删除商品接口
+                case "deleteGood":
+                    sql = "DELETE FROM good WHERE good_id=?";
+                    sqlParams = [requestData.deleteId];
+                    console.log(sqlParams);
+                    connection.query(sql,sqlParams,(err,data) => {
+                        if(err)
+                        {
+                            console.log(err);
+                            res.json({
+                                "state":"fail"
+                            });
+                        }
+                        else
+                        {
+                            console.log("成功删除数据");
+                            console.log(data);
+                            res.json({
+                                "state":"success",
+                            });
+                        }
+                    });
+                break;
+                // 编辑商品接口
                 case "editGood":
-                    console.log("编辑接口");
-                    console.log("取得的参数是:" + JSON.stringify(requestData));
-                    let sql = "UPDATE good SET good_name=? , good_price=? , category_name=? , good_detail=? , good_from=? WHERE good_id=?";
-                    let sqlParams = [requestData.editName,requestData.editPrice,requestData.editType,requestData.editDetail,requestData.editFrom,requestData.editId];
+                    sql = "UPDATE good SET good_name=? , good_price=? , category_name=? , good_detail=? , good_from=? , good_unit=? , good_imgurl=? WHERE good_id=?";
+                    sqlParams = [
+                        requestData.editForm.name,
+                        requestData.editForm.price,
+                        requestData.editForm.type,
+                        requestData.editForm.detail,
+                        requestData.editForm.from,
+                        requestData.editForm.unit,
+                        requestData.editForm.imgurl,
+                        requestData.editForm.id,
+                    ];
                     connection.query(sql,sqlParams,(err) => {
                         if(err)
                         {

@@ -1,9 +1,6 @@
 <template>
     <el-dialog :visible.sync="dialogState.state" title="编辑商品">
         <el-form :inline="true" ref="editDialog" :model="editForm" :rules="rules">
-            <el-form-item label="商品ID" prop="id">
-                <el-input v-model="editForm.id"></el-input>
-            </el-form-item>
             <el-form-item label="商品名称" prop="name">
                 <el-input v-model="editForm.name"></el-input>
             </el-form-item>
@@ -18,6 +15,12 @@
             </el-form-item>
             <el-form-item label="商品描述" prop="type">
                 <el-input v-model="editForm.detail"></el-input>
+            </el-form-item>
+            <el-form-item label="商品单位" prop="unit">
+                <el-input v-model="editForm.unit"></el-input>
+            </el-form-item>
+            <el-form-item label="商品图片" prop="imgurl">
+                <el-input v-model="editForm.imgurl"></el-input>
             </el-form-item>
         </el-form>
         <div class="btn-group">
@@ -50,11 +53,10 @@ export default {
                 type:this.editDialog.category_name,
                 from:this.editDialog.good_from,
                 detail:this.editDialog.good_detail,
+                unit:this.editDialog.good_unit,
+                imgurl:this.editDialog.good_imgurl,
             },
             rules:{
-                id:[
-                    {required: true, message: "id不可为空", trigger: 'blur'}
-                ],
                 name:[
                     {required: true, message: "姓名不可为空", trigger:'blur'}
                 ],
@@ -70,23 +72,24 @@ export default {
                 from:[
                     {required: true, message: "来源地不可为空", trigger:'blur'}
                 ],
+                unit:[
+                    {required: true, message: "单位不可为空", trigger:'blur'}
+                ],
+                imgurl:[
+                    {required: true, message: "图片不可为空", trigger:'blur'}
+                ],
             },
         }
     },
     methods:{
+        // 编辑商品,成功的话传递状态给父组件，提醒它请求并初始化表格数据
         edit(){
             let params = {
                 "method":"editGood",
-                "editId":this.editForm.id,
-                "editName":this.editForm.name,
-                "editPrice":this.editForm.price,
-                "editType":this.editForm.type,
-                "editFrom":this.editForm.from,
-                "editDetail":this.editForm.detail,
+                "editForm":this.editForm
             };
             this.$http.post('/goodMange',params)
             .then((data) => {
-                alert(JSON.stringify(data));
                 this.$emit("editSucceed");
                 this.dialogState.state = false;
             })

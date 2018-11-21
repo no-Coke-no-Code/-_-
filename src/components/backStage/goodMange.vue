@@ -85,9 +85,6 @@ export default {
                 "700-999",
                 "1000-9999"
             ],
-            typeList:[
-                "斤",
-            ],
             // 搜索的条件对象
             searchForm:{
                 id:"",
@@ -167,8 +164,9 @@ export default {
             // this.ifLoading = true;
             this.$http.post('/goodMange',params)
             .then((data) => {
-                this.resultGoods = data.data.responseData;
-                console.log(data.data.responseData);
+                this.resultGoods = data.data;
+                console.log(this.resultGoods);
+                console.log(data);
                 // this.ifLoading = false;
                 // alert(this.ifLoading);
             })

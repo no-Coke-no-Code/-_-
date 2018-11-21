@@ -1,9 +1,6 @@
 <template>
     <el-dialog :visible.sync="dialogState.state" title="新增商品">
         <el-form :inline="true" :rules="rules" ref="addGoodDialog" :model="addForm">
-            <el-form-item label="商品ID" prop="id">
-                <el-input v-model="addForm.id"></el-input>
-            </el-form-item>
             <el-form-item label="商品名称" prop="name">
                 <el-input v-model="addForm.name"></el-input>
             </el-form-item>
@@ -18,6 +15,12 @@
             </el-form-item>
             <el-form-item label="商品描述" prop="detail">
                 <el-input v-model="addForm.detail"></el-input>
+            </el-form-item>
+            <el-form-item label="商品单位" prop="unit">
+                <el-input v-model="addForm.unit"></el-input>
+            </el-form-item>
+            <el-form-item label="商品图片" prop="imgurl">
+                <el-input v-model="addForm.imgurl"></el-input>
             </el-form-item>
         </el-form>
         <div class="btn-group">
@@ -39,17 +42,16 @@ export default {
     data(){
         return{
             addForm:{
-                id:"",
                 name:"",
                 price:"",
                 type:"",
                 from:"",
                 detail:"",
+                imgurl:"",
+                unit:"",
             },
+            // 输入框的验证规则
             rules:{
-                id:[
-                    {required: true, message: "id不可为空", trigger: 'blur'}
-                ],
                 name:[
                     {required: true, message: "姓名不可为空", trigger:'blur'}
                 ],
@@ -65,22 +67,24 @@ export default {
                 from:[
                     {required: true, message: "来源地不可为空", trigger:'blur'}
                 ],
+                unit:[
+                    {required: true, message: "单位不可为空", trigger:'blur'}
+                ],
+                imgurl:[
+                    {required: true, message: "图片不可为空", trigger:'blur'}
+                ],
             },
         }
     },
     methods:{
+        // 增加商品操作,成功以后返回状态给父组件，提醒他刷新
         add(){
             this.$refs["addGoodDialog"].validate((valid) => {
                 if(valid)
                 {
                     let params = {
                     "method":"addGood",
-                    "addId":this.addForm.id,
-                    "addName":this.addForm.name,
-                    "addFrom":this.addForm.from,
-                    "addType":this.addForm.type,
-                    "addPrice":this.addForm.price,
-                    "addDetail":this.addForm.detail,
+                    "addGoodForm":this.addForm,
                     };
                     this.$http
                     .post("/goodMange",params)
