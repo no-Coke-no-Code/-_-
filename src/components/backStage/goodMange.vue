@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" v-loading="ifLoading">
         <!-- 查询表格 -->
         <el-form :inline="true">
             <el-row>
@@ -10,7 +10,7 @@
                     <el-input v-model="searchForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="商品类别">
-                    <el-select v-model="searchForm.type">
+                    <el-select v-model="searchForm.type" clearable>
                         <el-option
                             v-for="item in typeList"
                             :label="item"
@@ -19,7 +19,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商品价格">
-                    <el-select v-model="searchForm.price">
+                    <el-select v-model="searchForm.price" clearable>
                         <el-option
                             v-for="item in priceList"
                             :label="item"
@@ -28,13 +28,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商品来源地">
-                    <el-select v-model="searchForm.from">
-                        <el-option
-                            v-for="item in fromList"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select>
+                    <el-input v-model="searchForm.from"></el-input>
+                </el-form-item>
+                <el-form-item label="商品单位">
+                    <el-input v-model="searchForm.unit"></el-input>
                 </el-form-item>
             </el-row>
         </el-form>
@@ -47,22 +44,38 @@
         </div>
 
         <!-- 展示数据表格 -->
-        <el-table>
-
+        <el-table :data="resultGoods" border @row-dblclick="edit">
+            <el-table-column label="商品ID" prop="good_id"></el-table-column>
+            <el-table-column label="商品名称" prop="good_name"></el-table-column>
+            <el-table-column label="商品价格" prop="good_price"></el-table-column>
+            <el-table-column label="商品单位" prop="good_unit"></el-table-column>
+            <el-table-column label="商品图片" prop="good_imgurl"></el-table-column>
+            <el-table-column label="商品描述" prop="good_detail"></el-table-column>
+            <el-table-column label="商品产地" prop="good_from"></el-table-column>
+            <el-table-column label="操作">
+                <template scope='scope'>
+                    <el-button @click="deleting(scope.row)" type="danger" icon="delete">删除</el-button>
+                </template>
+            </el-table-column>
         </el-table>
 
         <!-- 增改子组件 -->
-        <addgood :dialogState="addDialogState"></addgood>
-        <editgood :dialogState="editDialogState"></editgood>
+        <addgood v-if="addDialogState.state" :dialogState="addDialogState" @addSucceed="refresh"></addgood>
+        <editgood v-if="editDialogState.state" :dialogState="editDialogState" :editDialog="editDialog" @editSucceed="refresh"></editgood>
     </div>
 </template>
 
 
 <script>
-
+import addgood from "./addGood.vue";
+import editgood from "./editGood.vue";
 
 export default {
     name: 'goodMange',
+    components:{
+        addgood,
+        editgood,
+    },
     data(){
         return{
             priceList:[
@@ -72,57 +85,137 @@ export default {
                 "700-999",
                 "1000-9999"
             ],
-            typeofList:[
-                "",
+            typeList:[
+                "斤",
             ],
-            fromList:[
-                "",
-            ],
+            // 搜索的条件对象
             searchForm:{
                 id:"",
                 name:"",
                 price:"",
                 type:"",
                 from:"",
+                unit:"",
             },
             // 这个是从服务器返回所要显示到表格中的对象数组
             resultGoods:[],
             // 增加商品信息弹窗状态
-            addDialogState:false,
+            addDialogState:{
+                state:false
+            },
             // 编辑商品信息弹窗状态
-            editDialogState:false,
+            editDialogState:{
+                state:false
+            },
+            // 所要传到编辑商品信息页的对象
+            editDialog:{},
+            ifLoading:false,
         }
     },
+    // 页面刷新所进行的操作
     created(){
         this.init();
     },
     methods:{
+
         // 重新请求商品信息操作
         init(){
             let params = {
-                "method":"searchAll"
+                "method":"searchGood",
+                "ifAll":true
             };
+            this.ifLoading = true;
             this.$http.post("/goodMange",params)
             .then((data) => {
                 // 返回的应该是一个对象数组，包含所有的商品
-                console.log(data);
+                this.resultGoods = data.data;
+                this.ifLoading = false;
             })
             .catch((err) => {
                 console.log(err);
             });
         },
 
-        // 新增商品操作
+        // 点击新增按钮操作
         add(){
-
+            this.addDialogState.state = true;
+        },
+        // 双击商品行编辑的操作
+        edit(rowdata){
+            this.editDialog = rowdata;
+            this.editDialogState.state = true;
         },
         // 根据商品信息查找商品操作
         search(){
-
+            let params = {};
+            let goodForm = {};
+            if(this.searchForm.name==""&&this.searchForm.id==""&&this.searchForm.price==""&&this.searchForm.type==""&&this.searchForm.from=="")
+            {
+                params = {
+                    "method":"searchGood",
+                    "ifAll":true
+                };
+            }
+            else
+            {
+                params = {
+                "method":"searchGood",
+                "ifAll":false,
+                "goodForm":this.searchForm
+            };
+            }
+            // this.ifLoading = true;
+            this.$http.post('/goodMange',params)
+            .then((data) => {
+                this.resultGoods = data.data.responseData;
+                console.log(data.data.responseData);
+                // this.ifLoading = false;
+                // alert(this.ifLoading);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
+        // 点击删除按钮所执行的操作
+        deleting(e){
+            this.$confirm('确认删除该商品??','警告',{
+                confirmButtonText:'确定',
+                cancelButtonText:'取消',
+                type:'warning'
+            })
+            .then(() => {
+                let params = {
+                    "method":'deleteGood',
+                    "deleteId":e.good_id
+                };
+                this.$http.post('/goodMange',params)
+                .then(() => {
+                    this.$message({
+                    type:'info',
+                    message:'已删除',
+                    });
+                    this.init();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            })
+            .catch(() => {
+                this.$message({
+                    type:'info',
+                    message:'已取消操作',
+                });
+            });
         },
         // 重置操作
         refresh(){
-
+            this.searchForm.id = "";
+            this.searchForm.name = "";
+            this.searchForm.price = "";
+            this.searchForm.type = "";
+            this.searchForm.from = "";
+            this.searchForm.unit = "";
+            this.init();
         },
     },
 }
