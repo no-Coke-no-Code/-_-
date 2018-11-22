@@ -46,6 +46,17 @@
             <el-table-column label="联系电话" prop="user_phone"></el-table-column>
             <el-table-column label="邮箱" prop="user_email"></el-table-column>
         </el-table>
+
+        <!-- 分页器 -->
+        <el-pagination
+            @current-change="handleCurrentChange"
+            @size-change="pagesizeChange"
+            :current-page="searchForm.pageIndex"
+            :page-size="searchForm.pageSize"
+            :page-sizes="[10,50,70]"
+            layout="total, sizes,prev, pager, next, jumper"
+            :total="searchForm.total">
+        </el-pagination>
     </div>
 </template>
 
@@ -66,6 +77,9 @@ export default {
                 address:"",
                 phone:"",
                 email:"",
+                pageSize:10,
+                pageIndex:1,
+                total:0,
             },
         }
     },
@@ -78,6 +92,7 @@ export default {
             .then((data) => {
                 console.log(data);
                 this.resultUsers = data.data.responseData;
+                this.searchForm.total = data.data.responseData.length;
             })
             .catch((err) => {
                 console.log(err);
@@ -98,6 +113,7 @@ export default {
                 .then((data) => {
                     console.log(data);
                     this.resultUsers = data.data.responseData;
+                    this.searchForm.total = data.data.responseData.length;
                 })
                 .catch((err) => {
                     console.log(err);
@@ -114,6 +130,17 @@ export default {
             this.searchForm.email = "";
             this.init();
         },
+
+        // 跳页操作
+        handleCurrentChange(val) {
+            this.searchForm.pageIndex = val;
+            this.init();
+        },
+        // 改变当前每页所含数据数操作
+        pagesizeChange(size){
+            this.searchForm.pageSize=size;
+            this.init();
+        }
     },
     created(){
         this.init();

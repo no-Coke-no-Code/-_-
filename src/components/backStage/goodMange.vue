@@ -59,6 +59,17 @@
             </el-table-column>
         </el-table>
 
+        <!-- 分页器 -->
+        <el-pagination
+            @current-change="handleCurrentChange"
+            @size-change="pagesizeChange"
+            :current-page="searchForm.pageIndex"
+            :page-size="searchForm.pageSize"
+            :page-sizes="[10,50,70]"
+            layout="total, sizes,prev, pager, next, jumper"
+            :total="searchForm.total">
+        </el-pagination>
+
         <!-- 增改子组件 -->
         <addgood v-if="addDialogState.state" :dialogState="addDialogState" @addSucceed="refresh"></addgood>
         <editgood v-if="editDialogState.state" :dialogState="editDialogState" :editDialog="editDialog" @editSucceed="refresh"></editgood>
@@ -93,6 +104,9 @@ export default {
                 type:"",
                 from:"",
                 unit:"",
+                pageSize:10,
+                pageIndex:1,
+                total:0,
             },
             // 这个是从服务器返回所要显示到表格中的对象数组
             resultGoods:[],
@@ -119,13 +133,16 @@ export default {
         init(){
             let params = {
                 "method":"searchGood",
-                "ifAll":true
+                "ifAll":true,
+                "pageIndex":this.searchForm.pageIndex,
+                "pageSize":this.searchForm.pageSize,
             };
             this.ifLoading = true;
             this.$http.post("/goodMange",params)
             .then((data) => {
                 // 返回的应该是一个对象数组，包含所有的商品
                 this.resultGoods = data.data;
+                this.searchForm.total = data.data.length
                 this.ifLoading = false;
             })
             .catch((err) => {
@@ -150,7 +167,9 @@ export default {
             {
                 params = {
                     "method":"searchGood",
-                    "ifAll":true
+                    "ifAll":true,
+                    "pageIndex":this.searchForm.pageIndex,
+                    "pageSize":this.searchForm.pageSize,
                 };
             }
             else
@@ -165,6 +184,7 @@ export default {
             this.$http.post('/goodMange',params)
             .then((data) => {
                 this.resultGoods = data.data;
+                this.searchForm.total = data.data.length;
                 console.log(this.resultGoods);
                 console.log(data);
                 // this.ifLoading = false;
@@ -215,6 +235,17 @@ export default {
             this.searchForm.unit = "";
             this.init();
         },
+
+        // 跳页操作
+        handleCurrentChange(val) {
+            this.searchForm.pageIndex = val;
+            this.init();
+        },
+        // 改变当前每页所含数据数操作
+        pagesizeChange(size){
+            this.searchForm.pageSize=size;
+            this.init();
+        }
     },
 }
 </script>

@@ -84,18 +84,25 @@ export default {
     methods:{
         // 编辑商品,成功的话传递状态给父组件，提醒它请求并初始化表格数据
         edit(){
-            let params = {
-                "method":"editGood",
-                "editForm":this.editForm
-            };
-            this.$http.post('/goodMange',params)
-            .then((data) => {
-                this.$emit("editSucceed");
-                this.dialogState.state = false;
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            if(this.editForm.id==""||this.editForm.name==""||this.editForm.price==""||this.editForm.type==""||this.editForm.from==""||this.editForm.detail==""||this.editForm.unit==""||this.editForm.imgurl=="")
+            {
+                return false;
+            }
+            else
+            {
+                let params = {
+                    "method":"editGood",
+                    "editForm":this.editForm
+                };
+                this.$http.post('/goodMange',params)
+                .then((data) => {
+                    this.$emit("editSucceed");
+                    this.dialogState.state = false;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            }
         },
     },
 }
