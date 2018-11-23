@@ -1,6 +1,7 @@
 # hema
 
 > A Vue.js project
+注：需要全局安装concurrently包；若不安装，要调整package.json中的启动命令
 
 ## Build Setup
 
