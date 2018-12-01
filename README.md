@@ -2,6 +2,7 @@
 
 > A Vue.js project
 
+
 ## Build Setup
 
 ``` bash
@@ -17,5 +18,6 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+注：需要全局安装concurrently包；若不安装，要调整package.json中的启动命令
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
