@@ -4,6 +4,9 @@
         <span v-if="!ifLogin">当前状态:未登录</span>
         <el-button type="primary" @click="login" v-if="!ifLogin">登录</el-button>
         <el-button type="danger" @click="logout" v-if="ifLogin">退出登录</el-button>
+        <el-button type="primary">
+            <router-link to="guestBackStage">个人信息</router-link>
+        </el-button>
     </div>
 </template>
 

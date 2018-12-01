@@ -3,15 +3,17 @@ import Router from 'vue-router'
 import mainPage from '@/components/mainPage/mainPage.vue'
 import login from "@/components/login.vue";
 import register from "@/components/register.vue";
-import cart from "@/components/cart/cart.vue";
 import goodList from "@/components/goodList/goodList.vue";
-import takeOrder from "@/components/takeOrder/takeOrder.vue";
-import guestInfo from "@/components/information/guestInfo.vue";
 
-import backStage from "@/components/backStage/backStage.vue";
-import goodMange from "@/components/backStage/goodMange.vue";
-import orderMange from "@/components/backStage/orderMange.vue";
-import userMange from "@/components/backStage/userMange.vue";
+import guestBackStage from "@/components/guestBackStage/guestBackStage";
+import guestInfo from "@/components/guestBackStage/guestInfo.vue";
+import guestOrder from "@/components/guestBackStage/guestOrder.vue";
+import cart from "@/components/guestBackStage/cart.vue";
+
+import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
+import goodMange from "@/components/adminBackStage/goodMange.vue";
+import orderMange from "@/components/adminBackStage/orderMange.vue";
+import userMange from "@/components/adminBackStage/userMange.vue";
 
 import store from "../store"
 
@@ -20,20 +22,23 @@ Vue.use(Router)
 
 const router = new Router({
     routes: [
+    // 主页路由
     {
         path: '/',
         name: 'mainPage',
         component: mainPage,
     },
+    // 注册路由
     {
         path: '/register',
         name: 'register',
         component: register
     },
+    // 后台管理路由
     {
-        path:'/backStage',
-        name:'backStage',
-        component:backStage,
+        path:'/adminBackStage',
+        name:'adminBackStage',
+        component:adminBackStage,
         children:[
             {
                 path:'goodMange',
@@ -52,34 +57,46 @@ const router = new Router({
             },
         ],
     },
+    // 登录路由
     {
         path:'/login',
         name:'login',
         component:login
     },
+    // 用户后台路由(包括个人信息，购物车，订单列表)
     {
-        path:'/cart',
-        name:'cart',
-        component:cart,
+        path:"/guestBackStage",
+        name:'guestBackStage',
+        component:guestBackStage,
         meta:{
-            requireAuth:true
+            // requireAuth:true
         },
-    },
-    {
-        path:'/takeOrder',
-        name:'takeOrder',
-        component:takeOrder,
-        meta:{
-            requireAuth:true
-        }
-    },
-    {
-        path:"/guestInfo",
-        name:'guestInfo',
-        component:guestInfo,
-        meta:{
-            requireAuth:true
-        }
+        children:[
+            {
+                path:"guestInfo",
+                name:"guestInfo",
+                component:guestInfo,
+                meta:{
+                    // requireAuth:true
+                }
+            },
+            {
+                path:"guestOrder",
+                name:"guestOrder",
+                component:guestOrder,
+                meta:{
+                    // requireAuth:true
+                }
+            },
+            {
+                path:"cart",
+                name:"cart",
+                component:cart,
+                meta:{
+                    // requireAuth:true
+                },
+            },
+        ],
     },
     {
         path:'/goodList',

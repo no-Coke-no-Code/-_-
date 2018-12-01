@@ -5,6 +5,7 @@ const userMange = require("./src/API/userMange.js");
 const goodMange = require("./src/API/goodMange.js");
 const register = require("./src/API/register.js");
 const login = require("./src/API/login.js");
+const guestInfo = require("./src/API/guestInfo.js");
 
 module.exports = () => {
     const route = express.Router();
@@ -22,6 +23,10 @@ module.exports = () => {
 
     // 后台管理用户信息功能
     route.post("/userMange",userMange);
+
+
+    // 用户获取/修改个人信息功能
+    route.post("/guestInfo",guestInfo);
 
     return route;
 };

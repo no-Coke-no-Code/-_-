@@ -1,23 +1,23 @@
 <template>
     <div class="wrapper">
-        <h1>后台管理</h1>
+        <h1>用户:{{username}}</h1>
     <el-menu
         class="el-menu-vertical-demo"
 
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b">
-        <el-menu-item index="1" @click="toGoodMange">
+        <el-menu-item index="1" @click="toGuestInfo">
             <i class="el-icon-menu"></i>
-            <span>商品管理</span>
+            <span>个人信息</span>
         </el-menu-item>
-        <el-menu-item index="2" @click="toUserMange">
+        <el-menu-item index="2" @click="toCart">
             <i class="el-icon-menu"></i>
-            <span>用户管理</span>
+            <span>我的购物车</span>
         </el-menu-item>
-        <el-menu-item index="3" @click="toOrderMange">
+        <el-menu-item index="3" @click="toGuestOrder">
             <i class="el-icon-setting"></i>
-            <span>订单管理</span>
+            <span>我的订单</span>
         </el-menu-item>
         </el-menu>
     </div>
@@ -28,25 +28,30 @@
 
 
 export default {
-    name: 'menuList',
+    name: 'adminBackStageMenuList',
     data () {
         return {
             menuList:{
-
             },
         }
     },
+    computed:{
+        username(){
+            return this.$store.state.userName;
+        },
+    },
     created(){
+        
     },
     methods:{
-        toGoodMange(){
-            this.$router.push("/backStage/goodMange");
+        toGuestInfo(){
+            this.$router.push("/guestBackStage/guestInfo");
         },
-        toUserMange(){
-            this.$router.push("/backStage/userMange");
+        toCart(){
+            this.$router.push("/guestBackStage/cart");
         },
-        toOrderMange(){
-            this.$router.push("/backStage/OrderMange");
+        toGuestOrder(){
+            this.$router.push("/guestBackStage/guestOrder");
         },
     },
 }

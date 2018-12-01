@@ -1,17 +1,17 @@
 <template>
     <div class="wrapper">
-        <menulist></menulist>
+        <adminBackStageMenuList></adminBackStageMenuList>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-import menulist from "./menuList.vue";
+import adminBackStageMenuList from "./adminBackStageMenuList.vue";
 
 export default {
     name: 'backStage',
     components:{
-        menulist
+        adminBackStageMenuList
     },
     data () {
         return {
