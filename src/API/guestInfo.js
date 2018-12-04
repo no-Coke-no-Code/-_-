@@ -23,6 +23,7 @@ route.post("/guestInfo",(req,res) => {
         switch(reqData.method)
         {
             case "refresh":
+            {
                 sql = "SELECT * FROM user WHERE user_nickname = ?";
                 sqlParams = [reqData.userName];
                 connection.query(sql,sqlParams,(err,data) => {
@@ -41,6 +42,7 @@ route.post("/guestInfo",(req,res) => {
                     }
                 });
                 break;
+            }
             case "updateUserInfo":{
                 console.log(reqData.userInfo.phone.length);
                 sql = "UPDATE user SET user_password=?,user_address=?,user_phone=?,user_email=? WHERE user_nickname=?";
@@ -65,6 +67,66 @@ route.post("/guestInfo",(req,res) => {
                     }
                 });
                 break;
+            }
+            case "guestOrder":{
+                // 这里有个坑:不可以使用order作为mysql的表名
+                if(reqData.orderState == "all")
+                {
+                    sql = "SELECT * FROM orderList WHERE user_nickname = ?";
+                    // sql = "SELECT * FROM order WHERE user_nickname = ?";
+                    sqlParams = [reqData.userName];
+                    connection.query(sql,sqlParams,(err,data) => {
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            console.log(JSON.parse(JSON.stringify(data)));
+                            res.json(
+                                JSON.parse(JSON.stringify(data))
+                            );
+                        }
+                    });
+                }
+                if(reqData.orderState == "b")
+                {
+                    // sql = "SELECT * FROM order WHERE user_nickname = ?";
+                    sql = "SELECT * FROM orderList WHERE user_nickname = ? AND orderList_state = 'b'";
+                    sqlParams = [reqData.userName];
+                    connection.query(sql,sqlParams,(err,data) => {
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            console.log(JSON.parse(JSON.stringify(data)));
+                            res.json(
+                                JSON.parse(JSON.stringify(data))
+                            );
+                        }
+                    });
+                }
+                if(reqData.orderState == "f")
+                {
+                    // sql = "SELECT * FROM order WHERE user_nickname = ?";
+                    sql = "SELECT * FROM orderList WHERE user_nickname = ? AND orderList_state = 'f'";
+                    sqlParams = [reqData.userName];
+                    connection.query(sql,sqlParams,(err,data) => {
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            console.log(JSON.parse(JSON.stringify(data)));
+                            res.json(
+                                JSON.parse(JSON.stringify(data))
+                            );
+                        }
+                    });
+                }
             }
         }
     });

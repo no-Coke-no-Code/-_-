@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper userInfo">
-        <el-form :inline="true" :model="editForm" :rules="rules">
+        <el-form :inline="true" :model="editForm" :rules="rules" ref="guestInfoForm">
             <el-col :span="8">
                 <el-form-item label="账号">
                     <el-input v-model="editForm.nickname" :disabled="true"></el-input>
@@ -31,9 +31,9 @@
                     <el-input v-model="editForm.email"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="24">
                 <el-form-item label="送货地址" prop="address">
-                    <el-input v-model="editForm.address"></el-input>
+                    <el-input v-model="editForm.address" style="width:780px;"></el-input>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -76,11 +76,15 @@ export default {
             {
                 callback(new Error("联系电话不能为空"));
             }
-            // let regExp = /^[0-9]{11}$/;
-            // if(!regExp.test(value))
-            // {
-            //     callback(new Error("请输入符合格式的联系电话"));
-            // }
+            let regExp = /^[0-9]{11}$/;
+            if(!regExp.test(value))
+            {
+                callback(new Error("请输入符合格式的联系电话"));
+            }
+            else
+            {
+                callback();
+            }
         };
         return{
             user:"",
@@ -191,21 +195,26 @@ export default {
             });
         },
         saveChange(){
-            this.ifChanged = false;
-            let params = {
-                "method":"updateUserInfo",
-                "userInfo":this.editForm,
-            };
-            this.$http.post('/guestInfo',params)
-            .then(() => {
-                this.$message({
-                    message:"保存成功",
-                    type:"success"
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            this.$refs["guestInfoForm"].validate((valid) => {
+                if(valid)
+                {
+                    this.ifChanged = false;
+                    let params = {
+                        "method":"updateUserInfo",
+                        "userInfo":this.editForm,
+                    };
+                    this.$http.post('/guestInfo',params)
+                    .then(() => {
+                        this.$message({
+                            message:"保存成功",
+                            type:"success"
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                }
+            });
         },
         removeChange(){
             console.log(this.editForm);
@@ -222,8 +231,19 @@ export default {
 </script>
 
 <style lang="scss">
-    .userInfo .el-form-item__label
+    .userInfo
     {
-        width: 100px !important;
+        float: left;
+        width: 908px;
+        margin-left: 37px;
+        margin-top: 67px;
+    }
+    .el-form
+    {
+        clear: both;
+    }
+    .userInfo
+    {
+        float: left;
     }
 </style>
