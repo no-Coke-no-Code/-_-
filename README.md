@@ -18,7 +18,7 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-注：若想通过npm run start直接启动所有服务,需要
+注：若想通过npm run start直接启动所有服务,需要:
     </br>
     1.全局安装concurrently(用于集合多条NPM SCRIPT)
     </br>
