@@ -13,6 +13,7 @@
                     <el-select v-model="searchForm.type" clearable>
                         <el-option
                             v-for="item in typeList"
+                            key="item"
                             :label="item"
                             :value="item"
                         ></el-option>
@@ -22,6 +23,7 @@
                     <el-select v-model="searchForm.price" clearable>
                         <el-option
                             v-for="item in priceList"
+                            key="item"
                             :label="item"
                             :value="item"
                         ></el-option>
@@ -53,7 +55,7 @@
             <el-table-column label="商品描述" prop="good_detail"></el-table-column>
             <el-table-column label="商品产地" prop="good_from"></el-table-column>
             <el-table-column label="操作">
-                <template scope='scope'>
+                <template slot-scope='scope'>
                     <el-button @click="deleting(scope.row)" type="danger" icon="delete">删除</el-button>
                 </template>
             </el-table-column>
