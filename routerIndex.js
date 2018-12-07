@@ -6,6 +6,8 @@ const goodMange = require("./src/API/goodMange.js");
 const register = require("./src/API/register.js");
 const login = require("./src/API/login.js");
 const guestInfo = require("./src/API/guestInfo.js");
+const guestOrder = require("./src/API/guestOrder.js");
+const guestCart = require("./src/API/guestCart.js");
 
 module.exports = () => {
     const route = express.Router();
@@ -27,6 +29,12 @@ module.exports = () => {
 
     // 用户获取/修改个人信息功能
     route.post("/guestInfo",guestInfo);
+
+    // 用户查看订单功能
+    route.post("/guestOrder",guestOrder);
+
+    // 用户查看购物车功能
+    route.post("/guestCart",guestCart);
 
     return route;
 };

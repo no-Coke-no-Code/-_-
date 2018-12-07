@@ -48,7 +48,7 @@ export default {
             this.$router.push("/guestBackStage/guestInfo");
         },
         toCart(){
-            this.$router.push("/guestBackStage/cart");
+            this.$router.push("/guestBackStage/guestCart");
         },
         toGuestOrder(){
             this.$router.push("/guestBackStage/guestOrder");

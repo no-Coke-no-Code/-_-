@@ -36,7 +36,6 @@ route.post("/goodMange",(req,res) => {
                         {
                             console.log(JSON.parse(JSON.stringify(data)));
                             res.send(JSON.parse(JSON.stringify(data)));
-                            // res.end();
                         }
                     });
                 }

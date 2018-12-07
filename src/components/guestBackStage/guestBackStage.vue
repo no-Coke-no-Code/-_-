@@ -15,24 +15,6 @@ export default {
     components:{
         guestMenuList
     },
-    data () {
-        return {
-
-        }
-    },
-    created(){
-    },
-    methods:{
-        toGuestInfo(){
-            this.$router.push("/guestBackStage/goodMange");
-        },
-        toUserMange(){
-            this.$router.push("/guestBackStage/userMange");
-        },
-        toOrderMange(){
-            this.$router.push("/guestBackStage/OrderMange");
-        },
-    },
 }
 </script>
 

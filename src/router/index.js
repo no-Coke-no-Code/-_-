@@ -8,7 +8,7 @@ import goodList from "@/components/goodList/goodList.vue";
 import guestBackStage from "@/components/guestBackStage/guestBackStage";
 import guestInfo from "@/components/guestBackStage/guestInfo.vue";
 import guestOrder from "@/components/guestBackStage/guestOrder.vue";
-import cart from "@/components/guestBackStage/cart.vue";
+import guestCart from "@/components/guestBackStage/guestCart.vue";
 
 import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
 import goodMange from "@/components/adminBackStage/goodMange.vue";
@@ -72,6 +72,7 @@ const router = new Router({
             // requireAuth:true
         },
         children:[
+            // 用户个人信息路由
             {
                 path:"guestInfo",
                 name:"guestInfo",
@@ -80,6 +81,7 @@ const router = new Router({
                     // requireAuth:true
                 }
             },
+            // 用户订单路由
             {
                 path:"guestOrder",
                 name:"guestOrder",
@@ -89,9 +91,9 @@ const router = new Router({
                 }
             },
             {
-                path:"cart",
-                name:"cart",
-                component:cart,
+                path:"guestCart",
+                name:"guestCart",
+                component:guestCart,
                 meta:{
                     // requireAuth:true
                 },
