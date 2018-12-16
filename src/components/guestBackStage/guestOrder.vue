@@ -98,9 +98,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .orderList
+    .wrapper
     {
-        border: 1px solid black;
-        margin-top: 10px;
+        padding-left: 320px;
+        padding-right: 30px;
+        .orderList
+        {
+            border: 1px solid black;
+            margin-top: 10px;
+        }
     }
 </style>

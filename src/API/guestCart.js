@@ -16,7 +16,66 @@ route.post('/guestCart',(req,res) => {
         reqData += chunk;
     });
     req.on("end",() => {
-        console.log(reqData);
+        reqData = JSON.parse(reqData);
+        switch(reqData.method){
+            case "refreshCart":
+            var sql = "SELECT * FROM cart WHERE user_nickname = ?";
+            var sqlParams = [reqData.userName];
+            connection.query(sql,sqlParams,(err,data) => {
+                if(err)
+                {
+                    console.log(err);
+                }
+                else
+                {
+                    let responseData = JSON.parse(JSON.stringify(data));
+                    sql = "SELECT * FROM good WHERE good_id = ? ";
+                    sqlParams = [responseData[0].good_id];
+                    // 若购物车中的商品多余一个，则对sql语句进行拼接
+                    if(responseData.length > 1)
+                    {
+                        for(let i = 1; i<responseData.length;i++)
+                        {
+                            sql += "OR ? "
+                            sqlParams.push(responseData[i].good_id);
+                        }
+                    }
+                    connection.query(sql,sqlParams,(err,data) => {
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let good_list = JSON.parse(JSON.stringify(data));
+                            responseData = good_list;
+                            console.log(responseData);
+                            res.json(responseData);
+                        }
+                    });
+                }
+            });
+            break;
+
+            case "deleting":
+            sql = "DELETE FROM cart WHERE good_id = ?";
+            sqlParams = [reqData.good_id];
+            connection.query(sql,sqlParams,(err,data) => {
+                if(err)
+                {
+                    console.log(err);
+                }
+                else
+                {
+                    console.log("删除商品成功,准备刷新购物车列表");
+                    res.json({
+                        "state":"succeed",
+                        "statement":"删除商品成功"
+                    });
+                }
+            });
+            break;
+        }
     });
 });
 

@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-        <guestMenuList></guestMenuList>
+        <headers></headers>
+        <guestMenuList class="menuList"></guestMenuList>
         <keep-alive>
             <router-view></router-view>
         </keep-alive>
@@ -9,14 +10,25 @@
 
 <script>
 import guestMenuList from "./guestMenuList.vue";
+import headers from "../global/headers.vue";
 
 export default {
     name: 'guestBackStage',
     components:{
-        guestMenuList
+        guestMenuList,
+        headers,
     },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .wrapper
+    {
+        height: 100%;
+        .menuList
+        {
+            height:100%;
+        }
+    }
 </style>
+

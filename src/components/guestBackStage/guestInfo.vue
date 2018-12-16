@@ -230,20 +230,18 @@ export default {
 }
 </script>
 
-<style lang="scss">
+
+<style lang="scss" scoped>
     .userInfo
     {
-        float: left;
-        width: 908px;
-        margin-left: 37px;
-        margin-top: 67px;
-    }
-    .el-form
-    {
-        clear: both;
-    }
-    .userInfo
-    {
-        float: left;
+        overflow: hidden;
+        margin-left: 320px;
+        margin-top: 50px;
+        height: auto;
+        .el-form--inline>.el-form-item__label
+        {
+            display: inline-block;
+            width: 80px !important;
+        }
     }
 </style>

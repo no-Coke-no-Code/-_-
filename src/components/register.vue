@@ -139,7 +139,10 @@ export default {
                 }
                 else
                 {
-                    alert("尚有信息未完善");
+                    this.$message({
+                        message:"尚有信息未完善或不正确",
+                        type:"warning"
+                    });
                     return false;
                 }
             });
