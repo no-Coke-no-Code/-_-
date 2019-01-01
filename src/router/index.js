@@ -3,12 +3,16 @@ import Router from 'vue-router'
 import mainPage from '@/components/mainPage/mainPage.vue'
 import login from "@/components/login.vue";
 import register from "@/components/register.vue";
-import goodList from "@/components/goodList/goodList.vue";
+// import goodList from "@/components/goodList/goodList.vue";
 
 import guestBackStage from "@/components/guestBackStage/guestBackStage";
 import guestInfo from "@/components/guestBackStage/guestInfo.vue";
 import guestOrder from "@/components/guestBackStage/guestOrder.vue";
 import guestCart from "@/components/guestBackStage/guestCart.vue";
+import searchResult from "@/components/searchResult/searchResult.vue";
+// 在这里面路由注册模块可以使用懒加载的方式进行引入，有利于提高首屏的渲染速度提高体验
+const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],resolve)};
+// import goodDetail from "@/components/goodList/goodDetail.vue";
 
 import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
 import goodMange from "@/components/adminBackStage/goodMange.vue";
@@ -100,10 +104,23 @@ const router = new Router({
             },
         ],
     },
+    // 商品列表路由
+    // {
+    //     path:'/goodList',
+    //     name:'goodList',
+    //     component:goodList,
+    // },
+    // 搜索结果列表路由
     {
-        path:'/goodList',
-        name:'goodList',
-        component:goodList,
+        path:'/searchResult',
+        name:"searchResult",
+        component:searchResult
+    },
+    // 商品详情信息页面路由
+    {
+        path:"/goodDetail",
+        name:"goodDetail",
+        component:goodDetail
     }
   ]
 })

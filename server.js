@@ -1,5 +1,5 @@
 const express = require("express");
-const routerIndex = require("./routerIndex.js");
+const api = require("./api.js");
 
 const server = express();
 
@@ -22,8 +22,8 @@ server.all("*",(req,res,next)=>{
         next();
     }
 });
-server.use(routerIndex());
-// server.use('/', routerIndex());
+server.use(api());
+// server.use('/', api());
 
 server.listen(3333,()=>{
     console.log("正在监听端口3333");

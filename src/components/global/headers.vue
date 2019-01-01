@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="headerWrapper">
         <div class="stateArea">
             <span v-if="ifLogin">当前账号:{{userName}}</span>
             <span v-if="!ifLogin">当前状态:未登录</span>
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .wrapper
+    .headerWrapper
     {
         background-color: #999;
         height: 40px;
