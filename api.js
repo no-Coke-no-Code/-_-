@@ -10,6 +10,7 @@ const guestOrder = require("./src/API/guestOrder.js");
 const guestCart = require("./src/API/guestCart.js");
 const mainPageGoodBlock = require("./src/API/mainPageGoodBlock.js");
 const goodDetail = require("./src/API/goodDetail.js");
+const guestCollection = require('./src/API/guestCollection.js');
 
 module.exports = () => {
     const route = express.Router();
@@ -35,7 +36,7 @@ module.exports = () => {
     // 用户查看订单功能
     route.post("/guestOrder",guestOrder);
 
-    // 用户查看购物车功能
+    // 用户购物车功能
     route.post("/guestCart",guestCart);
 
     // 商城主页三个商品区域接口
@@ -43,6 +44,9 @@ module.exports = () => {
 
     // 查询商品详细信息接口
     route.post("/goodDetail",goodDetail);
+
+    // 用户收藏夹功能接口
+    route.post('/guestCollection',guestCollection);
 
     return route;
 };

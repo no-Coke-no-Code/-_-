@@ -17,6 +17,7 @@ route.post('/guestCart',(req,res) => {
     });
     req.on("end",() => {
         reqData = JSON.parse(reqData);
+        console.log(reqData);
         switch(reqData.method){
             case "refreshCart":
             var sql = "SELECT * FROM cart WHERE user_nickname = ?";
@@ -75,6 +76,26 @@ route.post('/guestCart',(req,res) => {
                 }
             });
             break;
+
+            case "addToCart":
+            sql = "INSERT IGNORE INTO cart SET ?"
+            sqlParams = {
+                "user_nickname":reqData.userName,
+                "good_id":reqData.goodId,
+            };
+            connection.query(sql,sqlParams,(err)=>{
+                if(err)
+                {
+                    console.log(err);
+                }
+                else
+                {
+                    res.json({
+                        "state":"200",
+                        "message":"接口成功响应",
+                    });
+                }
+            });
         }
     });
 });

@@ -1,11 +1,12 @@
 <template>
     <div class="headerWrapper">
         <div class="stateArea">
-            <span v-if="ifLogin">当前账号:{{userName}}</span>
+            <span v-if="ifLogin">当前账号:{{this.userName}}</span>
             <span v-if="!ifLogin">当前状态:未登录</span>
         </div>
         <div class="controlArea">
-            <button class="back" @click="goBack">返回</button>
+            <!-- <button class="back" @click="goBack">返回</button> -->
+            <button class="back" @click="backToMainPage">返回主页</button>
             <button class="primary" @click="login" v-if="!ifLogin">登录</button>
             <button class="primary">
                 <router-link to="guestBackStage">个人信息</router-link>
@@ -20,42 +21,35 @@ export default {
     name:"headers",
     data(){
         return{
-            
+            userName:'',
+            ifLogin:false,
         }
     },
-    computed:{
-        userName(){
-            return this.$store.state.userName;
-        },
-        ifLogin(){
-            if(this.$store.state.ifLogin)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        },
+    created(){
+        if(this.$store.getters.getUsername !== undefined && this.$store.getters.getUsername !== null)
+        {
+            this.userName = this.$store.getters.getUsername;
+            this.ifLogin = true;
+            console.log(this.userName,this.ifLogin);
+        }
+        else
+        {
+            this.userName = "未登录";
+            this.ifLogin = false;
+        }
     },
     methods:{
         login(){
             this.$router.push("/login");
         },
         logout(){
-            if(this.$store.state.ifLogin)
-            {
-                this.$router.push("/");
-                this.$store.state.ifLogin = false;
-                this.$store.state.userName = null;
-            }
-            else
-            {
-                alert("你尚未登录");
-            }
+            this.$router.push("/");
+            this.$store.commit('removeUsername');
+            this.userName = "未登录";
+            this.ifLogin = false;
         },
-        goBack(){
-            history.back(-1);
+        backToMainPage(){
+            this.$router.push({path:"/"});
         },
     },
 }

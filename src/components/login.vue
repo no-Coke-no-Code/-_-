@@ -56,13 +56,26 @@ export default {
                 .then((responseData) => { 
                     if(responseData.data.state == 1)
                     {
-                        this.$store.state.ifLogin = true;
-                        this.$store.state.userName = this.username;
+                        this.$store.commit('setUsername',this.username);
+                        console.log(this.$store);
+                        // 这个操作是用户若尚未登录，点击购物车/收藏操作时会创建一个锚点，登录后进入原页面
+                        if(this.$store.state.location != undefined)
+                        {
+                            let targetLocation = this.$store.state.location.split("#")[1];
+                            let targetGood = this.$store.state.location.split("=")[1]
+                            this.$router.push({path:targetLocation,name:"goodDetail",query:{
+                                goodName:targetGood
+                            }});
+                            return;
+                        }
                         this.$router.push("/");
                     }
                     else
                     {
-                        alert("账号或密码有误，请重新输入");
+                        this.$message({
+                            message:"账号或密码有误，请重新输入",
+                            type:"error"
+                        });
                     }
                 })
                 .catch((err) => {
@@ -90,12 +103,7 @@ export default {
         },
     },
     created(){
-        this.$http.get("http://localhost:3333/index").then((data)=>{
-            // this.name = data
-            console.log(data);
-        }).catch((err)=>{
-            console.log(err);
-        });
+        console.log(this.$store.state.location);
     },
 }
 </script>

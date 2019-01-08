@@ -84,9 +84,58 @@ export default {
             }});
         },
         // 收藏操作
-        collect(){},
+        collect(){
+            let userName = this.$store.getters.getUsername;
+            if(userName===null)
+            {
+                this.$store.state.location = decodeURI(window.location.href);
+                this.$router.push({path:"/login",name:"login"});
+                return;
+            }
+            let params = {
+                "method":"addToCollection",
+                "userName":userName,
+                "goodId":this.goodDetail.good_id,
+            };
+            this.$http.post('/guestCollection',params)
+            .then((data)=>{
+                console.log(data);
+                this.$message({
+                    message:"已经成功添加至我的收藏",
+                    type:'success'
+                });
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
         // 添加至购物车操作
-        addToCart(){},
+                addToCart(){
+            let userName = this.$store.getters.getUsername;
+            // 若尚未登录，点击添加到购物车按钮，页面回自动跳转到登录页；并在登录后返回原页面
+            if(userName===null)
+            {
+                this.$store.state.location = decodeURI(window.location.href);
+                this.$router.push({path:"/login",name:"login"});
+                return;
+            }
+            let params = {
+                "method":"addToCart",
+                "userName":userName,
+                "goodId":this.goodDetail.good_id,
+            };
+            this.$http.post('/guestCart',params)
+            .then((data)=>{
+                console.log(data);
+                this.$message({
+                    message:"已经成功添加至购物车",
+                    type:'success'
+                });
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
     },
 }
 </script>

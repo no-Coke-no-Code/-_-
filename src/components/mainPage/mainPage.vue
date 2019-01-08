@@ -41,8 +41,6 @@ export default {
 
         }
     },
-    created(){
-    },
     methods:{
     
     },
