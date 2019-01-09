@@ -30,17 +30,46 @@ route.post('/guestCart',(req,res) => {
                 else
                 {
                     let responseData = JSON.parse(JSON.stringify(data));
-                    sql = "SELECT * FROM good WHERE good_id = ? ";
-                    sqlParams = [responseData[0].good_id];
+                    console.log(responseData,"这是从购物车表查询到的数据");
+                    if(responseData.length == 0)
+                    {
+                        res.json({
+                            'state':'200',
+                            'message':'当前购物车空空如也',
+                            'data':'empty'
+                        });
+                        return;
+                    }
+                    sql = "SELECT * FROM good WHERE good_id";
+                    sqlParams = [];
+                    // 问题应该出现在这里下面
+                    console.log("将要查询的购物车中的商品的ID",sqlParams);
                     // 若购物车中的商品多余一个，则对sql语句进行拼接
                     if(responseData.length > 1)
                     {
-                        for(let i = 1; i<responseData.length;i++)
+                        sql += " IN (";
+                        for(let i = 0; i<responseData.length;i++)
                         {
-                            sql += "OR ? "
-                            sqlParams.push(responseData[i].good_id);
+                            if(i == responseData.length-1)
+                            {
+                                sql += "?";
+                                sqlParams.push(responseData[i].good_id);
+                            }
+                            else
+                            {
+                                sql += "?,";
+                                sqlParams.push(responseData[i].good_id);
+                            }
                         }
+                        sql += ")";
                     }
+                    else
+                    {
+                        sql += "= ?"; 
+                        sqlParams = [responseData[0].good_id];
+                    }
+                    console.log(sql,sqlParams,'出现问题了');
+                    // console.log("将要查询的购物车中的商品",sqlParams);
                     connection.query(sql,sqlParams,(err,data) => {
                         if(err)
                         {
@@ -83,6 +112,7 @@ route.post('/guestCart',(req,res) => {
                 "user_nickname":reqData.userName,
                 "good_id":reqData.goodId,
             };
+            console.log('将要新增至购物车的商品',sqlParams);
             connection.query(sql,sqlParams,(err)=>{
                 if(err)
                 {

@@ -14,7 +14,7 @@
                         <div class="bottom clearfix">
                             <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
                             <el-button type="warning" class="button" @click="collect">收藏</el-button>
-                            <el-button type="danger" class="button" @click="addToCart">加入购物车</el-button>
+                            <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
                         </div>
                     </div>
                     </el-card>
@@ -110,7 +110,7 @@ export default {
             });
         },
         // 添加至购物车操作
-                addToCart(){
+        addToCart(item){
             let userName = this.$store.getters.getUsername;
             // 若尚未登录，点击添加到购物车按钮，页面回自动跳转到登录页；并在登录后返回原页面
             if(userName===null)
@@ -122,7 +122,7 @@ export default {
             let params = {
                 "method":"addToCart",
                 "userName":userName,
-                "goodId":this.goodDetail.good_id,
+                "goodId":item.good_id,
             };
             this.$http.post('/guestCart',params)
             .then((data)=>{

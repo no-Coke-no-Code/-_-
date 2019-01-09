@@ -41,7 +41,6 @@ route.post('/guestOrder',(req,res) => {
                 else
                 {
                     let resultData = JSON.parse(JSON.stringify(data));
-                    let orderDetail = [];
                     // 然后再遍历刚刚所查询到的所有订单，查询属于该订单的货物的详细信息，然后以对象数组形式并入该订单中
                     for(let x = 0; x<resultData.length;x++)
                     {

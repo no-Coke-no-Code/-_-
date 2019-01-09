@@ -70,6 +70,7 @@ export default {
     // 注意：在created阶段不能够获取到html元素(refs),因为这个阶段页面还没有被渲染出来
     created(){
         this.init();
+        this.responseData = [];
     },
     methods:{
         init(){
@@ -81,6 +82,11 @@ export default {
             .then((data) => {
                 this.total = 0;
                 this.responseData = JSON.parse(JSON.stringify(data.data));
+                if(this.responseData.data == 'empty')
+                {
+                    this.responseData = [];
+                    return;
+                }
                 for(let i =0;i<this.responseData.length;i++)
                 {
                     this.$set(this.responseData[i],"ifChoosing",true);
@@ -190,7 +196,7 @@ export default {
         },
 
         makeOrder(){
-
+            
         },
     },
 }
