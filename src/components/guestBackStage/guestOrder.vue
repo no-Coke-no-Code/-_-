@@ -61,7 +61,7 @@ export default {
     methods:{
         init(orderState){
             let params = {
-                "method":"guestOrder",
+                "method":"getGuestOrder",
                 "userName":this.username,
                 "orderState":orderState,
             };

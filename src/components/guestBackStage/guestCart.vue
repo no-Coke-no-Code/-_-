@@ -45,7 +45,8 @@
                 <td colspan="7">
                     <div>
                         <p>共计:<span class="totalMoney">￥{{this.total}}</span></p>
-                        <button @click="makeOrder" class="ordering"><i class="el-icon-edit"></i>生成订单</button>
+                        <!-- <button @click="makeOrder" class="ordering"><i class="el-icon-edit"></i>生成订单</button> -->
+                        <button @click="makeOrder" class="ordering"><router-link :to="targetUrl"><i class="el-icon-edit"></i>生成订单</router-link></button>
                     </div>
                 </td>
             </tfoot>
@@ -65,12 +66,15 @@ export default {
             ifChooseAll:true,
             goodNum:[],
             selectedNum:"",
+            selectedGoodList:[],
+            targetUrl:"/makeOrder",
         }
     },
     // 注意：在created阶段不能够获取到html元素(refs),因为这个阶段页面还没有被渲染出来
     created(){
         this.init();
         this.responseData = [];
+        this.selectedGoodList = [];
     },
     methods:{
         init(){
@@ -196,7 +200,27 @@ export default {
         },
 
         makeOrder(){
-            
+            for(let i = 0;i<this.responseData.length;i++)
+            {
+                if(this.responseData[i].ifChoosing == true)
+                {
+                    this.selectedGoodList.push(this.responseData[i]);
+                }
+            }
+            if(this.selectedGoodList.length == 0)
+            {
+                this.$message({
+                    message:"请先选择商品，再生成订单",
+                    type:"error"
+                });
+                console.log(this.$route);
+                return;
+            }
+            else
+            {
+                window.localStorage.setItem('selectedGoodList',JSON.stringify(this.selectedGoodList));
+                window.localStorage.setItem('totalPrice',this.total);
+            }
         },
     },
 }
@@ -296,6 +320,17 @@ export default {
                         outline: none;
                         cursor: pointer;
                         background: #00C1DF;
+                        a
+                        {
+                            color: white;
+                        }
+                        &:hover
+                        {
+                            a
+                            {
+                                color: #c0c0c0;
+                            }
+                        }
                     }
                 }
             }

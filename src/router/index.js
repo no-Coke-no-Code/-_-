@@ -12,7 +12,10 @@ import guestCart from "@/components/guestBackStage/guestCart.vue";
 import searchResult from "@/components/searchResult/searchResult.vue";
 // 在这里面路由注册模块可以使用懒加载的方式进行引入，有利于提高首屏的渲染速度提高体验
 const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],resolve)};
-// import goodDetail from "@/components/goodList/goodDetail.vue";
+// 懒加载好像会引起一点奇怪的问题：二级路由跳到一级路由好像没有反应？？
+// const makeOrder = (resolve) => {require(["@/components/makeOrder/makeOrder"]),resolve};
+import makeOrder from "@/components/makeOrder/makeOrder.vue";
+import makeOrderSuccess from "@/components/makeOrder/makeOrderSuccess.vue";
 
 import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
 import goodMange from "@/components/adminBackStage/goodMange.vue";
@@ -121,6 +124,19 @@ const router = new Router({
         path:"/goodDetail",
         name:"goodDetail",
         component:goodDetail
+    },
+    // 生成订单页面路由
+    {
+        path:"/makeOrder",
+        name:'makeOrder',
+        component:makeOrder,
+        children:[
+            {
+                path:'makeOrderSuccess',
+                name:'makeOrderSuccess',
+                component:makeOrderSuccess
+            }
+        ],
     }
   ]
 })
