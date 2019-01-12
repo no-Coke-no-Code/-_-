@@ -47,6 +47,8 @@ export default {
             this.$store.commit('removeUsername');
             this.userName = "未登录";
             this.ifLogin = false;
+            window.localStorage.removeItem('selectedGoodList');
+            window.localStorage.removeItem('totalPrice');
         },
         backToMainPage(){
             this.$router.push({path:"/"});

@@ -1,10 +1,6 @@
 <template>
     <div class="wrapper" v-loading="ifLoading">
         <headers></headers>
-        <div>
-            <searchInput></searchInput>
-            <good-menu></good-menu>
-        </div>
         <div class="mainBlock">
             <h2>请确认所有信息</h2>
             <div class="goodList">
@@ -29,15 +25,10 @@
 
 <script>
 import headers from "../global/headers.vue";
-import searchInput from "./../global/searchInput.vue";
-import goodMenu from "./../global/goodMenu.vue";
-
 export default {
     name: 'makeOrder',
     components:{
-        headers,
-        searchInput,
-        goodMenu
+        headers
     },
     data(){
         return{

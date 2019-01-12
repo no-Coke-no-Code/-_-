@@ -11,6 +11,8 @@ const guestCart = require("./src/API/guestCart.js");
 const mainPageGoodBlock = require("./src/API/mainPageGoodBlock.js");
 const goodDetail = require("./src/API/goodDetail.js");
 const guestCollection = require('./src/API/guestCollection.js');
+const getGuestHeadImg = require("./src/API/getGuestHeadImg");
+const deleteGuestHeadImg = require("./src/API/deleteGuestHeadImg");
 
 module.exports = () => {
     const route = express.Router();
@@ -32,6 +34,10 @@ module.exports = () => {
 
     // 用户获取/修改个人信息功能
     route.post("/guestInfo",guestInfo);
+    // 用户设置个人头像功能接口
+    route.post("/guestInfo/getGuestHeadImg",getGuestHeadImg);
+    // 删除用户个人头像功能接口
+    route.delete("/guestInfo/deleteGuestHeadImg",deleteGuestHeadImg);
 
     // 用户查看订单功能
     route.post("/guestOrder",guestOrder);

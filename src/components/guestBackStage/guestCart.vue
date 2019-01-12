@@ -73,6 +73,9 @@ export default {
     // 注意：在created阶段不能够获取到html元素(refs),因为这个阶段页面还没有被渲染出来
     created(){
         this.init();
+        // 若生成订单，到时候要通过这东西删除购物车中的商品
+        window.localStorage.removeItem('selectedGoodList');
+        window.localStorage.removeItem('totalPrice');
         this.responseData = [];
         this.selectedGoodList = [];
     },
@@ -320,9 +323,12 @@ export default {
                         outline: none;
                         cursor: pointer;
                         background: #00C1DF;
+                        line-height: 40px;
                         a
                         {
                             color: white;
+                            display: block;
+                            height: 100%;
                         }
                         &:hover
                         {
