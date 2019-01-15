@@ -1,8 +1,2 @@
-const queryString = require("querystring");
-
-var demoJson = {
-    name:'YRL',
-    age:21
-};
-
-console.log(queryString.stringify(demoJson));
+let date = new Date();
+console.log(date.getFullYear());

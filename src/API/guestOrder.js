@@ -69,7 +69,39 @@ route.post('/guestOrder',(req,res) => {
             break;
 
             case "makeGuestOrder":
-            
+                console.log("生成订单接口发送过来的数据" , reqData);
+                let newTime = new Date();
+                // 注意：要获取到实际的月份，需要getMonth()+1
+                let createOrderTime = newTime.getFullYear()+"-"+(newTime.getMonth()+1)+"-"+newTime.getDate()+" "+newTime.getHours()+":"+newTime.getMinutes()+":"+newTime.getSeconds();
+                sql = "INSERT INTO orderlist SET ?";
+                sqlParams = {
+                    "user_nickname":reqData.userName,
+                    "goodList":reqData.goodList,
+                    "createTime":createOrderTime,
+                    "orderList_state":"b",
+                    "orderList_price":reqData.totalPrice,
+                    "user_address":reqData.address,
+                    "user_phone":reqData.phone
+                };
+                console.log("传送过来的数据",sqlParams);
+                // connection.query(sql,sqlParams,(err,data)=>{
+                //     if(err)
+                //     {
+                //         console.log(err);
+                //     }
+                //     else
+                //     {
+
+                //     }
+                // });
+                res.json({
+                    "code":0,
+                    "message":"生成订单接口响应成功"
+                });
+            break;
+
+            case "finishGuestOrder":
+                
             break;
         };
     });

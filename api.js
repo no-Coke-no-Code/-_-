@@ -36,8 +36,10 @@ module.exports = () => {
     route.post("/guestInfo",guestInfo);
     // 用户设置个人头像功能接口
     route.post("/guestInfo/getGuestHeadImg",getGuestHeadImg);
+    route.post("/guestInfo/changeGuestHeadImg",getGuestHeadImg);
     // 删除用户个人头像功能接口
-    route.delete("/guestInfo/deleteGuestHeadImg",deleteGuestHeadImg);
+    // (需要落实如何接收delete请求的参数)
+    route.post("/guestInfo/deleteGuestHeadImg",deleteGuestHeadImg);
 
     // 用户查看订单功能
     route.post("/guestOrder",guestOrder);

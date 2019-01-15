@@ -207,7 +207,8 @@ export default {
             {
                 if(this.responseData[i].ifChoosing == true)
                 {
-                    this.selectedGoodList.push(this.responseData[i]);
+                    // this.selectedGoodList.push(this.responseData[i]);
+                    this.$set(this.selectedGoodList,i,this.responseData[i]);
                 }
             }
             if(this.selectedGoodList.length == 0)

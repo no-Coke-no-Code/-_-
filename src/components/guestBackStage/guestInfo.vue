@@ -6,6 +6,8 @@
             <!-- <a>点击我，上传新的头像</a> -->
             <p>点击头像进行更改</p>
         </div>
+        <!-- :auto-upload="false" -->
+        <template>
         <el-dialog :visible.sync="ifshowing" title="上传新的头像" class="userHeadImgDialog">
             <el-upload
             class="avatar-uploader"
@@ -17,10 +19,11 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <div class="dialogBtnGroup">
-                <el-button @click="confirmHeadImg">确定上传</el-button>
+                <el-button  @click="confirmHeadImg">确定上传</el-button>
                 <el-button @click="cancelHeadImgDialog">取消</el-button>
             </div>
         </el-dialog>
+        </template>
         <el-form :inline="true" :model="editForm" :rules="rules" ref="guestInfoForm">
             <el-col :span="8">
                 <el-form-item label="账号">
@@ -70,10 +73,10 @@ export default {
     name:"guestInfo",
     created(){
         this.init();
-        console.log(this.userID);
+        console.log(this.userName);
     },
     computed:{
-        userID(){
+        userName(){
             return this.$store.state.userName;
         },
     },
@@ -108,6 +111,8 @@ export default {
             }
         };
         return{
+            currentHeadImg:"",
+            previewImg:"",
             user:"",
             editForm:{
                 nickname:"coke43",
@@ -119,7 +124,7 @@ export default {
                 email:""
             },
             newUserHeadImg:"",
-            userHeadImg:require("@/../static/pic/vagetable1/5afa5370N6e05d6c7(1).jpg"),
+            userHeadImg:"",
             ifshowing:false,
             imageUrl:"",
             temForm:{},
@@ -205,7 +210,8 @@ export default {
                 this.editForm.phone = responseData.user_phone;
                 this.editForm.address = responseData.user_address;
                 this.editForm.email = responseData.user_email;
-                // this.userHeadImg = responseData.user_headImg;
+                this.userHeadImg = require("D:/hemashengxian/hema/static/pic/userHeadImg/" + responseData.user_headImg);
+                this.currentHeadImg = responseData.user_headImg;
                 if(responseData.user_sex == "m")
                 {
                     this.editForm.sex = "男";
@@ -259,56 +265,87 @@ export default {
         // 弹窗中确定更改头像按钮
         // 此时用户已经上传，所以如果不再操作的话，需要删除旧的用户头像
         confirmHeadImg(){
-            this.$http
-            .delete("/guestInfo/deleteGuestHeadImg"+this.userHeadImg)
-            .then((data) => {
-                console.log(data);
-                this.$message({
-                    message:"已保存更改",
-                    type:"success"
+            // this.$refs.upload.submit();
+            let params = {
+                "userName":this.userName,
+                "newUserHeadImg":this.previewImg
+            };
+            if(params.newUserHeadImg == "")
+            {
+                this.ifshowing = false;
+            }
+            else
+            {
+                this.$http
+                .post("/guestInfo/changeGuestHeadImg",params)
+                .then((data) => {
+                    console.log(data);
+                    this.previewImg = "";
+                    this.$message({
+                        message:"已保存更改",
+                        type:"success"
+                    });
+                    let params2 = {
+                        "deleteImg":"D:/hemashengxian/hema/static/pic/userHeadImg/" + this.currentHeadImg,
+                    };
+                    console.log(params2,"将要删除的原来的头像");
+                    this.$http
+                    .post('/guestInfo/deleteGuestHeadImg',params2)
+                    .then((data)=>{
+                        console.log(data);
+                        this.imageUrl = "";
+                        this.$forceUpdate();
+                        this.ifshowing = false;
+                        this.previewImg = "";
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-            this.userHeadImg = this.newUserHeadImg;
-            this.ifshowing = false;
+            }
         },
         // 弹窗中取消按钮
         // 此时用户已经上传图片到服务器了；如果此时不想变更图片，需要将刚刚新增的图片删除
         cancelHeadImgDialog(){
-            this.ifshowing = false;
-            this.$http
-            .delete(''+this.newUserHeadImg)
-            .then((data)=>{
-                // 这里应当返回删除状态
-                console.log(data);
-                this.$message({
-                    message:"已取消更改头像",
-                    type:"warning"
+            if(this.previewImg == "")
+            {
+                this.ifshowing = false;
+            }
+            else
+            {
+                let params = {
+                    "deleteImg":this.previewImg
+                };
+                console.log(params);
+                this.$http
+                .post('/guestInfo/deleteGuestHeadImg',params)
+                .then((data)=>{
+                    // 这里应当返回删除状态
+                    console.log(data);
+                    this.imageUrl = "";
+                    this.$forceUpdate();
+                    this.$message({
+                        message:"已取消更改头像",
+                        type:"warning"
+                    });
+                    this.ifshowing = false;
+                    this.previewImg = "";
+                })
+                .catch((err)=>{
+                    console.log(err);
                 });
-            })
-            .catch((err)=>{
-                console.log(err);
-            });
+            }
         },
 
         handleAvatarSuccess(res, file) {
             this.imageUrl = URL.createObjectURL(file.raw);
-            // console.log(this.imageUrl);
-            console.log(res);
-            // this.$http
-            // .post()
-            // .then((data)=>{
-            //     // 这里只需要服务器返回新的头像的图片地址即可
-            //     console.log(data);
-            //     this.imageUrl
-            // })
-            // .catch((err)=>{
-            //     console.log(err);
-            // });
-            console.log('服务器返回信息',res);
             console.log('文件信息',file);
+            this.previewImg = file.response.data;
+            // 这里的正则表达式尚需要修改(无效？？？)
+            // D:\hemashengxian\hema\static\pic\userHeadImg/20191136053_headImg.jpg
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
@@ -320,7 +357,6 @@ export default {
             if (!isLt2M) {
             this.$message.error('上传头像图片大小不能超过 2MB!');
             }
-            return isJPG && isLt2M;
         }
     },
 }
