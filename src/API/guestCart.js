@@ -126,6 +126,52 @@ route.post('/guestCart',(req,res) => {
                     });
                 }
             });
+
+            case "makeOrderSuccess":
+            sql = "DELETE FROM cart WHERE user_nickname=? AND good_id";
+            sqlParams = [];
+            sqlParams.push(reqData.userName);
+            if(reqData.goodIdList.length > 1)
+            {
+                sql += " IN (";
+                for(let i = 0;i<reqData.goodIdList.length;i++)
+                {
+                    if(i == reqData.goodIdList.length-1)
+                    {
+                        sql += "?)";
+                    }
+                    else
+                    {
+                        sql += "?,";
+                    }
+                    sqlParams.push(reqData.goodIdList[i]);
+                }
+            }
+            else if(reqData.goodIdList.length == 1)
+            {
+                sql += "=?";
+                sqlParams = reqData.goodIdList[0];
+            }
+            console.log("将要执行的SQL语句食",sql);
+            console.log("将要删除的goodIdList食",sqlParams);
+            connection.query(sql,sqlParams,(err)=>{
+                if(err)
+                {
+                    console.log(err);
+                    res.json({
+                        "code":"-1",
+                        "message":err,
+                    });
+                }
+                else
+                {
+                    console.log("生成订单成功，已成功从用户购物车清除生成订单的商品");
+                    res.json({
+                        "code":"0",
+                        "message":"已成功删除生成订单的商品"
+                    });
+                }
+            });
         }
     });
 });

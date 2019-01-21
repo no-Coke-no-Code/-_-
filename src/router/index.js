@@ -130,13 +130,12 @@ const router = new Router({
         path:"/makeOrder",
         name:'makeOrder',
         component:makeOrder,
-        children:[
-            {
-                path:'makeOrderSuccess',
-                name:'makeOrderSuccess',
-                component:makeOrderSuccess
-            }
-        ],
+    },
+    // 生成订单成功页面路由
+    {
+        path:'makeOrderSuccess',
+        name:'makeOrderSuccess',
+        component:makeOrderSuccess
     }
   ]
 })

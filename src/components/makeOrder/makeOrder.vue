@@ -47,6 +47,7 @@ export default {
             userName:"",
             userPhone:"",
             userAddress:"",
+            goodIdList:[],
         }
     },
     created(){
@@ -115,6 +116,20 @@ export default {
                 .then((data) => {
                     console.log(data);
                     this.ifLoading = false;
+                    for(let i = 0;i<this.goodList.length;i++)
+                    {
+                        this.goodIdList.push(this.goodList[i].good_id);
+                    }
+                    params = {
+                        "method":"makeOrderSuccess",
+                        "userName":this.userName,
+                        "goodIdList":this.goodIdList,
+                    };
+                    this.$http.post('/guestCart',params).then((data)=>{
+                        console.log(data);
+                    }).catch((err)=>{
+                        console.log(err);
+                    });
                     this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
                 })
                 .catch((err) => {

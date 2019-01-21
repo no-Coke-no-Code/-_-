@@ -98,14 +98,6 @@ route.post('/guestOrder',(req,res) => {
                             reqData.goodList[i].orderList_id = data.insertId;
                             reqData.goodList[i].good_count = reqData.goodList[i].num;
                             reqData.goodList[i].orderItem_priceSub = reqData.goodList[i].sum;
-                            // delete reqData.goodList[i].good_id;
-                            // delete reqData.goodList[i].category_name;
-                            // delete reqData.goodList[i].good_detail;
-                            // delete reqData.goodList[i].good_unit;
-                            // delete reqData.goodList[i].good_from;
-                            // delete reqData.goodList[i].ifChoosing;
-                            // delete reqData.goodList[i].num;
-                            // delete reqData.goodList[i].sum;
                             sqlParams[i] = [];
                             sqlParams[i].push(
                                 reqData.goodList[i].good_name,
@@ -116,7 +108,6 @@ route.post('/guestOrder',(req,res) => {
                                 reqData.goodList[i].good_imgurl,
                             );
                         }
-                        console.log('将要插入数据库的数据',sqlParams);
                         connection.query(sql,[sqlParams],(err)=>{
                             if(err){
                                 console.log(err);
