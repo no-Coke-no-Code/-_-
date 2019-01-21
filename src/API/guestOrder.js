@@ -76,27 +76,60 @@ route.post('/guestOrder',(req,res) => {
                 sql = "INSERT INTO orderlist SET ?";
                 sqlParams = {
                     "user_nickname":reqData.userName,
-                    "goodList":reqData.goodList,
-                    "createTime":createOrderTime,
+                    // "goodList":JSON.parse(reqData.goodList),
+                    "orderList_startTime":createOrderTime,
                     "orderList_state":"b",
                     "orderList_price":reqData.totalPrice,
                     "user_address":reqData.address,
                     "user_phone":reqData.phone
                 };
-                console.log("传送过来的数据",sqlParams);
-                // connection.query(sql,sqlParams,(err,data)=>{
-                //     if(err)
-                //     {
-                //         console.log(err);
-                //     }
-                //     else
-                //     {
-
-                //     }
-                // });
-                res.json({
-                    "code":0,
-                    "message":"生成订单接口响应成功"
+                // console.log("传送过来的数据",sqlParams);
+                connection.query(sql,sqlParams,(err,data)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                    }
+                    else
+                    {
+                        sql = "INSERT INTO orderitem (good_name,good_count,good_price,orderList_id,orderItem_priceSub,good_imgurl) VALUES ?";
+                        sqlParams = [];
+                        for(let i = 0;i<reqData.goodList.length;i++)
+                        {
+                            reqData.goodList[i].orderList_id = data.insertId;
+                            reqData.goodList[i].good_count = reqData.goodList[i].num;
+                            reqData.goodList[i].orderItem_priceSub = reqData.goodList[i].sum;
+                            // delete reqData.goodList[i].good_id;
+                            // delete reqData.goodList[i].category_name;
+                            // delete reqData.goodList[i].good_detail;
+                            // delete reqData.goodList[i].good_unit;
+                            // delete reqData.goodList[i].good_from;
+                            // delete reqData.goodList[i].ifChoosing;
+                            // delete reqData.goodList[i].num;
+                            // delete reqData.goodList[i].sum;
+                            sqlParams[i] = [];
+                            sqlParams[i].push(
+                                reqData.goodList[i].good_name,
+                                reqData.goodList[i].good_count,
+                                reqData.goodList[i].good_price,
+                                reqData.goodList[i].orderList_id,
+                                reqData.goodList[i].orderItem_priceSub,
+                                reqData.goodList[i].good_imgurl,
+                            );
+                        }
+                        console.log('将要插入数据库的数据',sqlParams);
+                        connection.query(sql,[sqlParams],(err)=>{
+                            if(err){
+                                console.log(err);
+                            }
+                            else
+                            {
+                                res.json({
+                                    "code":0,
+                                    "message":"生成订单接口响应成功"
+                                });
+                            }
+                        });
+                    }
                 });
             break;
 
