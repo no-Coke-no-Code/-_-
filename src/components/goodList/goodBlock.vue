@@ -8,15 +8,15 @@
             <el-row :gutter="40">
                 <el-col :span="8" v-for="(item, index) in responseData" :key="index">
                     <el-card :body-style="{ padding: '0px' }">
-                    <img :src="item.good_imgurl" class="image">
-                    <div style="padding: 14px;">
-                        <span>{{item.good_name}}</span>
-                        <div class="bottom clearfix">
-                            <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
-                            <el-button type="warning" class="button" @click="collect">收藏</el-button>
-                            <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
+                        <img :src="item.good_imgurl" class="image">
+                        <div style="padding: 14px;">
+                            <span>{{item.good_name}}</span>
+                            <div class="bottom clearfix">
+                                <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
+                                <el-button type="warning" class="button" @click="collect">收藏</el-button>
+                                <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
+                            </div>
                         </div>
-                    </div>
                     </el-card>
                 </el-col>
             </el-row>
@@ -34,16 +34,16 @@ export default {
     data(){
         return{
             responseData:[
-                {
-                    category_name: "",
-                    good_detail: "",
-                    good_from: "",
-                    good_id: 0,
-                    good_imgurl: "",
-                    good_name: "",
-                    good_price: 0,
-                    good_unit: "",
-                }
+                // {
+                //     category_name: "",
+                //     good_detail: "",
+                //     good_from: "",
+                //     good_id: 0,
+                //     good_imgurl: "",
+                //     good_name: "",
+                //     good_price: 0,
+                //     good_unit: "",
+                // }
             ],
             goodDetail:{
                 category_name: "",
@@ -63,9 +63,11 @@ export default {
     },
     methods:{
         init(){
+            // this.responseData = "";
             let params = {
                 "type":this.type,
             };
+
             this.$http.post('/mainPageGoodBlock',params)
             .then((data) => {
                 this.responseData = data.data.data;
@@ -174,4 +176,14 @@ export default {
             transition: .2s ease;
         }
     }
+    // .testing
+    // {
+    //     opacity: 1;
+    //     transition: 2s ease;
+    // }
+    // .testing2
+    // {
+    //     opacity: 0;
+    //     transition: 2s ease;
+    // }
 </style>

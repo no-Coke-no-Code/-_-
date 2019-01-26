@@ -1,37 +1,46 @@
 <template>
     <div class="wrapper">
-        <header>
-        </header>
+        <div class="header">
+
+        </div>
         <div class="middle">
             <div class="middle_left">
             </div>
             <div class="middle_right">
                 <form id="form1" runat="server">
-                    <h1>购物网站</h1>
+                    <h1>生鲜超市</h1>
                     <div class="hr"></div>
-                    <p>
-                        <!-- <span class="icon_admin">&#xe625;</span> -->
-                        <i class="el-icon-edit"></i>
-                        <input type="text" id="username" name="username" v-model="username"/>
-                    </p>
-                    <p>
-                        <!-- <span class="icon_password">&#xe8a3;</span> -->
-                        <i class="el-icon-edit"></i>
-                        <input type="password" id="password" name="password" v-model="password"/>
-                    </p>
-                    <p>
-                        <el-button class="login" type="primary" @click="login">登录</el-button>
-                    </p>
-                    <router-link to="/register">没有账号？？注册一个</router-link>
+                    <div id="form1Content">
+                        <p>
+                            <i class="adminIcon">
+                                <img src="../assets/img/index/user_icon_alter@2x.png"/>
+                            </i>
+                            <input type="text" id="username" name="username" v-model="username" placeholder="账号"/>
+                        </p>
+                        <p>
+                            <i class="adminIcon">
+                                <img src="../assets/img/index/nav_icon_pwd@2x.png"/>
+                            </i>
+                            <input type="password" id="password" name="password" v-model="password" placeholder="密码"/>
+                        </p>
+                        <p>
+                            <el-button class="login" type="primary" @click="login">登录</el-button>
+                        </p>
+                        <p>
+                            <el-button class="login"><router-link to="/register">注册</router-link></el-button>
+                        </p>
+                    </div>
                 </form>
             </div>
         </div>
-        <footer>
-        </footer>
+        <div class="footer">
+
+        </div>
     </div>
 </template>
 
 <script>
+
 export default {
     name:'login',
     data(){
@@ -114,16 +123,15 @@ export default {
     {
         height: 100%;
     }
-    header
+    .header
     {
         height: 10%;
-        // background: url("../assets/img/index/htop.png");
+        background: url("../assets/img/index/htop.png");
         background-color: transparent;
     }
     .middle
     {
         height: 80%;
-        background-color: green;
         .middle_left
         {
             float: left;
@@ -142,48 +150,82 @@ export default {
             {
                 box-sizing: border-box;
                 background-color: #fff;
-                border-radius: 10%;
-                width: 80%;
+                border-radius: 3px;
+                width: 360px;
                 margin: auto;
                 margin-top: 50px;
-                padding: 0 50px;
+                height: 425px;
                 h1
                 {
                     text-align: center;
                     line-height: 60px;
+                    font-family:Verdana, Geneva, Tahoma, sans-serif;
                 }
                 .hr
                 {
                     height: 1px;
                     border-top: 1px dotted gray;
-                    margin:auto;
+                    margin:10px auto;
+                    width: 90%;
                 }
-                p
+                #form1Content
                 {
-                    margin-top: 10px;
-                    font-size: 0;
-                    [class^="icon_"]
+                    padding: 0 50px;
+                    p
                     {
-                        display: inline-block;
-                        background-color: #c0c0c0;
-                        padding: 5px;
-                        font-size: 16px;
-                        border: 1px solid gray;
-                    }
-                    input
-                    {
-                        height: 25px;
-                        vertical-align: top;
-                        padding: 0 5px;
+                        margin-top: 20px;
+                        font-size: 0;
+                        // [class^="el-icon-"]
+                        // {
+                        //     display: inline-block;
+                        //     padding: 5px;
+                        //     font-size: 16px;
+                        //     border: 1.5px solid #c0c0c0;
+                        //     border-right: unset;
+                        // }
+                        .adminIcon
+                        {
+                            display: inline-block;
+                            padding: 8px 9px 4px 9px;;
+                            font-size: 16px;
+                            border: 1.5px solid #c0c0c0;
+                            border-right: unset;
+                            background-color:rgba(192,192,192,0.2);
+                            img
+                            {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
+                        input
+                        {
+                            height: 35px;
+                            vertical-align: top;
+                            padding: 0 5px;
+                            width: 200px;
+                        }
+                        .el-button
+                        {
+                            width: 253px;
+                        }
+                        &:first-of-type
+                        {
+                            margin-top: 50px;
+                        }
+                        &:nth-of-type(3)
+                        {
+                            margin-top: 50px;
+                        }
                     }
                 }
             }
         }
     }
-    footer
+    .footer
     {
         height: 10%;
-        background: transparent;  
+        background: url("../assets/img/index/htop.png");
+        background-color: transparent;
     }
 </style>
 
