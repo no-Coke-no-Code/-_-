@@ -13,6 +13,7 @@ const goodDetail = require("./src/API/goodDetail.js");
 const guestCollection = require('./src/API/guestCollection.js');
 const getGuestHeadImg = require("./src/API/getGuestHeadImg");
 const deleteGuestHeadImg = require("./src/API/deleteGuestHeadImg");
+const goodSearch = require("./src/API/goodSearch.js");
 
 module.exports = () => {
     const route = express.Router();
@@ -43,6 +44,9 @@ module.exports = () => {
 
     // 用户查看订单功能
     route.post("/guestOrder",guestOrder);
+
+    // 用户查询商品功能接口
+    route.post("/goodSearch",goodSearch);
 
     // 用户购物车功能
     route.post("/guestCart",guestCart);

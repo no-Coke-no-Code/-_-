@@ -126,6 +126,7 @@ route.post('/guestCart',(req,res) => {
                     });
                 }
             });
+            break;
 
             case "makeOrderSuccess":
             sql = "DELETE FROM cart WHERE user_nickname=? AND good_id";
@@ -152,8 +153,6 @@ route.post('/guestCart',(req,res) => {
                 sql += "=?";
                 sqlParams = reqData.goodIdList[0];
             }
-            console.log("将要执行的SQL语句食",sql);
-            console.log("将要删除的goodIdList食",sqlParams);
             connection.query(sql,sqlParams,(err)=>{
                 if(err)
                 {

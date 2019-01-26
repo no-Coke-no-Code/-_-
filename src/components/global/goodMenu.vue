@@ -47,7 +47,7 @@ export default {
     methods:{
         // 这里面的key是导航栏项里面的index
         handleSelect(key){
-            this.$router.push({path:'searchResult',query:{search:key}});
+            this.$router.push({path:'searchResult',query:{search:key,searchType:'category'}});
         },
     },
 }

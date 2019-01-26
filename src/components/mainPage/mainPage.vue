@@ -17,6 +17,7 @@
                 <good-block title="异国风情" type="foreignGood"></good-block>
             </div>
         </div>
+        <footers></footers>
     </div>
 </template>
 
@@ -26,6 +27,7 @@ import rollPic from "./rollPic.vue";
 import searchInput from "./../global/searchInput.vue";
 import goodMenu from "./../global/goodMenu.vue";
 import goodBlock from "./../goodList/goodBlock.vue";
+import footers from "../global/footers.vue";
 
 export default {
     name: 'mainPage',
@@ -35,6 +37,7 @@ export default {
         rollPic,
         goodMenu,
         goodBlock,
+        footers
     },
     data () {
         return {

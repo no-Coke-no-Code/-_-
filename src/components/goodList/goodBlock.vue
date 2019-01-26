@@ -165,4 +165,13 @@ export default {
             height: 200px;
         }
     }
+    .el-card
+    {
+        transition: .2s ease;
+        &:hover
+        {
+            transform: scale(1.05,1.05);
+            transition: .2s ease;
+        }
+    }
 </style>
