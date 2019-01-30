@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-        <el-form :model="registerForm" ref="registerForm" :rules="rules">
+        <el-form :model="registerForm" ref="registerForm" class="registerForm" :rules="rules">
+            <h2 class="registerFormTitle">注册</h2>
             <el-form-item label="账号" prop="username">
                 <el-input v-model="registerForm.username"></el-input>
             </el-form-item>
@@ -32,9 +33,9 @@
             <el-form-item label="电子邮箱" prop="email">
                 <el-input v-model="registerForm.email"></el-input>
             </el-form-item>
+            <el-button type="primary" @click="register('registerForm')" class="registerFormBtn">确定</el-button>
+            <el-button @click="backToLogin" class="registerFormBtn">返回</el-button>
         </el-form>
-        <el-button type="primary" @click="register('registerForm')">注册</el-button>
-        <el-button @click="backToLogin">返回</el-button>
     </div>
 </template>
 
@@ -151,6 +152,26 @@ export default {
 }
 </script>
 
+<style>
+    .registerForm .el-form-item__label
+    {
+        width: 100px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .registerForm .el-form-item__content
+    {
+        display: inline-block;
+        margin-left: 120px;
+        width: 300px;
+    }
+    .registerForm .el-select
+    {
+        width: 300px;
+    }
+</style>
+
 <style lang="scss" scoped>
     .wrapper
     {
@@ -159,6 +180,32 @@ export default {
         width: 50%;
         margin: 50px auto;
         padding: 20px 10px;
+        .registerForm
+        {
+            padding-right: 80px;
+            padding-left: 80px;
+            .registerFormTitle
+            {
+                text-align: center;
+                font-size: 30px;
+                margin-bottom: 20px;
+            }
+            .el-form-item
+            {
+                position: relative;
+            }
+            .registerFormBtn
+            {
+                display: block;
+                width: 400px;
+                margin-top: 50px;
+                margin-left: 20px;
+            }
+            .el-button+.el-button
+            {
+                margin-top: 20px;
+            }
+        }
     }
 </style>
 
