@@ -60,7 +60,7 @@ export default {
     data(){
         return{
             // 这是假数据，以后要改回来
-            userName:"coke43",
+            userName:"",
             total:0,
             responseData:[],
             ifChooseAll:true,
@@ -83,7 +83,8 @@ export default {
         init(){
             let params = {
                 "method":"refreshCart",
-                "userName":this.userName
+                // "userName":this.userName
+                "userName":this.$store.state.userName
             };
             this.$http.post('/guestCart',params)
             .then((data) => {

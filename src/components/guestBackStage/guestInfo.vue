@@ -115,7 +115,8 @@ export default {
             previewImg:"",
             user:"",
             editForm:{
-                nickname:"coke43",
+                // 这个需要从别的组件传过来
+                nickname:"",
                 realname:"",
                 password:"",
                 sex:"",
@@ -197,8 +198,8 @@ export default {
         init(){
             let params = {
                 "method":"refresh",
-                // "userName":this.$store.state.userName
-                "userName":this.editForm.nickname
+                "userName":this.$store.state.userName
+                // "userName":this.editForm.nickname
             };
             this.$http.post("/guestInfo",params)
             .then((data) => {

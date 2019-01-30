@@ -1,11 +1,75 @@
 <template>
     <div class="wrapper">
+        <!-- <div class="leftMenuBlock">
+            <el-button class="leftMenuBtn" @click="ifShowingLeftMenu" v-if="!ifShowing">展开</el-button>
+            <el-button class="leftMenuBtn" @click="ifShowingLeftMenu" v-if="ifShowing">收起</el-button>
+            <el-menu class="leftMenu" v-if="ifShowing">
+                <el-submenu index="1">
+                    <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span slot="title">导航一</span>
+                    </template>
+                    <el-menu-item-group>
+                        <span slot="title">分组一</span>
+                        <el-menu-item index="1-1">选项1</el-menu-item>
+                        <el-menu-item index="1-2">选项2</el-menu-item>
+                    </el-menu-item-group>
+                    <el-menu-item-group title="分组2">
+                        <el-menu-item index="1-3">选项3</el-menu-item>
+                    </el-menu-item-group>
+                    <el-submenu index="1-4">
+                        <span slot="title">选项4</span>
+                    <el-menu-item index="1-4-1">选项1</el-menu-item>
+                    </el-submenu>
+                </el-submenu>
+                <el-menu-item index="2">
+                    <i class="el-icon-menu"></i>
+                    <span slot="title">导航二</span>
+                </el-menu-item>
+                <el-menu-item index="4">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title">导航四</span>
+                </el-menu-item>
+
+            <el-submenu index="1">
+                <template slot="title">蔬菜</template>
+                <el-menu-item index="叶类蔬菜">叶类蔬菜</el-menu-item>
+                <el-menu-item index="地下蔬菜">地下蔬菜</el-menu-item>
+                <el-menu-item index="山货">山货</el-menu-item>
+            </el-submenu>
+            <el-submenu index="2">
+                <template slot="title">水果</template>
+                <el-menu-item index="苹果">苹果</el-menu-item>
+                <el-menu-item index="雪梨">雪梨</el-menu-item>
+                <el-menu-item index="香蕉">香蕉</el-menu-item>
+            </el-submenu>
+            <el-submenu index="3">
+                <template slot="title">海鲜</template>
+                <el-menu-item index="鱼">鱼</el-menu-item>
+                <el-menu-item index="龙虾">龙虾</el-menu-item>
+                <el-menu-item index="鲍鱼">鲍鱼</el-menu-item>
+            </el-submenu>
+            <el-submenu index="4">
+                <template slot="title">肉类</template>
+                <el-menu-item index="牛肉">牛肉</el-menu-item>
+                <el-menu-item index="猪肉">猪肉</el-menu-item>
+                <el-menu-item index="羊肉">羊肉</el-menu-item>
+            </el-submenu>
+            <el-submenu index="5">
+                <template slot="title">零食</template>
+                <el-menu-item index="巧克力">巧克力</el-menu-item>
+                <el-menu-item index="糖果">糖果</el-menu-item>
+                <el-menu-item index="汽水">汽水</el-menu-item>
+            </el-submenu>
+            </el-menu>
+        </div> -->
         <headers></headers>
         <div>
             <searchInput></searchInput>
             <good-menu></good-menu>
         </div>
         <rollPic></rollPic>
+        <!-- <svg-icon icon-class="shengxian-shucai"></svg-icon> -->
         <div class="introduce">
             <ul>
                 <li>
@@ -73,11 +137,13 @@ export default {
     },
     data () {
         return {
-
+            ifShowing:false,
         }
     },
     methods:{
-    
+        ifShowingLeftMenu(){
+            this.ifShowing = !this.ifShowing;
+        },
     },
 }
 </script>
@@ -85,6 +151,24 @@ export default {
 <style lang="scss" scoped>
     .wrapper
     {
+        .leftMenuBlock
+        {
+            position: fixed;
+            z-index: 10;
+            .leftMenu
+            {
+                top: 40px;
+                left: 0px;
+                width: 150px;
+                position: absolute
+            }
+            .leftMenuBtn
+            {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+            }
+        }
         .introduce
         {
             margin: 50px;

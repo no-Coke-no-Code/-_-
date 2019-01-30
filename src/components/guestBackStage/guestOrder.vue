@@ -50,7 +50,7 @@ export default {
             activeName:"",
             // orderState:"",
             // 标记：这是一条假数据，实际情况应该是从vuex里面获取
-            username:"coke43",
+            username:"",
         }
     },
     watch:{
@@ -62,7 +62,8 @@ export default {
         init(orderState){
             let params = {
                 "method":"getGuestOrder",
-                "userName":this.username,
+                // "userName":this.username,
+                "userName":this.$store.state.userName,
                 "orderState":orderState,
             };
             this.$http.post("/guestOrder",params).then((data) => {

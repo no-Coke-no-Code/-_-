@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="goodMenuWrapper">
         <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
             <el-submenu index="1">
                 <template slot="title">蔬菜</template>
@@ -9,29 +9,28 @@
             </el-submenu>
             <el-submenu index="2">
                 <template slot="title">水果</template>
-                <el-menu-item index="2-1">苹果</el-menu-item>
-                <el-menu-item index="2-2">雪梨</el-menu-item>
-                <el-menu-item index="2-3">香蕉</el-menu-item>
+                <el-menu-item index="苹果">苹果</el-menu-item>
+                <el-menu-item index="雪梨">雪梨</el-menu-item>
+                <el-menu-item index="香蕉">香蕉</el-menu-item>
             </el-submenu>
             <el-submenu index="3">
                 <template slot="title">海鲜</template>
-                <el-menu-item index="2-1">鱼</el-menu-item>
-                <el-menu-item index="2-2">龙虾</el-menu-item>
-                <el-menu-item index="2-3">鲍鱼</el-menu-item>
+                <el-menu-item index="鱼">鱼</el-menu-item>
+                <el-menu-item index="龙虾">龙虾</el-menu-item>
+                <el-menu-item index="鲍鱼">鲍鱼</el-menu-item>
             </el-submenu>
             <el-submenu index="4">
                 <template slot="title">肉类</template>
-                <el-menu-item index="2-1">牛肉</el-menu-item>
-                <el-menu-item index="2-2">猪肉</el-menu-item>
-                <el-menu-item index="2-3">羊肉</el-menu-item>
+                <el-menu-item index="牛肉">牛肉</el-menu-item>
+                <el-menu-item index="猪肉">猪肉</el-menu-item>
+                <el-menu-item index="羊肉">羊肉</el-menu-item>
             </el-submenu>
             <el-submenu index="5">
                 <template slot="title">零食</template>
-                <el-menu-item index="2-1">巧克力</el-menu-item>
-                <el-menu-item index="2-2">糖果</el-menu-item>
-                <el-menu-item index="2-3">汽水</el-menu-item>
+                <el-menu-item index="巧克力">巧克力</el-menu-item>
+                <el-menu-item index="糖果">糖果</el-menu-item>
+                <el-menu-item index="汽水">汽水</el-menu-item>
             </el-submenu>
-            <!-- <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item> -->
         </el-menu>
     </div>
 </template>
@@ -54,5 +53,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+    .goodMenuWrapper
+    {
+        border-bottom: 1px solid #e6e6e6;
+        border-top: 1px solid #e6e6e6;
+        .el-menu.el-menu--horizontal
+        {
+            width: 80%;
+            margin: 0px auto;
+            border: transparent !important;
+        }
+    }
 </style>

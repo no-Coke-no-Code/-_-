@@ -8,8 +8,9 @@
             <!-- <button class="back" @click="goBack">返回</button> -->
             <button class="back" @click="backToMainPage">返回主页</button>
             <button class="primary" @click="login" v-if="!ifLogin">登录</button>
-            <button class="primary">
-                <router-link to="guestBackStage">个人信息</router-link>
+            <button class="primary" @click="iftoguestBack">
+                <!-- <router-link to="guestBackStage">个人信息</router-link> -->
+                个人信息
             </button>
             <button class="danger" @click="logout" v-if="ifLogin">退出登录</button>
         </div>
@@ -39,6 +40,16 @@ export default {
         }
     },
     methods:{
+        iftoguestBack(){
+            if(this.userName == "未登录" && this.ifLogin == false)
+            {
+                this.$router.push({path:'login'});
+            }
+            else
+            {
+                this.$router.push({path:'guestBackStage'});
+            }
+        },
         login(){
             this.$router.push("/login");
         },
@@ -49,6 +60,7 @@ export default {
             this.ifLogin = false;
             window.localStorage.removeItem('selectedGoodList');
             window.localStorage.removeItem('totalPrice');
+            window.location.reload();
         },
         backToMainPage(){
             this.$router.push({path:"/"});

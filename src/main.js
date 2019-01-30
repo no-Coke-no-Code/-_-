@@ -9,6 +9,7 @@ import ElementUi from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/normal.scss';
 import "@/assets/font.scss";
+import "@/icons";
 // 这里无法引入sass文件
 
 Vue.use(ElementUi);
