@@ -100,7 +100,7 @@ export default {
                 {
                     goodList.push(this.goodList[i]);
                 }
-                // this.ifLoading = true;
+                this.ifLoading = true;
                 // 生成订单接口所需参数：用户名，商品信息，数量，单价，小计，创建时间(后端生成吧)
                 let params = {
                     "method":"makeGuestOrder",
@@ -136,7 +136,9 @@ export default {
                     console.log(err);
                 });
             })
-            .catch();
+            .catch((err)=>{
+                console.log(err);
+            });
         },
         // 取消生成订单
         cancelOrder(){

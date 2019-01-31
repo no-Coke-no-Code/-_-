@@ -2,9 +2,9 @@
     <div class="wrapper">
         <headers></headers>
         <guestMenuList class="menuList"></guestMenuList>
-        <keep-alive>
+        <!-- <keep-alive> -->
             <router-view></router-view>
-        </keep-alive>
+        <!-- </keep-alive> -->
     </div>
 </template>
 

@@ -211,7 +211,14 @@ export default {
                 this.editForm.phone = responseData.user_phone;
                 this.editForm.address = responseData.user_address;
                 this.editForm.email = responseData.user_email;
-                this.userHeadImg = require("D:/hemashengxian/hema/static/pic/userHeadImg/" + responseData.user_headImg);
+                if(responseData.user_headImg == ""||responseData.user_headImg==undefined)
+                {
+                    this.userHeadImg = require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png');
+                }
+                else
+                {
+                    this.userHeadImg = require("D:/hemashengxian/hema/static/pic/userHeadImg/" + responseData.user_headImg);
+                }
                 this.currentHeadImg = responseData.user_headImg;
                 if(responseData.user_sex == "m")
                 {

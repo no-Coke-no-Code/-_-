@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" v-loading="ifLoading">
+    <div class="wrapper">
         <h1>已成功生成订单！！货品将会很快送到你手上的！！</h1>
         <div class="btnGroup">
             <!-- 这里放一个庆祝的图片 -->
@@ -17,6 +17,11 @@ export default {
     name: 'makeOrderSuccess',
     components:{
         headers
+    },
+    data(){
+        return{
+            ifLoading:false
+        }
     },
 }
 </script>

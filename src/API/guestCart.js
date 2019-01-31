@@ -132,26 +132,18 @@ route.post('/guestCart',(req,res) => {
             sql = "DELETE FROM cart WHERE user_nickname=? AND good_id";
             sqlParams = [];
             sqlParams.push(reqData.userName);
-            if(reqData.goodIdList.length > 1)
+            sql += " IN (";
+            for(let i = 0;i<reqData.goodIdList.length;i++)
             {
-                sql += " IN (";
-                for(let i = 0;i<reqData.goodIdList.length;i++)
+                if(i == reqData.goodIdList.length-1)
                 {
-                    if(i == reqData.goodIdList.length-1)
-                    {
-                        sql += "?)";
-                    }
-                    else
-                    {
-                        sql += "?,";
-                    }
-                    sqlParams.push(reqData.goodIdList[i]);
+                    sql += "?)";
                 }
-            }
-            else if(reqData.goodIdList.length == 1)
-            {
-                sql += "=?";
-                sqlParams = reqData.goodIdList[0];
+                else
+                {
+                    sql += "?,";
+                }
+                sqlParams.push(reqData.goodIdList[i]);
             }
             connection.query(sql,sqlParams,(err)=>{
                 if(err)

@@ -12,6 +12,9 @@
                     </el-table>
                     <p>订单总价:{{order.orderList_price}}</p>
                 </div>
+                <div v-if="!responseData.length">
+                    暂时无相关的订单
+                </div>
             </el-tab-pane>
             <el-tab-pane label="未发货">
                 <div class="orderList" v-for="(order,index) in responseData">
@@ -24,6 +27,9 @@
                     </el-table>
                     <p>订单总价:{{order.orderList_price}}</p>
                 </div>
+                <div v-if="!responseData.length">
+                    暂时无相关的订单
+                </div>
             </el-tab-pane>
             <el-tab-pane label="已发货">
                 <div class="orderList" v-for="(order,index) in responseData">
@@ -35,6 +41,9 @@
                         <el-table-column label="商品小计" prop="orderItem_priceSub"></el-table-column>
                     </el-table>
                     <p>订单总价:{{order.orderList_price}}</p>
+                </div>
+                <div v-if="!responseData.length">
+                    暂时无相关的订单
                 </div>
             </el-tab-pane>
         </el-tabs>
