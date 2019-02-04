@@ -13,7 +13,7 @@
                     <el-select v-model="searchForm.type" clearable>
                         <el-option
                             v-for="item in typeList"
-                            key="item"
+                            :key="item"
                             :label="item"
                             :value="item"
                         ></el-option>
@@ -23,7 +23,7 @@
                     <el-select v-model="searchForm.price" clearable>
                         <el-option
                             v-for="item in priceList"
-                            key="item"
+                            :key="item"
                             :label="item"
                             :value="item"
                         ></el-option>
@@ -123,6 +123,8 @@ export default {
             // 所要传到编辑商品信息页的对象
             editDialog:{},
             ifLoading:false,
+            // 这是假的商品种类
+            typeList:['蔬菜','肉类'],
         }
     },
     // 页面刷新所进行的操作
