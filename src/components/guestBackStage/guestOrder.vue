@@ -1,8 +1,8 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" v-loading="ifLoading">
         <el-tabs @tab-click="changeTab" v-model="activeName">
             <el-tab-pane label="全部">
-                <div class="orderList" v-for="order in responseData">
+                <div class="orderList" v-for="order in responseData" v-if="responseData.length">
                     <h3>订单</h3>
                     <el-table :data="order.orderDetail">
                         <el-table-column label="商品名称" prop="good_name"></el-table-column>
@@ -17,7 +17,7 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="未发货">
-                <div class="orderList" v-for="(order,index) in responseData">
+                <div class="orderList" v-for="(order,index) in responseData" v-if="responseData.length">
                     <h3>订单{{index}}</h3>
                     <el-table :data="order.orderDetail">
                         <el-table-column label="商品名称" prop="good_name"></el-table-column>
@@ -32,7 +32,7 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="已发货">
-                <div class="orderList" v-for="(order,index) in responseData">
+                <div class="orderList" v-for="(order,index) in responseData" v-if="responseData.length">
                     <h3>订单{{index}}</h3>
                     <el-table :data="order.orderDetail">
                         <el-table-column label="商品名称" prop="good_name"></el-table-column>
@@ -60,6 +60,7 @@ export default {
             // orderState:"",
             // 标记：这是一条假数据，实际情况应该是从vuex里面获取
             username:"",
+            ifLoading:false,
         }
     },
     watch:{
@@ -71,15 +72,21 @@ export default {
         init(orderState){
             let params = {
                 "method":"getGuestOrder",
-                // "userName":this.username,
                 "userName":this.$store.state.userName,
                 "orderState":orderState,
             };
-            this.$http.post("/guestOrder",params).then((data) => {
-                this.responseData = data.data;
-                console.log(this.responseData);
+            this.responseData = [];
+            this.ifLoading = true;
+            this.$http
+            .post("/guestOrder",params)
+            .then((data) => {
+                this.responseData = data.data.data;
                 console.log(data);
-            }).catch((err) => {
+                this.ifLoading = false;
+            })
+            .catch((err) => {
+                // alert(this.responseData);
+                this.ifLoading = false;
                 console.log(err);
             });
         },
@@ -90,12 +97,12 @@ export default {
                 this.init("all");
             }
             // 查看未发货订单
-            if(this.activeName == 1)
+            else if(this.activeName == 1)
             {
                 this.init("b");
             }
             // 查看已发货订单
-            if(this.activeName == 2)
+            else if(this.activeName == 2)
             {
                 this.init("f");
             }

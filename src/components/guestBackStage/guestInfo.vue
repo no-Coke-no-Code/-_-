@@ -1,14 +1,11 @@
 <template>
     <div class="wrapper userInfo">
-        <div class="userHeadImg">
-            <!-- 若需要动态绑定图片地址时，图片地址要这样子写:require("图片的地址") -->
+        <!-- <div class="userHeadImg">
             <img :src="userHeadImg" class="userHead"  @click="showHeadImgDialog"/>
-            <!-- <a>点击我，上传新的头像</a> -->
             <p>点击头像进行更改</p>
-        </div>
-        <!-- :auto-upload="false" -->
+        </div> -->
         <template>
-        <el-dialog :visible.sync="ifshowing" title="上传新的头像" class="userHeadImgDialog">
+        <!-- <el-dialog :visible.sync="ifshowing" title="上传新的头像" class="userHeadImgDialog">
             <el-upload
             class="avatar-uploader"
             action="http://localhost:3333/guestInfo/getGuestHeadImg"
@@ -22,7 +19,7 @@
                 <el-button  @click="confirmHeadImg">确定上传</el-button>
                 <el-button @click="cancelHeadImgDialog">取消</el-button>
             </div>
-        </el-dialog>
+        </el-dialog> -->
         </template>
         <el-form :inline="true" :model="editForm" :rules="rules" ref="guestInfoForm">
             <el-col :span="8">

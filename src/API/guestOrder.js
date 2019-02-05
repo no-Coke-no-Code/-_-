@@ -31,9 +31,9 @@ route.post('/guestOrder',(req,res) => {
                 // 判断查询订单类型
                 else
                 {
-                    var sql = "SELECT * FROM orderList WHERE user_nickname = ? AND orderList_state = '"+ orderState +"'";
+                    var sql = "SELECT * FROM orderList WHERE user_nickname = ? AND orderList_state=? ";
                 }
-                let sqlParams = [userName];
+                let sqlParams = [userName,orderState];
                 connection.query(sql,sqlParams,(err,data) => {
                     if(err)
                     {
@@ -58,11 +58,20 @@ route.post('/guestOrder',(req,res) => {
                                     if(x == resultData.length-1)
                                     {
                                         console.log(resultData);
-                                        res.json(resultData);
+                                        res.json({
+                                            'code':'0',
+                                            'message':'成功返回数据',
+                                            'data':resultData
+                                        });
                                     }
                                 }
                             });
                         }
+                        // res.json({
+                        //     'code':'0',
+                        //     'message':'成功返回数据',
+                        //     'data':resultData
+                        // });
                     }
                 });
             }
