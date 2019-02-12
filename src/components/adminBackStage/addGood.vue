@@ -19,9 +19,9 @@
             <el-form-item label="商品单位" prop="unit">
                 <el-input v-model="addForm.unit"></el-input>
             </el-form-item>
-            <el-form-item label="商品图片" prop="imgurl">
-                <el-input v-model="addForm.imgurl"></el-input>
-            </el-form-item>
+            <!-- <el-form-item label="商品图片" prop="imgurl">
+                <img :src="addForm.imgurl" class="goodImg" @click="changeImg"/>
+            </el-form-item> -->
         </el-form>
         <div class="btn-group">
             <el-button type="primary" @click="add">添加</el-button>
@@ -77,6 +77,10 @@ export default {
         }
     },
     methods:{
+        // changeImg(){
+        //     this.ifChangeImg = !this.ifChangeImg;
+        // },
+
         // 增加商品操作,成功以后返回状态给父组件，提醒他刷新
         add(){
             this.$refs["addGoodDialog"].validate((valid) => {
@@ -91,6 +95,10 @@ export default {
                     .then(() => {
                         this.$emit("addSucceed");
                         this.dialogState.state = false;
+                        this.$message({
+                            message:'添加商品成功',
+                            type:'success'
+                        });
                     })
                     .catch((err) => {
                         console.log(err);
@@ -107,6 +115,16 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+// .goodImg
+//     {
+//         width:100px;
+//         height: 100px;
+//         &:hover
+//         {
+//             outline: 1px solid #409EFF;
+//             cursor: pointer;
+//         }
+//     }
 </style>
+

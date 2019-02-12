@@ -51,7 +51,11 @@
             <el-table-column label="商品名称" prop="good_name"></el-table-column>
             <el-table-column label="商品价格" prop="good_price"></el-table-column>
             <el-table-column label="商品单位" prop="good_unit"></el-table-column>
-            <el-table-column label="商品图片" prop="good_imgurl"></el-table-column>
+            <el-table-column label="商品图片" prop="good_imgurl">
+                <template slot-scope="scope">
+                    <img :src="scope.row.good_imgurl" class="goodImg"/>
+                </template>
+            </el-table-column>
             <el-table-column label="商品描述" prop="good_detail"></el-table-column>
             <el-table-column label="商品产地" prop="good_from"></el-table-column>
             <el-table-column label="操作">
@@ -74,7 +78,7 @@
 
         <!-- 增改子组件 -->
         <addgood v-if="addDialogState.state" :dialogState="addDialogState" @addSucceed="refresh"></addgood>
-        <editgood v-if="editDialogState.state" :dialogState="editDialogState" :editDialog="editDialog" @editSucceed="refresh"></editgood>
+        <editgood v-if="editDialogState.state" :dialogState="editDialogState" :editDialog="editDialog" @editSucceed="refresh" @changeImg="changeImg"></editgood>
     </div>
 </template>
 
@@ -132,6 +136,10 @@ export default {
         this.init();
     },
     methods:{
+        changeImg(val){
+            console.log("页面重新刷新了");
+            this.init();
+        },
 
         // 重新请求商品信息操作
         init(){
@@ -182,7 +190,7 @@ export default {
                 "method":"searchGood",
                 "ifAll":false,
                 "goodForm":this.searchForm
-            };
+                };
             }
             // this.ifLoading = true;
             this.$http.post('/goodMange',params)
@@ -254,9 +262,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .wrapper
     {
         padding-left: 310px;
+        .goodImg
+        {
+            width: 100px;
+            height: 100px;
+        }
     }
 </style>

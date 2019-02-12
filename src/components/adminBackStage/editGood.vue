@@ -1,33 +1,50 @@
 <template>
-    <el-dialog :visible.sync="dialogState.state" title="编辑商品">
-        <el-form :inline="true" ref="editDialog" :model="editForm" :rules="rules">
-            <el-form-item label="商品名称" prop="name">
-                <el-input v-model="editForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="商品价格" prop="price">
-                <el-input v-model="editForm.price"></el-input>
-            </el-form-item>
-            <el-form-item label="商品来源" prop="from">
-                <el-input v-model="editForm.from"></el-input>
-            </el-form-item>
-            <el-form-item label="商品类型" prop="type">
-                <el-input v-model="editForm.type"></el-input>
-            </el-form-item>
-            <el-form-item label="商品描述" prop="type">
-                <el-input v-model="editForm.detail"></el-input>
-            </el-form-item>
-            <el-form-item label="商品单位" prop="unit">
-                <el-input v-model="editForm.unit"></el-input>
-            </el-form-item>
-            <el-form-item label="商品图片" prop="imgurl">
-                <el-input v-model="editForm.imgurl"></el-input>
-            </el-form-item>
-        </el-form>
-        <div class="btn-group">
-            <el-button type="primary" @click="edit">编辑</el-button>
-            <el-button @click="dialogState.state=false">取消</el-button>
-        </div>
-    </el-dialog>
+    <div>
+        <el-dialog :visible.sync="dialogState.state" title="编辑商品">
+            <el-form :inline="true" ref="editDialog" :model="editForm" :rules="rules">
+                <el-form-item label="商品名称" prop="name">
+                    <el-input v-model="editForm.name"></el-input>
+                </el-form-item>
+                <el-form-item label="商品价格" prop="price">
+                    <el-input v-model="editForm.price"></el-input>
+                </el-form-item>
+                <el-form-item label="商品来源" prop="from">
+                    <el-input v-model="editForm.from"></el-input>
+                </el-form-item>
+                <el-form-item label="商品类型" prop="type">
+                    <el-input v-model="editForm.type"></el-input>
+                </el-form-item>
+                <el-form-item label="商品描述" prop="detail">
+                    <el-input v-model="editForm.detail"></el-input>
+                </el-form-item>
+                <el-form-item label="商品单位" prop="unit">
+                    <el-input v-model="editForm.unit"></el-input>
+                </el-form-item>
+                <el-form-item label="商品图片" prop="imgurl">
+                    <img :src="editForm.imgurl" class="goodImg" @click="changeImg"/>
+                </el-form-item>
+            </el-form>
+            <div class="btn-group">
+                <el-button type="primary" @click="edit">编辑</el-button>
+                <el-button @click="dialogState.state=false">取消</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog :visible.sync="ifChangeImg" title="更改图片" @close="cancelImg">
+            <el-upload
+            class="upload-demo"
+            ref="upload"
+            action="http://localhost:3333/goodMange/getGoodImg"
+            :data="{goodName:editForm.name}"
+            :on-success="handleSuccess"
+            :limit="1"
+            :file-list="fileList"
+            :auto-upload="false">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="confirmImg">确定上传</el-button>
+            </el-upload>
+            <el-button @click="cancelImg">取消</el-button>
+        </el-dialog>
+    </div>
 </template>
 
 
@@ -46,6 +63,8 @@ export default {
     },
     data(){
         return{
+            fileList:[],
+            ifChangeImg:false,
             editForm:{
                 id:this.editDialog.good_id,
                 name:this.editDialog.good_name,
@@ -82,6 +101,51 @@ export default {
         }
     },
     methods:{
+        refresh(){
+            let params = {
+                "method":"refreshGood",
+                "good_name":this.editForm.name
+            };
+            this.$http.post('/goodMange',params).then((data)=>{
+                let responseData = data.data.data[0];
+                this.editForm.name = responseData.good_name;
+                this.editForm.price = responseData.good_price;
+                this.editForm.from = responseData.good_from;
+                this.editForm.type = responseData.category_name;
+                this.editForm.detail = responseData.good_detail;
+                this.editForm.unit = responseData.good_unit;
+                this.editForm.imgurl = responseData.good_imgurl;
+                this.$emit('changeImg',this.editForm.imgurl);
+            }).catch((err)=>{
+                console.log(err);
+            });
+        },
+
+        handleSuccess(res){
+            if(res.data)
+            {
+                this.dialogState.state = false;
+                this.fileList = [];
+                // this.refresh();
+                this.$emit('changeImg',this.editForm.imgurl);
+            }
+        },
+
+        selectImg(){
+
+        }, 
+        confirmImg(){
+            this.$refs.upload.submit();
+        },
+        cancelImg(){
+            this.ifChangeImg = false;
+            this.fileList = [];
+        },
+
+        changeImg(){
+            this.ifChangeImg = !this.ifChangeImg;
+        },
+
         // 编辑商品,成功的话传递状态给父组件，提醒它请求并初始化表格数据
         edit(){
             if(this.editForm.id==""||this.editForm.name==""||this.editForm.price==""||this.editForm.type==""||this.editForm.from==""||this.editForm.detail==""||this.editForm.unit==""||this.editForm.imgurl=="")
@@ -108,6 +172,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.upload-demo
+{
 
+}
+    .el-form-item
+    {
+        display: block !important;
+    }
+    .goodImg
+    {
+        width:100px;
+        height: 100px;
+        &:hover
+        {
+            outline: 1px solid #409EFF;
+            cursor: pointer;
+        }
+    }
 </style>

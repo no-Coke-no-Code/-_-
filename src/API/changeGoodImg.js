@@ -15,7 +15,7 @@ var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
 
 
-route.post('/guestInfo/changeGuestHeadImg',(req,res) => {
+route.post('/goodMange/changeGoodImg',(req,res) => {
     var reqData = "";
     req.on('data',(chunk) => {
         reqData += chunk;
@@ -49,17 +49,17 @@ route.post('/guestInfo/changeGuestHeadImg',(req,res) => {
     });
 });
 
-route.post('/guestInfo/getGuestHeadImg',(req,res) => {
+route.post('/goodMange/getGoodImg',(req,res) => {
     var form = new formidable.IncomingForm();
         form.encoding = "utf-8";
         // 接收后的图片所存放的位置
-        form.uploadDir = path.join(__dirname + "../../../static/pic/userHeadImg");
-        form.keepExtensions = true;
+        form.uploadDir = path.join(__dirname + "../../../static/pic/goodImg");
         form.parse(req,(err,fields,files)=>{
             if(err)
             {
                 console.log(err);
             }
+            console.log("发送过来的参数",fields);
             var imgName = files.file.name;
             var nameArray = imgName.split(".");
             var imgType = nameArray[nameArray.length-1];
@@ -68,16 +68,58 @@ route.post('/guestInfo/getGuestHeadImg',(req,res) => {
             let month = time.getMonth()+1;
             let day = time.getDate();
             let random = parseInt(Math.random() * 10000);
-            let newName = year.toString()+month.toString()+day.toString()+random.toString() + "_headImg." + imgType;
+            let newName = year.toString()+month.toString()+day.toString()+random.toString() + "_"+fields.goodName+"." + imgType;
             let oldPath = files.file.path;
             var newPath = form.uploadDir + "\\" + newName;
             console.log(newPath);
-            fs.renameSync(oldPath,newPath)
-            res.json({
-                "state":"200",
-                "message":"成功接收到上传的图片",
-                "data":newPath
+            fs.renameSync(oldPath,newPath);
+            newPath = "@/../static/pic/goodImg/"+newName;
+
+            let sql = "SELECT good_imgurl FROM good WHERE good_name=?";
+            let sqlParams = [fields.goodName];
+            connection.query(sql,sqlParams,(err,data)=>{
+                if(err)
+                {
+                    console.log(err);
+                }
+                else
+                { 
+                    let responseData = JSON.parse(JSON.stringify(data));
+                    let deleteImg = responseData[0].good_imgurl.split("/");
+                    deleteImg = deleteImg[deleteImg.length-1];
+                    if(responseData[0].good_imgurl.length != 0)
+                    {
+                        fs.unlinkSync(form.uploadDir + "\\" + deleteImg);
+                    }
+                    sql = "UPDATE good SET good_imgurl=? WHERE good_name=?";
+                    sqlParams = [newPath,fields.goodName];
+                    connection.query(sql,sqlParams,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        res.json({
+                            "state":"200",
+                            "message":"成功接收到上传的图片",
+                            "data":newPath
+                        });
+                    });
+                }
             });
+
+            // let sql = "UPDATE good SET good_imgurl=? WHERE good_name=?";
+            // let sqlParams = [newPath,fields.goodName];
+            // connection.query(sql,sqlParams,(err,data)=>{
+            //     if(err)
+            //     {
+            //         console.log(err);
+            //     }
+            //     res.json({
+            //         "state":"200",
+            //         "message":"成功接收到上传的图片",
+            //         "data":newPath
+            //     });
+            // });
         });
 });
 
