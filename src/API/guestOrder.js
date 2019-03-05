@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const mysqlConfig = require("./../../mysql.config.js");
 
 // 返回数据函数
-const response = require("./response/response.js");
+const response = require("../response/response");
 
 // 实例化express路由
 const route = express.Router();

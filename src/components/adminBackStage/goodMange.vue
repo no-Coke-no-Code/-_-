@@ -47,15 +47,16 @@
 
         <!-- 展示数据表格 -->
         <el-table :data="resultGoods" border @row-dblclick="edit">
-            <el-table-column label="商品ID" prop="good_id"></el-table-column>
-            <el-table-column label="商品名称" prop="good_name"></el-table-column>
-            <el-table-column label="商品价格" prop="good_price"></el-table-column>
-            <el-table-column label="商品单位" prop="good_unit"></el-table-column>
             <el-table-column label="商品图片" prop="good_imgurl">
                 <template slot-scope="scope">
                     <img :src="scope.row.good_imgurl" class="goodImg"/>
                 </template>
             </el-table-column>
+            <el-table-column label="商品ID" prop="good_id"></el-table-column>
+            <el-table-column label="商品名称" prop="good_name"></el-table-column>
+            <el-table-column label="商品价格" prop="good_price"></el-table-column>
+            <el-table-column label="商品单位" prop="good_unit"></el-table-column>
+            <el-table-column label="商品类别" prop="category_name"></el-table-column>
             <el-table-column label="商品描述" prop="good_detail"></el-table-column>
             <el-table-column label="商品产地" prop="good_from"></el-table-column>
             <el-table-column label="操作">
@@ -154,6 +155,7 @@ export default {
             .then((data) => {
                 // 返回的应该是一个对象数组，包含所有的商品
                 this.resultGoods = data.data;
+                console.log(this.resultGoods);
                 this.searchForm.total = data.data.length
                 this.ifLoading = false;
             })

@@ -33,7 +33,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <!-- <h2 v-if="!orderList.length">暂无数据</h2> -->
             </el-tab-pane>
             <el-tab-pane label="已处理订单">
                 <el-table :data="orderList" empty-text='暂无数据'>

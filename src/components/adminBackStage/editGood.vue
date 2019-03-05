@@ -12,7 +12,10 @@
                     <el-input v-model="editForm.from"></el-input>
                 </el-form-item>
                 <el-form-item label="商品类型" prop="type">
-                    <el-input v-model="editForm.type"></el-input>
+                    <!-- <el-input v-model="editForm.type"></el-input> -->
+                    <el-select v-model="editForm.type">
+                        <el-option v-for="item in categoryList" :label="item.category_name" :value="item.category_name" :key="item.category_name"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="商品描述" prop="detail">
                     <el-input v-model="editForm.detail"></el-input>
@@ -63,6 +66,7 @@ export default {
     },
     data(){
         return{
+            categoryList:[],
             fileList:[],
             ifChangeImg:false,
             editForm:{
@@ -100,6 +104,9 @@ export default {
             },
         }
     },
+    created(){
+        this.initCategory();
+    },
     methods:{
         refresh(){
             let params = {
@@ -128,6 +135,7 @@ export default {
                 this.fileList = [];
                 // this.refresh();
                 this.$emit('changeImg',this.editForm.imgurl);
+                // this.ifChangeImg = false;
             }
         },
 
@@ -150,6 +158,10 @@ export default {
         edit(){
             if(this.editForm.id==""||this.editForm.name==""||this.editForm.price==""||this.editForm.type==""||this.editForm.from==""||this.editForm.detail==""||this.editForm.unit==""||this.editForm.imgurl=="")
             {
+                this.$message({
+                    message:"尚有信息未完善",
+                    type:"error"
+                });
                 return false;
             }
             else
@@ -167,6 +179,20 @@ export default {
                     console.log(err);
                 });
             }
+        },
+        initCategory(){
+            let params = {
+                "method":"searchAllCategory"
+            };
+            this.$http
+            .post('/goodMange',params)
+            .then((data)=>{
+                console.log(data);
+                this.categoryList = data.data.data;
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
         },
     },
 }

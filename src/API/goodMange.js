@@ -202,6 +202,25 @@ route.post("/goodMange",(req,res) => {
                         }
                     });
                 break;
+                // 查询所有商品类别
+                case "searchAllCategory":
+                    sql = "SELECT category_name FROM category";
+                    connection.query(sql,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            res.json({
+                                "code":"0",
+                                "message":"成功返回数据",
+                                "data":responseData
+                            });
+                        }
+                    });
+                break;
                 default:break;
         }
     });

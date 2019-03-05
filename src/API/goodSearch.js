@@ -21,35 +21,37 @@ route.post('/goodSearch',(req,res)=>{
         reqData = JSON.parse(reqData);
         switch(reqData.searchType)
         {
-            case "category":
-                sql = "SELECT * FROM good WHERE category_name = ?";
-                sqlParams = [reqData.searchKeyWord];
-                connection.query(sql,sqlParams,(err,data)=>{
-                    if(err)
-                    {
-                        console.log(err);
-                        res.json({
-                            "code":"-1",
-                            "message":"查询商品失败",
-                            "data":[]
-                        });
-                    }
-                    else
-                    {
-                        let responseData = JSON.parse(JSON.stringify(data));
-                        console.log("成功查询的数据",responseData);
-                        res.json({
-                            "code":"0",
-                            "message":"查询商品成功",
-                            "data":responseData
-                        });
-                    }
-                });
-            break;
+            // case "category":
+            //     sql = "SELECT * FROM good WHERE category_name = ?";
+            //     sqlParams = [reqData.searchKeyWord];
+            //     connection.query(sql,sqlParams,(err,data)=>{
+            //         if(err)
+            //         {
+            //             console.log(err);
+            //             res.json({
+            //                 "code":"-1",
+            //                 "message":"查询商品失败",
+            //                 "data":[]
+            //             });
+            //         }
+            //         else
+            //         {
+            //             let responseData = JSON.parse(JSON.stringify(data));
+            //             console.log("成功查询的数据",responseData);
+            //             res.json({
+            //                 "code":"0",
+            //                 "message":"查询商品成功",
+            //                 "data":responseData
+            //             });
+            //         }
+            //     });
+            // break;
             
+            // 需要改造这个
+            // 需要做成模糊查询
             case "goodName":
-                sql = "SELECT * FROM good WHERE good_name = ?";
-                sqlParams = [reqData.searchKeyWord];
+                sql = "SELECT * FROM good WHERE good_name = ? OR category_name = ?";
+                sqlParams = [reqData.searchKeyWord,reqData.searchKeyWord];
                 connection.query(sql,sqlParams,(err,data)=>{
                     if(err)
                     {
@@ -72,6 +74,8 @@ route.post('/goodSearch',(req,res)=>{
                     }
                 });
             break;
+
+
         }
         // switch(reqData.method)
         // {

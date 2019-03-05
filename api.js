@@ -16,6 +16,8 @@ const deleteGuestHeadImg = require("./src/API/deleteGuestHeadImg");
 const goodSearch = require("./src/API/goodSearch.js");
 const mangeOrder = require('./src/API/mangeOrder.js');
 const changeGoodImg = require('./src/API/changeGoodImg');
+const categoryMange = require("./src/API/categoryMange");
+const topGoodMange = require("./src/API/topGoodMange");
 
 module.exports = () => {
     const route = express.Router();
@@ -38,7 +40,10 @@ module.exports = () => {
     // 后台修改商品图片功能
     route.post('/goodMange/changeGoodImg',changeGoodImg);
     route.post('/goodMange/getGoodImg',changeGoodImg);
-
+    // 后台操作商品类别功能
+    route.post("/categoryMange",categoryMange);
+    // 后台管理首页三种商品类别功能
+    route.post('/topGoodMange',topGoodMange);
 
     // 用户获取/修改个人信息功能
     route.post("/guestInfo",guestInfo);

@@ -21,7 +21,8 @@ import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
 import goodMange from "@/components/adminBackStage/goodMange.vue";
 import orderMange from "@/components/adminBackStage/orderMange.vue";
 import userMange from "@/components/adminBackStage/userMange.vue";
-
+import categoryMange from "@/components/adminBackStage/categoryMange.vue";
+import topGoodMange from "@/components/adminBackStage/topGoodMange";
 import store from "../store"
 
 
@@ -62,6 +63,16 @@ const router = new Router({
                 name:'userMange',
                 component:userMange
             },
+            {
+                path:'categoryMange',
+                name:'categoryMange',
+                component:categoryMange,
+            },
+            {
+                path:'topGoodMange',
+                name:'topGoodMange',
+                component:topGoodMange,
+            }
         ],
     },
     // 登录路由
