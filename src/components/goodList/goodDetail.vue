@@ -15,6 +15,22 @@
                 <el-button @click="addToCart" type="primary">加入购物车</el-button>
                 <el-button @click="collect" type="warning">收藏</el-button>
             </div>
+            <div class="goodComment">
+                <h2>最新评论</h2>
+                <div v-for="item in commentList" class="commentItem" v-if="commentList.length != 0 && !item.reply_comment_id">
+                    <!-- <img :src="item.user_" class="userImg"/> -->
+                    <span class="userName">{{item.user_nickname}}</span>
+                    <el-rate disabled v-model="item.comment_rank" class="commentRank"></el-rate>
+                    <p class="commentContent">{{item.comment_content}}</p>
+                    <span class="commentTime">{{item.comment_time}}</span>
+                    <div v-for="item2 in commentList" v-if="item2.reply_comment_id == item.comment_id" class="adminReply">
+                        管理员admin:{{item2.comment_content}}
+                    </div>
+                </div>
+                <div v-if="commentList.length == 0">
+                    <p>暂无评论</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -29,6 +45,7 @@ export default {
     data(){
         return{
             goodDetail:{},
+            commentList:[],
         }
     },
     components:{
@@ -66,6 +83,7 @@ export default {
         // 添加收藏操作与购物车操作同理
         collect(){
             let userName = this.$store.getters.getUsername;
+            let userId = this.$store.getters.getUserid;
             if(userName===null)
             {
                 this.$store.state.location = decodeURI(window.location.href);
@@ -75,8 +93,11 @@ export default {
             let params = {
                 "method":"addToCollection",
                 "userName":userName,
+                "userId":userId,
                 "goodId":this.goodDetail.good_id,
+                "goodName":this.goodDetail.good_name,
             };
+            console.log(params,"商品详细信息");
             this.$http.post('/guestCollection',params)
             .then((data)=>{
                 console.log(data);
@@ -89,26 +110,64 @@ export default {
                 console.log(err);
             });
         },
+
+        init:function(){
+            // promise中this的指向与vue中this的指向是不同的
+            // 返回的promise对象应该是包裹着要执行的异步函数的
+            let that = this;
+            let promise = new Promise((resolve,reject)=>{
+                resolve();
+            });
+            promise
+            .then(function(){
+                // 检测当前是否已经接收到了商品信息；若是没有，则重新通过商品名查找数据库获取
+                // 一般，重新刷新页面的话，穿过来的对象会被刷掉
+                if(that.$route.params.goodDetail == undefined)
+                {
+                    return new Promise((resolve,reject)=>{
+                        let params = {
+                            "goodName":that.$route.query.goodName
+                        };
+                        that.$http
+                        .post('/goodDetail',params)
+                        .then((data) => {
+                            that.goodDetail = data.data.data[0];
+                            resolve(that.goodDetail);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                    });
+                }
+                else
+                {
+                    return new Promise((resolve,reject)=>{
+                        that.goodDetail = JSON.parse(JSON.stringify(that.$route.params.goodDetail));
+                        resolve(that.goodDetail);
+                    });
+                }
+            })
+            .then(function(goodDetail){
+                console.log(goodDetail,'I want to see');
+                let params = {
+                    "method":'getGoodComment',
+                    "good_name":goodDetail.good_name
+                };
+                that.$http
+                .post('/comment',params)
+                .then((data)=>{
+                    let responseData = data.data.data;
+                    that.commentList = responseData;
+                    console.log(that.commentList,'返回的商品评论');
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+            });
+        },
     },
     created(){
-        // 检测当前是否已经接收到了商品信息；若是没有，则重新通过商品名查找数据库获取
-        // 一般，重新刷新页面的话，穿过来的对象会被刷掉
-        if(this.$route.params.goodDetail == undefined)
-        {
-            let params = {
-                "goodName":this.$route.query.goodName
-            };
-            this.$http.post('/goodDetail',params).then((data) => {
-                this.goodDetail = data.data.data[0];
-                console.log(this.goodDetail);
-            }).catch((err) => {
-                console.log(err);
-            });
-        }
-        else
-        {
-            this.goodDetail = JSON.parse(JSON.stringify(this.$route.params.goodDetail));
-        }
+        this.init();
     },
 }
 </script>
@@ -118,7 +177,7 @@ export default {
     {
         width: 80%;
         margin: 50px auto;
-        font-size: 0;
+        // font-size: 0;
         .goodImgs
         {
             display: inline-block;
@@ -145,6 +204,51 @@ export default {
             p
             {
 
+            }
+        }
+        .goodComment
+        {
+            h2
+            {
+                margin-bottom: 30px;
+            }
+            .userName
+            {
+                display: inline-block;
+                width: 130px;
+            }
+            .commentRank
+            {
+                display: inline-block;
+                margin-bottom: 10px;
+            }
+            .commentContent
+            {
+                margin-left: 135px;
+                margin-bottom: 10px;
+            }
+            .commentTime
+            {
+                margin-left: 135px;
+            }
+            .commentItem
+            {
+                border: 1px solid #f6f6f6;
+                border-radius: 3px;
+                padding: 30px;
+                background-color: #f7f4f2d3;
+                margin-bottom: 10px;
+                .adminReply
+                {
+                    border: 1px solid black;
+                    border-radius: 3px;
+                    background: #cccbcbd3;
+                    margin: 20px 0px 0px 50px;
+                }
+                &:hover
+                {
+                    background-color: #f0eeeed3;
+                }
             }
         }
     }

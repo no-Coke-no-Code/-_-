@@ -33,7 +33,8 @@ route.post("/index",(req,res)=>{
                 {
                     let responseData = {
                         "ifLogin":"成功",
-                        "state":1
+                        "state":1,
+                        "user":queryData[0]
                     };
                     res.json(responseData);
                 }

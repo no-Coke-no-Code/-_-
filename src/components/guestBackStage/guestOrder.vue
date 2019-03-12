@@ -22,6 +22,12 @@
                         <el-table-column label="商品数量" prop="good_count"></el-table-column>
                         <el-table-column label="商品单价" prop="good_price"></el-table-column>
                         <el-table-column label="商品小计" prop="orderItem_priceSub"></el-table-column>
+                        <el-table-column v-if="order.orderList_state=='f'" prop="ifComment">
+                            <template slot-scope="scope">
+                                <a v-if="!scope.row.ifComment" @click="makeComment(scope.row,order)" class="makeComment">添加评价</a>
+                                <a v-if="scope.row.ifComment">该商品已评价</a>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <p>订单总价:{{order.orderList_price}}</p>
                 </div>
@@ -52,6 +58,12 @@
                         <el-table-column label="商品数量" prop="good_count"></el-table-column>
                         <el-table-column label="商品单价" prop="good_price"></el-table-column>
                         <el-table-column label="商品小计" prop="orderItem_priceSub"></el-table-column>
+                        <el-table-column prop="ifComment">
+                            <template slot-scope="scope">
+                                <a v-if="!scope.row.ifComment" @click="makeComment(scope.row,order)" class="makeComment">添加评价</a>
+                                <a v-if="scope.row.ifComment">该商品已评价</a>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <p>订单总价:{{order.orderList_price}}</p>
                 </div>
@@ -60,12 +72,17 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
+        <guest-comment :commentDialog='commentDialog' @closeDialog='closeDialog' :commentGood='commentGood' :commentOrder='commentOrder'></guest-comment>
     </div>
 </template>
 
 <script>
+import guestComment from "./guestComment.vue";
 export default {
     name:"guestOrder",
+    components:{
+        guestComment
+    },
     data(){
         return{
             responseData:[],
@@ -83,6 +100,9 @@ export default {
                 "1000-9999"
             ],
             orderState:"all",
+            commentDialog:false,
+            commentGood:{},
+            commentOrder:{},
         }
     },
     methods:{
@@ -116,11 +136,10 @@ export default {
             .post("/guestOrder",params)
             .then((data) => {
                 this.responseData = data.data.data;
-                console.log(data);
+                console.log(this.responseData,'i want to see');
                 this.ifLoading = false;
             })
             .catch((err) => {
-                // alert(this.responseData);
                 this.ifLoading = false;
                 console.log(err);
             });
@@ -172,6 +191,14 @@ export default {
                 console.log(err);
             });
         },
+        makeComment(scope,order){
+            this.commentDialog = true;
+            this.commentGood = scope;
+            this.commentOrder = order
+        },
+        closeDialog(){
+            this.commentDialog = false;
+        },
     },
     created(){
         this.init("all");
@@ -196,6 +223,15 @@ export default {
         {
             border: 1px solid black;
             margin-top: 10px;
+        }
+    }
+    .makeComment
+    {
+        &:hover
+        {
+            color: #1989fa;
+            cursor: pointer;
+            text-decoration: underline;
         }
     }
 </style>

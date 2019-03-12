@@ -18,6 +18,7 @@ const mangeOrder = require('./src/API/mangeOrder.js');
 const changeGoodImg = require('./src/API/changeGoodImg');
 const categoryMange = require("./src/API/categoryMange");
 const topGoodMange = require("./src/API/topGoodMange");
+const comment = require("./src/API/comment");
 
 module.exports = () => {
     const route = express.Router();
@@ -71,6 +72,9 @@ module.exports = () => {
 
     // 用户收藏夹功能接口
     route.post('/guestCollection',guestCollection);
+
+    // 评论功能接口
+    route.post('/comment',comment);
 
     return route;
 };

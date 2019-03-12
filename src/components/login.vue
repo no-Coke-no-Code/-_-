@@ -65,8 +65,11 @@ export default {
                 .then((responseData) => { 
                     if(responseData.data.state == 1)
                     {
-                        this.$store.commit('setUsername',this.username);
-                        console.log(this.$store);
+                        let userInfo = {
+                            userName:responseData.data.user.user_nickname,
+                            userId:responseData.data.user.user_id,
+                        };
+                        this.$store.commit('setUsername',userInfo);
                         // 这个操作是用户若尚未登录，点击购物车/收藏操作时会创建一个锚点，登录后进入原页面
                         if(this.$store.state.location != undefined)
                         {

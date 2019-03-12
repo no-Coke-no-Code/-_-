@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state:{
         userName:null,
+        userId:null,
         power:null,
     },
     // vuex中的getters其实与VUE实例中的computed相类似
@@ -17,15 +18,28 @@ export default new Vuex.Store({
             }
             return state.userName;
         },
+        getUserid(state)
+        {
+            if(!state.userId)
+            {
+                state.userId = window.localStorage.getItem("userId");
+            }
+            return state.userId;
+        }
     },
     mutations:{
-        setUsername(state,value){
-            state.userName = value;
-            window.localStorage.setItem('userName',value);
+        // mutations中，后一位的参数称之为载荷。官网上面倡导载荷应当是一个对象
+        setUsername(state,userInfo){
+            state.userName = userInfo.userName;
+            state.userId = userInfo.userId;
+            window.localStorage.setItem('userName',userInfo.userName);
+            window.localStorage.setItem('userId',userInfo.userId);
         },
-        removeUsername(state,value){
+        removeUsername(state){
             state.userName = null;
+            state.userId = null;
             window.localStorage.removeItem('userName');
+            window.localStorage.removeItem('userId');
         },
     }
 })

@@ -2,7 +2,7 @@
     <div class="wrapper" v-loading="ifLoading">
         <!-- 查询表格 -->
         <el-form :inline="true">
-            <el-row>
+            <el-row class="tableRow">
                 <el-form-item label="商品ID">
                     <el-input v-model="searchForm.id"></el-input>
                 </el-form-item>
@@ -264,14 +264,48 @@ export default {
 }
 </script>
 
+<style>
+/* // 因为scoped属性使得元素带有hash值，又因为element-ui组件的dom是动态生成的，所以css的hash值匹配不到dom元素上 */
+    .tableRow .el-form-item
+    {
+        margin-right: 40px;
+    }
+    .tableRow  .el-form-item__label
+    {
+        width: 90px !important;
+        text-align: left;
+        padding-right: 0px
+    }
+    .tableRow  .el-form-item__content
+    {
+        width: 210px !important;
+    }
+</style>
+
 <style lang="scss" scoped>
     .wrapper
     {
-        padding-left: 310px;
+        padding-left: 30px;
+        height: 100%;
+        overflow: auto;
         .goodImg
         {
             width: 100px;
             height: 100px;
+        }
+        .tableRow
+        {
+            height:150px;
+            margin-top: 20px;
+        }
+        .btn_wrapper
+        {
+            margin-bottom: 30px;
+        }
+        .el-pagination
+        {
+            float:right;
+            margin:20px 45px 20px 0px;
         }
     }
 </style>

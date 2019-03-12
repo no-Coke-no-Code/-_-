@@ -9,6 +9,7 @@ import guestBackStage from "@/components/guestBackStage/guestBackStage";
 import guestInfo from "@/components/guestBackStage/guestInfo.vue";
 import guestOrder from "@/components/guestBackStage/guestOrder.vue";
 import guestCart from "@/components/guestBackStage/guestCart.vue";
+import guestCollect from "@/components/guestBackStage/guestCollect.vue";
 import searchResult from "@/components/searchResult/searchResult.vue";
 // 在这里面路由注册模块可以使用懒加载的方式进行引入，有利于提高首屏的渲染速度提高体验
 const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],resolve)};
@@ -22,7 +23,8 @@ import goodMange from "@/components/adminBackStage/goodMange.vue";
 import orderMange from "@/components/adminBackStage/orderMange.vue";
 import userMange from "@/components/adminBackStage/userMange.vue";
 import categoryMange from "@/components/adminBackStage/categoryMange.vue";
-import topGoodMange from "@/components/adminBackStage/topGoodMange";
+import topGoodMange from "@/components/adminBackStage/topGoodMange.vue";
+import commentManage from "@/components/adminBackStage/commentManage.vue";
 import store from "../store"
 
 
@@ -72,6 +74,11 @@ const router = new Router({
                 path:'topGoodMange',
                 name:'topGoodMange',
                 component:topGoodMange,
+            },
+            {
+                path:'commentManage',
+                name:'commentManage',
+                component:commentManage
             }
         ],
     },
@@ -116,14 +123,16 @@ const router = new Router({
                     // requireAuth:true
                 },
             },
+            {
+                path:"guestCollect",
+                name:"guestCollect",
+                component:guestCollect,
+                meta:{
+                    // requireAuth:true
+                },
+            }
         ],
     },
-    // 商品列表路由
-    // {
-    //     path:'/goodList',
-    //     name:'goodList',
-    //     component:goodList,
-    // },
     // 搜索结果列表路由
     {
         path:'/searchResult',

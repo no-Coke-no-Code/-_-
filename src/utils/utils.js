@@ -57,6 +57,13 @@ const _ = {
             return responseArr;
         }
     },
+
+    // 获取当前时间
+    getCurrentTime:function(){
+        let times = new Date();
+        let nowTime = times.getFullYear()+"-"+(times.getMonth()+1)+"-"+times.getDate()+" "+times.getHours()+":"+times.getMinutes()+":"+times.getSeconds();
+        return nowTime;
+    },
 };
 
 module.exports = _;

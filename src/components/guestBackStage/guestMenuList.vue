@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <h1 class="userName">你好，{{username}}</h1>
+        <!-- <h1 class="userName">你好，{{username}}</h1> -->
         <el-menu
             class="el-menu-vertical-demo"
             background-color="#545c64"
@@ -17,6 +17,10 @@
             <el-menu-item index="3" @click="toGuestOrder">
                 <i class="el-icon-setting"></i>
                 <span>我的订单</span>
+            </el-menu-item>
+            <el-menu-item index="4" @click="toGuestCollect">
+                <i class="el-icon-setting"></i>
+                <span>我的收藏</span>
             </el-menu-item>
         </el-menu>
     </div>
@@ -51,6 +55,9 @@ export default {
         },
         toGuestOrder(){
             this.$router.push("/guestBackStage/guestOrder");
+        },
+        toGuestCollect(){
+            this.$router.push("/guestBackStage/guestCollect");
         },
     },
 }

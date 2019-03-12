@@ -27,6 +27,10 @@
                 <i class="el-icon-setting"></i>
                 <span>新品，热销品管理</span>
             </el-menu-item>
+            <el-menu-item index="6" @click="toCommentManage">
+                <i class="el-icon-setting"></i>
+                <span>用户评论管理</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -62,6 +66,9 @@ export default {
         toTopGoodMange(){
             this.$router.push('/adminBackStage/topGoodMange');
         },
+        toCommentManage(){
+            this.$router.push("/adminBackStage/commentManage");
+        },
     },
 }
 </script>
@@ -71,5 +78,7 @@ export default {
     {
         width: 300px;
         float: left;
+        height: 100%;
+        background: rgb(84, 92, 100);   
     }
 </style>
