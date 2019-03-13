@@ -1,16 +1,34 @@
 <template>
     <div class="wrapper">
         <el-form class="addCategory" ref="addCategoryForm" :model="addCategoryForm" :rules="rule">
-            <el-form-item label="请输入需要新增的商品类别名:" prop="addCategory">
+            <el-form-item label="请输入需要新增的商品类别名:" prop="addCategoryName">
                 <el-input v-model="addCategoryForm.addCategoryName"></el-input>
             </el-form-item>
             <el-button type="primary" @click="confirmAddCategory">添加</el-button>
         </el-form>
         <div class="checkCategory">
-            <el-table :data="categoryList">
-                <el-table-column prop="category_name"></el-table-column>
-            </el-table>
+            <el-collapse accordion>
+                <el-collapse-item v-for="(item,index) in categoryList" :name="index" :key="index" @click.native="getSubCatalog(item)">
+                    <template slot="title" >
+                        <span>{{item.category_name}}</span>
+                        <a @click.stop="addSubCatalog(item)" class="addSubCatalog">添加子类型</a>
+                    </template>
+                    <p class="subCatalogItem" v-for="subCatalog in subCatalogList">{{subCatalog}}</p>
+                </el-collapse-item>
+            </el-collapse>
         </div>
+
+        <el-dialog :visible.sync='dialogVisible'>
+            <el-form ref="addSubCatalogForm" :model="addSubCatalogForm" :rules="rule2">
+                <el-form-item label="子类型名称" prop="subCatalogName">
+                    <el-input v-model="addSubCatalogForm.subCatalogName"></el-input>
+                </el-form-item>
+                <div class="btn_group">
+                    <el-button type="primary" @click="confirm">确定</el-button>
+                    <el-button @click="cancel">取消</el-button>
+                </div>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -22,7 +40,8 @@ export default {
         if(!value)
             {
                 // return callback(new Error('商品类别名不能为空'));
-                return new Error(callback('商品类别名不能为空'));
+                // return new Error(callback('商品类别名不能为空'));
+                callback(new Error('商品类别名不能为空'));
             }
         else
             {
@@ -42,13 +61,23 @@ export default {
             addCategoryForm:{
                 addCategoryName:"",
             },
+            addSubCatalogForm:{
+                subCatalogName:"",
+            },
             checkCategory:"",
             categoryList:[],
             rule:{
-                addCategory:[
-                    {validator:categoryRule,trigger:'blur'}
+                addCategoryName:[
+                    { required:true,validator:categoryRule,trigger:'blur' }
                 ],
             },
+            rule2:{
+                subCatalogName:[
+                    { required:true,validator:categoryRule,trigger:'blur' }
+                ],
+            },
+            dialogVisible:false,
+            subCatalogList:[],
         }
     },
     created(){
@@ -56,6 +85,7 @@ export default {
     },
     methods:{
         confirmAddCategory(){
+            console.log(this.addCategoryForm.addCategoryName);
             this.$refs['addCategoryForm'].validate((valid)=>{
                 if(valid)
                 {
@@ -73,6 +103,8 @@ export default {
                                 message:"添加商品类别成功",
                                 type:'success'
                             });
+                            this.addCategoryForm.addCategoryName = "";
+                            this.$refs['addCategoryForm'].resetFields();
                             this.init();
                         }
                         else
@@ -113,6 +145,71 @@ export default {
                 console.log(err);
             });
         },
+        addSubCatalog(item){
+            this.dialogVisible = true;
+            this.choosingCatalog = item.category_name;
+        },
+        getSubCatalog(item){
+            this.subCatalogList = [];
+            let params = {
+                "method":"checkSubCatalog",
+                "catalog_name":item.category_name
+            };
+            this.$http
+            .post('/categoryMange',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    for(let i = 0;i<responseData.data.length;i++)
+                    {
+                        this.subCatalogList.push(responseData.data[i].subCatalog_name);
+                    }
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
+
+        cancel(){
+            this.addSubCatalogForm.subCatalogName = "";
+            this.$refs['addSubCatalogForm'].resetFields();
+            this.dialogVisible = false;
+        },
+        confirm(){
+            this.$refs['addSubCatalogForm'].validate((valid)=>{
+                if(valid)
+                {
+                    let params = {
+                        "method":"addSubCatalog",
+                        "catalog_name":this.choosingCatalog,
+                        "subCatalog_name":this.addSubCatalogForm.subCatalogName,
+                    };
+                    this.$http
+                    .post('/categoryMange',params)
+                    .then((data)=>{
+                        let responseData = data.data;
+                        console.log(responseData);
+                        if(responseData.code == 0)
+                        {
+                            this.$message.success("添加成功");
+                            this.addSubCatalogForm.subCatalogName = "";
+                            this.$refs['addSubCatalogForm'].resetFields();
+                            this.dialogVisible = false;
+                            this.init();
+                        }
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                    });
+                }
+                else
+                {
+                    this.$message.error("添加失败");
+                }
+            });
+        },
     },
 }
 </script>
@@ -121,5 +218,26 @@ export default {
     .wrapper
     {
         margin-left: 320px;
+        height: 100%;
+        overflow: auto;
+        .addSubCatalog
+        {
+            margin-left: 50px;
+            &:hover
+            {
+                color: blue;
+                text-decoration: underline;
+            }
+        }
+        .subCatalogItem
+        {
+            // margin-left: 50px;
+            // padding-left: 20px;
+            // padding-right: 20px;
+            // line-height: 30px;
+            // background-color: #c0c0c0;
+            // border-radius: 3px;
+            margin-left: 50px;
+        }
     }
 </style>

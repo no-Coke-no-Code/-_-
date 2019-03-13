@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 // 连接mysql数据库的基本配置
 const mysqlConfig = require("./../../mysql.config.js");
+const response = require("./../response/response.js");
 
 // 实例化express路由
 const route = express.Router();
@@ -48,16 +49,17 @@ route.post("/categoryMange",(req,res) => {
                             }
                             else
                             {
-                                sql = "INSERT INTO category ";
-                                sqlParams = [requestData.categoryName];
-                                connection.query((err,data)=>{
+                                sql = "INSERT INTO category set ?";
+                                sqlParams = [{
+                                    "category_name":requestData.categoryName
+                                }];
+                                connection.query(sql,sqlParams,(err,data)=>{
                                     if(err)
                                     {
                                         console.log(err);
                                     }
                                     else
                                     {
-                                        responseData = JSON.parse(JSON.stringify(data));
                                         res.json({
                                             "code":"0",
                                             "message":"添加商品类别成功",
@@ -85,6 +87,67 @@ route.post("/categoryMange",(req,res) => {
                                 "data":responseData
                             });
                         }
+                    });
+                break;
+                // 根据选择的父类查询相对应商品子种类
+                case "checkSubCatalog":
+                    sql = "SELECT subCatalog_name FROM subCatalog WHERE catalog_name = ?";
+                    sqlParams = [requestData.catalog_name];
+                    connection.query(sql,sqlParams,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                            res.json(response.responseFail(err));
+                            return;
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            res.json(response.responseSuccess(responseData));
+                        }
+                    });
+                break;
+                // 根据选择的父类查询相对应商品子种类
+                case "addSubCatalog":
+                    let promise = new Promise((resolve,reject)=>{
+                        sql = "SELECT * FROM subCatalog WHERE subCatalog_name = ?";
+                        sqlParams = [requestData.subCatalog_name];
+                        connection.query(sql,sqlParams,(err,data)=>{
+                            if(err)
+                            {
+                                console.log(err);
+                            }
+                            else
+                            {
+                                let responseData = JSON.parse(JSON.stringify(data));
+                                if(responseData.length == 0)
+                                {
+                                    resolve();
+                                }
+                                else
+                                {
+                                    res.json(response.responseFail("该分类已存在该子目录"));
+                                }
+                            }
+                        });
+                    });
+                    promise.then((resolve,reject)=>{
+                        sql = "INSERT INTO subCatalog SET ?";
+                        sqlParams = [{
+                            "catalog_name":requestData.catalog_name,
+                            "subCatalog_name":requestData.subCatalog_name,
+                        }];
+                        connection.query(sql,sqlParams,(err,data)=>{
+                            if(err)
+                            {
+                                console.log(err);
+                                res.json(response.responseFail("新增子分类失败失败"));
+                            }
+                            else
+                            {
+                                res.json(response.responseSuccess("新增子分类成功"));
+                            }
+                        });
                     });
                 break;
                 default:break;

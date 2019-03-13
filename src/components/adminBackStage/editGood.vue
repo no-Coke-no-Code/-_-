@@ -11,10 +11,24 @@
                 <el-form-item label="商品来源" prop="from">
                     <el-input v-model="editForm.from"></el-input>
                 </el-form-item>
-                <el-form-item label="商品类型" prop="type">
-                    <!-- <el-input v-model="editForm.type"></el-input> -->
-                    <el-select v-model="editForm.type">
-                        <el-option v-for="item in categoryList" :label="item.category_name" :value="item.category_name" :key="item.category_name"></el-option>
+                <el-form-item label="商品类别" prop="type">
+                    <el-select v-model="editForm.type" @change="initSubCatalog(editForm.type)">
+                        <el-option 
+                            v-for="item in categoryList" 
+                            :label="item.category_name" 
+                            :value="item.category_name" 
+                            :key="item.category_name">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="商品子类别" prop="subType">
+                    <el-select v-model="editForm.subType">
+                        <el-option 
+                            v-for="item in subCatalogList" 
+                            :label="item.subCatalog_name" 
+                            :value="item.subCatalog_name" 
+                            :key="item.subCatalog_name">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商品描述" prop="detail">
@@ -67,6 +81,7 @@ export default {
     data(){
         return{
             categoryList:[],
+            subCatalogList:[],
             fileList:[],
             ifChangeImg:false,
             editForm:{
@@ -74,6 +89,7 @@ export default {
                 name:this.editDialog.good_name,
                 price:this.editDialog.good_price,
                 type:this.editDialog.category_name,
+                subType:this.editDialog.subCatalog_name,
                 from:this.editDialog.good_from,
                 detail:this.editDialog.good_detail,
                 unit:this.editDialog.good_unit,
@@ -88,6 +104,9 @@ export default {
                 ],
                 type:[
                     {required: true, message: "类型不可为空", trigger:'blur'}
+                ],
+                subType:[
+                    { required: true, message: "子类型不可为空", trigger:'blur' }
                 ],
                 detail:[
                     {required: true, message: "描述不可为空", trigger:'blur'}
@@ -106,6 +125,8 @@ export default {
     },
     created(){
         this.initCategory();
+        this.initSubCatalog(this.editForm.type);
+        this.editForm.subType = this.editDialog.subCatalog_name;
     },
     methods:{
         refresh(){
@@ -119,6 +140,7 @@ export default {
                 this.editForm.price = responseData.good_price;
                 this.editForm.from = responseData.good_from;
                 this.editForm.type = responseData.category_name;
+                this.editForm.subType = responseData.subCatalog_name;
                 this.editForm.detail = responseData.good_detail;
                 this.editForm.unit = responseData.good_unit;
                 this.editForm.imgurl = responseData.good_imgurl;
@@ -156,7 +178,7 @@ export default {
 
         // 编辑商品,成功的话传递状态给父组件，提醒它请求并初始化表格数据
         edit(){
-            if(this.editForm.id==""||this.editForm.name==""||this.editForm.price==""||this.editForm.type==""||this.editForm.from==""||this.editForm.detail==""||this.editForm.unit==""||this.editForm.imgurl=="")
+            if(this.editForm.id==""||this.editForm.name==""||this.editForm.price==""||this.editForm.type==""||this.editForm.subType==""||this.editForm.from==""||this.editForm.detail==""||this.editForm.unit==""||this.editForm.imgurl=="")
             {
                 this.$message({
                     message:"尚有信息未完善",
@@ -181,6 +203,8 @@ export default {
             }
         },
         initCategory(){
+            this.subCatalogList = [];
+            this.editForm.subType = "";
             let params = {
                 "method":"searchAllCategory"
             };
@@ -194,15 +218,35 @@ export default {
                 console.log(err);
             });
         },
+        // 当父类型变化时,初始化子目录的列表
+        initSubCatalog(catalogName){
+            this.subCatalogList = [];
+            this.editForm.subType = "";
+            let params = {
+                "method":"checkSubCatalog",
+                "catalog_name":catalogName,
+            };
+            this.$http
+            .post('/categoryMange',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    for(let i = 0;i<responseData.data.length;i++)
+                    {
+                        this.subCatalogList.push(responseData.data[i]);
+                    }
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
     },
 }
 </script>
 
 <style lang="scss" scoped>
-.upload-demo
-{
-
-}
     .el-form-item
     {
         display: block !important;

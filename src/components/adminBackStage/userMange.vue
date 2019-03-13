@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <!-- 查询表格 -->
-        <el-form :inline="true">
+        <el-form :inline="true" class="userForm">
             <el-row>
                 <el-form-item label="用户ID">
                     <el-input v-model="searchForm.id"></el-input>
@@ -148,9 +148,43 @@ export default {
 }
 </script>
 
-<style scoped>
-    .wrapper
+<style>
+    .userForm .el-form-item
     {
-        padding-left: 310px;
+        margin-right: 40px;
+    }
+    .userForm .el-form-item__label
+    {
+        width: 90px !important;
+        text-align: left;
+        padding-right: 0px
+    }
+    .userForm .el-form-item__content
+    {
+        width: 210px !important;
     }
 </style>
+
+<style lang="scss" scoped>
+    .wrapper
+    {
+        padding-left: 30px;
+        height: 100%;
+        overflow: auto;
+        .userForm
+        {
+            margin-top: 20px;
+        }
+        .btn_wrapper
+        {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .el-pagination
+        {
+            float:right;
+            margin:20px 45px 20px 0px;
+        }
+    }
+</style>
+

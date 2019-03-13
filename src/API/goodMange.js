@@ -4,6 +4,7 @@ const formidable = require("formidable");
 const path = require('path');
 // 连接mysql数据库的基本配置
 const mysqlConfig = require("./../../mysql.config.js");
+const response = require("./../response/response.js");
 
 // 实例化express路由
 const route = express.Router();
@@ -28,63 +29,140 @@ route.post("/goodMange",(req,res) => {
                 case "searchGood":
                     if(requestData.ifAll)
                     {
-                        sql = "SELECT * FROM good";
-                        connection.query(sql,(err,data) => {
-                            if(err)
-                            {
-                                console.log(err);
-                            }
-                            else
-                            {
-                                console.log(JSON.parse(JSON.stringify(data)));
-                                res.send(JSON.parse(JSON.stringify(data)));
-                            }
+                        let pageIndex = requestData.pageIndex;
+                        let pageSize = requestData.pageSize;
+                        let promise = new Promise((resolve,reject)=>{
+                            sql = "SELECT COUNT(*) FROM good";
+                            connection.query(sql,(err,data)=>{
+                                if(err)
+                                {
+                                    console.log(err);
+                                    res.json(response.responseFail(err));
+                                }
+                                else
+                                {
+                                    let responseDataCount = JSON.parse(JSON.stringify(data))[0]['COUNT(*)'];
+                                    resolve(responseDataCount);
+                                }
+                            });
+                        });
+                        promise.then((value)=>{
+                            sql = "SELECT * FROM good LIMIT " + (pageIndex-1)*pageSize + "," + pageSize;
+                            console.log(sql);
+                            connection.query(sql,(err,data) => {
+                                if(err)
+                                {
+                                    console.log(err);
+                                }
+                                else
+                                {
+                                    let responseData = JSON.parse(JSON.stringify(data));
+                                    res.send({
+                                        "code":0,
+                                        "message":"查询成功",
+                                        "data":responseData,
+                                        "totalSize":value
+                                    });
+                                }
+                            });
                         });
                     }
                     // 2.查询特定条件的数据
                     else
                     {
-                        console.log(requestData.goodForm);
-                        let sql = "SELECT * FROM good WHERE ";
-                        if(requestData.goodForm.id != "")
-                        {
-                            sql += "good_id=" + requestData.goodForm.id + " AND ";
-                        }
-                        if(requestData.goodForm.name != "")
-                        {
-                            sql += "good_name='" + requestData.goodForm.name + "' AND ";
-                        }
-                        if(requestData.goodForm.price != "")
-                        {
-                            let lowPrice = requestData.goodForm.price.split("-")[0];
-                            let highPrice = requestData.goodForm.price.split("-")[1];
-                            console.log("最高价:"+highPrice + "最低价:" + lowPrice);
-                            sql += "good_price BETWEEN " + lowPrice + " AND " + highPrice + " AND ";
-                        }
-                        if(requestData.goodForm.type != "")
-                        {
-                            sql += "good_type='" + requestData.goodForm.type + "' AND ";
-                        }
-                        if(requestData.goodForm.from != "")
-                        {
-                            sql += "good_from='" + requestData.goodForm.from + " AND ";
-                        }
-                        if(requestData.goodForm.unit != "")
-                        {
-                            sql += "good_unit='" + requestData.goodForm.unit + "' AND ";
-                        }
-                        sql = sql.split(" ").slice(0,-2).join(" ");
-                        console.log(sql);
-                        connection.query(sql,(err,data) => {
-                            if(err)
+                        let pageIndex = requestData.pageIndex;
+                        let pageSize = requestData.pageSize;
+                        let promise = new Promise((resolve,reject)=>{
+                            sql = "SELECT COUNT(*) FROM good WHERE ";
+                            if(requestData.goodForm.id != "")
                             {
-                                console.log(err);
+                                sql += "good_id=" + requestData.goodForm.id + " AND ";
                             }
-                            else
+                            if(requestData.goodForm.name != "")
                             {
-                                res.send(JSON.parse(JSON.stringify(data)));
-                                console.log(JSON.parse(JSON.stringify(data)));
+                                sql += "good_name='" + requestData.goodForm.name + "' AND ";
                             }
+                            if(requestData.goodForm.price != "")
+                            {
+                                let lowPrice = requestData.goodForm.price.split("-")[0];
+                                let highPrice = requestData.goodForm.price.split("-")[1];
+                                console.log("最高价:"+highPrice + "最低价:" + lowPrice);
+                                sql += "good_price BETWEEN " + lowPrice + " AND " + highPrice + " AND ";
+                            }
+                            if(requestData.goodForm.type != "")
+                            {
+                                sql += "good_type='" + requestData.goodForm.type + "' AND ";
+                            }
+                            if(requestData.goodForm.from != "")
+                            {
+                                sql += "good_from='" + requestData.goodForm.from + " AND ";
+                            }
+                            if(requestData.goodForm.unit != "")
+                            {
+                                sql += "good_unit='" + requestData.goodForm.unit + "' AND ";
+                            }
+                            sql = sql.split(" ").slice(0,-2).join(" ");
+                            connection.query(sql,(err,data)=>{
+                                if(err)
+                                {
+                                    console.log(err);
+                                    res.json(response.responseFail(err));
+                                }
+                                else
+                                {
+                                    let responseDataCount = JSON.parse(JSON.stringify(data))[0]['COUNT(*)'];
+                                    resolve(responseDataCount);
+                                }
+                            });
+                        });
+                        promise.then((value)=>{
+                            sql = "SELECT * FROM good WHERE ";
+                            if(requestData.goodForm.id != "")
+                            {
+                                sql += "good_id=" + requestData.goodForm.id + " AND ";
+                            }
+                            if(requestData.goodForm.name != "")
+                            {
+                                sql += "good_name='" + requestData.goodForm.name + "' AND ";
+                            }
+                            if(requestData.goodForm.price != "")
+                            {
+                                let lowPrice = requestData.goodForm.price.split("-")[0];
+                                let highPrice = requestData.goodForm.price.split("-")[1];
+                                console.log("最高价:"+highPrice + "最低价:" + lowPrice);
+                                sql += "good_price BETWEEN " + lowPrice + " AND " + highPrice + " AND ";
+                            }
+                            if(requestData.goodForm.type != "")
+                            {
+                                sql += "good_type='" + requestData.goodForm.type + "' AND ";
+                            }
+                            if(requestData.goodForm.from != "")
+                            {
+                                sql += "good_from='" + requestData.goodForm.from + " AND ";
+                            }
+                            if(requestData.goodForm.unit != "")
+                            {
+                                sql += "good_unit='" + requestData.goodForm.unit + "' AND ";
+                            }
+                            sql = sql.split(" ").slice(0,-2).join(" ");
+                            sql += " LIMIT " + (pageIndex-1)*pageSize + "," + pageSize;
+                            console.log(sql);
+                            connection.query(sql,(err,data) => {
+                                if(err)
+                                {
+                                    console.log(err);
+                                }
+                                else
+                                {
+                                    let responseData = JSON.parse(JSON.stringify(data));
+                                    res.send({
+                                        "code":0,
+                                        "message":"查询成功",
+                                        "data":responseData,
+                                        "totalSize":value
+                                    });
+                                }
+                            });
                         });
                     }
                 break;
@@ -108,6 +186,7 @@ route.post("/goodMange",(req,res) => {
                                     good_name:requestData.addGoodForm.name,
                                     good_price:requestData.addGoodForm.price,
                                     category_name:requestData.addGoodForm.type,
+                                    subCatalog_name:requestData.addGoodForm.subType,
                                     good_imgurl:requestData.addGoodForm.imgurl,
                                     good_detail:requestData.addGoodForm.detail,
                                     good_unit:requestData.addGoodForm.unit,
@@ -157,11 +236,12 @@ route.post("/goodMange",(req,res) => {
                 break;
                 // 编辑商品接口
                 case "editGood":
-                    sql = "UPDATE good SET good_name=? , good_price=? , category_name=? , good_detail=? , good_from=? , good_unit=? , good_imgurl=? WHERE good_id=?";
+                    sql = "UPDATE good SET good_name=? , good_price=? , category_name=? , subCatalog_name=? , good_detail=? , good_from=? , good_unit=? , good_imgurl=? WHERE good_id=?";
                     sqlParams = [
                         requestData.editForm.name,
                         requestData.editForm.price,
                         requestData.editForm.type,
+                        requestData.editForm.subType,
                         requestData.editForm.detail,
                         requestData.editForm.from,
                         requestData.editForm.unit,

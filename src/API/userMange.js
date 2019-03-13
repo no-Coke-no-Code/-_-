@@ -20,7 +20,7 @@ route.post("/userMange",(req,res) => {
         console.log(requestData.method);
         if(requestData.method == "searchAll")
         {
-            let sql = "SELECT * FROM user";
+            let sql = "SELECT * FROM user WHERE user_nickname != 'admin'";
             connection.query(sql,(err,data) => {
                 if(err)
                 {

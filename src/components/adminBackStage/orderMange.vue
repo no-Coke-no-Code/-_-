@@ -1,17 +1,22 @@
 <template>
     <div class="wrapper" v-loading="ifLoading">
-        <el-form class="searchForm">
-            <el-form-item label="用户名:">
-                <el-input v-model="currentGuest"></el-input>
+        <el-form class="searchForm" :inline="true">
+            <el-form-item label="生成订单时间段:">
+                <el-date-picker v-model="startTimeRange" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
             </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="searchByName"><i class="el-icon-search"></i>搜索</el-button>
+            <el-form-item label="完成订单时间段:">
+                <el-date-picker v-model="endTimeRange" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
             </el-form-item>
+            <el-row>
+                <el-form-item label="用户名:">
+                    <el-input v-model="currentGuest"></el-input>
+                </el-form-item>
+            </el-row>
         </el-form>
-        <!-- <div class="HeadBtnGroup">
+        <div class="btn_group">
             <el-button type="primary" @click="searchByName"><i class="el-icon-search"></i>搜索</el-button>
-        </div> -->
-        <el-tabs @tab-click="handleClick">
+        </div>
+        <el-tabs @tab-click="handleClick" class="orderTabs">
             <el-tab-pane label="所有订单">
                 <el-table :data="orderList" empty-text='暂无数据'>
                     <el-table-column label="订单编号" prop="orderList_id"></el-table-column>
@@ -80,38 +85,33 @@
             </el-tab-pane>
         </el-tabs>
 
+
         <el-dialog :visible.async="orderDetailDialog" @close="cancel" title="订单详情">
             <div class="contentBlock">
-                <p>
-                    <span>订单编号:</span>
-                    {{chosenOrder.orderList_id}}
+                <p class="orderInfo">
+                    <span>订单编号:{{chosenOrder.orderList_id}}</span>
+
+                    <span>订单用户:{{chosenOrder.user_nickname}}</span>
+
+                    <span>订单总金额:{{chosenOrder.orderList_price}}</span>
                 </p>
-                <p>
-                    <span>订单用户:</span>
-                    {{chosenOrder.user_nickname}}
+                <p class="orderInfo">
+                    <span>订单生成时间:{{chosenOrder.orderList_startTime}}</span>
+
+                    <span>订单结束时间:{{chosenOrder.orderList_finishTime}}</span>
                 </p>
-                <p>
-                    <span>订单生成时间:</span>
-                    {{chosenOrder.orderList_startTime}}
-                </p>
-                <p>
-                    <span>订单结束时间:</span>
-                    {{chosenOrder.orderList_finishTime}}
-                </p>
-                <p>
-                    <span>送货地址:</span>
-                    {{chosenOrder.user_address}}
-                </p>
-                <p>
-                    <span>联系电话:</span>
-                    {{chosenOrder.user_phone}}
-                </p>
-                <p>
-                    <span>订单总金额:</span>
-                    {{chosenOrder.orderList_price}}
+                <p class="orderInfo">
+                    <span>送货地址:{{chosenOrder.user_address}}</span>
+
+                    <span>联系电话:{{chosenOrder.user_phone}}</span>
                 </p>
                 <h2>订单商品</h2>
-                <el-table :data="chosenOrder.goodList">
+                <el-table :data="chosenOrder.goodList" class="orderItemGood">
+                    <el-table-column label="图片" prop="good_imgurl">
+                        <template slot-scope="scope">
+                            <img :src="scope.row.good_imgurl" class="goodImg"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="商品名称" prop="good_name"></el-table-column>
                     <el-table-column label="商品数量" prop="good_count"></el-table-column>
                     <el-table-column label="商品单价" prop="good_price"></el-table-column>
@@ -143,6 +143,8 @@ export default {
             ifLoading:false,
             currentTab:"all",
             currentGuest:"",
+            startTimeRange:"",
+            endTimeRange:"",
         }
     },
     filters:{
@@ -180,6 +182,15 @@ export default {
                 "orderType":orderType,
                 "action":'checkOrder'
             };
+            if(this.startTimeRange != "")
+            {
+                params.startTimeRange = this.startTimeRange;
+            }
+            if(this.endTimeRange != "")
+            {
+                params.endTimeRange = this.endTimeRange;
+            }
+            console.log(params);
             // this.ifLoading = true;
             this.orderList = [];
             this.$http
@@ -268,16 +279,31 @@ export default {
 </script>
 
 
+<style>
+    .searchForm .el-form--inline .el-form-item
+    {
+        margin-right: 20px !important;
+    }
+    .searchForm .el-form-item__label
+    {
+        width: 114px !important;
+    }
+    .searchForm .el-row .el-input input
+    {
+        width: 400px;
+    }
+</style>
+
 <style lang="scss" scoped>
     .wrapper
     {
-        padding-left: 310px;
+        padding-left: 30px;
+        height: 100%;
+        overflow: auto;
         .searchForm
         {
-            .el-form-item
-            {
-                height: 100px;
-            }   
+            padding-top: 20px;
+            height: 100px;
             .el-form-item__content::after, .el-form-item__content::before
             {
                 display: block !important;
@@ -290,6 +316,11 @@ export default {
                 }
             }
         }
+        .btn_group
+        {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
         .hyperLink
         {
             color: #409EFF;
@@ -299,6 +330,34 @@ export default {
                 cursor: pointer;
             }
         }
+        .orderInfo
+        {
+            span
+            {
+                margin-right: 50px;
+            }
+        }
+        .orderItemGood
+        {
+            .goodImg
+            {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        .contentBlock
+        {
+            p
+            {
+                // margin-right: 50px;
+                margin-bottom: 30px;
+            }
+        }
+    }
+
+    .orderTabs
+    {
+        margin-bottom: 30px;
     }
 </style>
 

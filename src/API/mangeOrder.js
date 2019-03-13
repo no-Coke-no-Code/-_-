@@ -25,6 +25,8 @@ route.post('/mangeOrder',(req,res) => {
             reqData = JSON.parse(reqData);
             console.log("所要查询的用户名字",reqData.userName);
             console.log("所要查询的订单类型",reqData.orderType);
+            console.log("所要查询的订单开始范围",reqData.startTimeRange);
+            console.log("所要查询的订单结束范围",reqData.endTimeRange);
             let sql = "";
             let sqlParams = [];
             switch(reqData.orderType){
@@ -32,6 +34,19 @@ route.post('/mangeOrder',(req,res) => {
                     if(reqData.userName == "all")
                     {
                         sql = "SELECT * FROM orderlist";
+                        if(reqData.startTimeRange)
+                        {
+                            sql += " WHERE orderList_startTime BETWEEN '" + reqData.startTimeRange[0] + "' AND '" + reqData.startTimeRange[1]+"'";
+                        }
+                        else if(reqData.endTimeRange && !reqData.startTimeRange)
+                        {
+                            sql += " WHERE orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+                        if(reqData.endTimeRange && reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+                        console.log(sql);
                         // 这里是先查询出全部有多少订单
                         connection.query(sql,(err,data)=>{
                             if(err)
@@ -66,7 +81,7 @@ route.post('/mangeOrder',(req,res) => {
                                 }
                                 // 这里是查询出刚查询的订单中的商品列表项(结果尚未得知商品属于哪个订单)
                                 connection.query(sql,sqlParams,(err,data)=>{
-                                    if(err)
+                                    if(err)  
                                     {
                                         console.log(err);
                                     }
@@ -106,6 +121,18 @@ route.post('/mangeOrder',(req,res) => {
                     else
                     {
                         sql = "SELECT * FROM orderlist WHERE user_nickname = ?";
+                        if(reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_startTime BETWEEN '" + reqData.startTimeRange[0] + "' AND '" + reqData.startTimeRange[1]+"'";
+                        }
+                        else if(reqData.endTimeRange && !reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+                        if(reqData.endTimeRange && reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
                         sqlParams = [reqData.userName];
                         // 这里是先查询某个用户有多少订单
                         connection.query(sql,sqlParams,(err,data)=>{
@@ -183,6 +210,20 @@ route.post('/mangeOrder',(req,res) => {
                     if(reqData.userName == "all")
                     {
                         sql = "SELECT * FROM orderlist WHERE orderList_state=?";
+
+                        if(reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_startTime BETWEEN '" + reqData.startTimeRange[0] + "' AND '" + reqData.startTimeRange[1]+"'";
+                        }
+                        else if(reqData.endTimeRange && !reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+                        if(reqData.endTimeRange && reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+
                         sqlParams = ["f"];
                         connection.query(sql,sqlParams,(err,data)=>{
                             if(err)
@@ -248,6 +289,20 @@ route.post('/mangeOrder',(req,res) => {
                     else
                     {
                         sql = "SELECT * FROM orderlist WHERE orderList_state=? AND user_nickname=?";
+
+                        if(reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_startTime BETWEEN '" + reqData.startTimeRange[0] + "' AND '" + reqData.startTimeRange[1]+"'";
+                        }
+                        else if(reqData.endTimeRange && !reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+                        if(reqData.endTimeRange && reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+
                         sqlParams = ['f',reqData.userName];
                         connection.query(sql,sqlParams,(err,data)=>{
                             if(err)
@@ -324,6 +379,20 @@ route.post('/mangeOrder',(req,res) => {
                 if(reqData.userName == "all")
                 {
                     sql = "SELECT * FROM orderlist WHERE orderList_state=?";
+
+                    if(reqData.startTimeRange)
+                    {
+                        sql += " AND orderList_startTime BETWEEN '" + reqData.startTimeRange[0] + "' AND '" + reqData.startTimeRange[1]+"'";
+                    }
+                    else if(reqData.endTimeRange && !reqData.startTimeRange)
+                    {
+                        sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                    }
+                    if(reqData.endTimeRange && reqData.startTimeRange)
+                    {
+                        sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                    }
+
                     sqlParams = ["b"];
                     connection.query(sql,sqlParams,(err,data)=>{
                         if(err)
@@ -398,6 +467,20 @@ route.post('/mangeOrder',(req,res) => {
                 else
                     {
                         sql = "SELECT * FROM orderlist WHERE orderList_state=? AND user_nickname=?";
+
+                        if(reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_startTime BETWEEN '" + reqData.startTimeRange[0] + "' AND '" + reqData.startTimeRange[1]+"'";
+                        }
+                        else if(reqData.endTimeRange && !reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+                        if(reqData.endTimeRange && reqData.startTimeRange)
+                        {
+                            sql += " AND orderList_finishTime BETWEEN '" + reqData.endTimeRange[0] + "' AND '" + reqData.endTimeRange[1]+"'";
+                        }
+
                         sqlParams = ['b',reqData.userName];
                         connection.query(sql,sqlParams,(err,data)=>{
                             if(err)

@@ -10,8 +10,25 @@
             <el-form-item label="商品来源" prop="from">
                 <el-input v-model="addForm.from"></el-input>
             </el-form-item>
-            <el-form-item label="商品类型" prop="type">
-                <el-input v-model="addForm.type"></el-input>
+            <el-form-item label="商品类别" prop="type">
+                <el-select v-model="addForm.type" @change="initSubCatalog" clearable>
+                    <el-option 
+                        v-for="item in categoryList" 
+                        :label="item.category_name" 
+                        :value="item.category_name" 
+                        :key="item.category_name">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="商品子类别" prop="subType">
+                <el-select v-model="addForm.subType" clearable>
+                    <el-option 
+                        v-for="item in subCatalogList" 
+                        :label="item.subCatalog_name" 
+                        :value="item.subCatalog_name" 
+                        :key="item.subCatalog_name">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="商品描述" prop="detail">
                 <el-input v-model="addForm.detail"></el-input>
@@ -41,10 +58,13 @@ export default {
     ],
     data(){
         return{
+            categoryList:[],
+            subCatalogList:[],
             addForm:{
                 name:"",
                 price:"",
                 type:"",
+                subType:"",
                 from:"",
                 detail:"",
                 imgurl:"",
@@ -61,6 +81,9 @@ export default {
                 type:[
                     {required: true, message: "类型不可为空", trigger:'blur'}
                 ],
+                subType:[
+                    { required: true, message: "子类型不可为空", trigger:'blur' }
+                ],
                 detail:[
                     {required: true, message: "描述不可为空", trigger:'blur'}
                 ],
@@ -76,6 +99,11 @@ export default {
             },
         }
     },
+
+    created(){
+        this.initCategory();
+    },
+
     methods:{
         // changeImg(){
         //     this.ifChangeImg = !this.ifChangeImg;
@@ -109,6 +137,49 @@ export default {
                     console.log("error submit");
                     return false;
                 }
+            });
+        },
+
+        // 初始化类别列表
+        initCategory(){
+            this.subCatalogList = [];
+            let params = {
+                "method":"searchAllCategory"
+            };
+            this.$http
+            .post('/goodMange',params)
+            .then((data)=>{
+                console.log(data);
+                this.categoryList = data.data.data;
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
+
+        // 初始化子类别列表
+        initSubCatalog(){
+            this.subCatalogList = [];
+            this.addForm.subType = "";
+            let params = {
+                "method":"checkSubCatalog",
+                "catalog_name":this.addForm.type,
+            };
+            this.$http
+            .post('/categoryMange',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    for(let i = 0;i<responseData.data.length;i++)
+                    {
+                        this.subCatalogList.push(responseData.data[i]);
+                    }
+                    console.log(this.subCatalogList,'i want to see');
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
             });
         },
     }
