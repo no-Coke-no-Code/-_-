@@ -91,7 +91,11 @@ route.post("/goodMange",(req,res) => {
                             }
                             if(requestData.goodForm.type != "")
                             {
-                                sql += "good_type='" + requestData.goodForm.type + "' AND ";
+                                sql += "category_name='" + requestData.goodForm.type + "' AND ";
+                            }
+                            if(requestData.goodForm.subType != "")
+                            {
+                                sql += "subCatalog_name='" + requestData.goodForm.subType + "' AND ";
                             }
                             if(requestData.goodForm.from != "")
                             {
@@ -134,7 +138,11 @@ route.post("/goodMange",(req,res) => {
                             }
                             if(requestData.goodForm.type != "")
                             {
-                                sql += "good_type='" + requestData.goodForm.type + "' AND ";
+                                sql += "category_name='" + requestData.goodForm.type + "' AND ";
+                            }
+                            if(requestData.goodForm.subType != "")
+                            {
+                                sql += "subCatalog_name='" + requestData.goodForm.subType + "' AND ";
                             }
                             if(requestData.goodForm.from != "")
                             {

@@ -1,18 +1,19 @@
 <template>
-    <div>
+    <div class="commentManageWrapper">
         <div class="commentList">
             <div class="commentItem" v-for="(item,index) in commentList">
                 <div v-if="!item.reply_comment_id">
                     <span class="guestName">用户{{item.user_nickname}}:</span>
-                    <p class="guestComment">{{item.comment_content}}</p>
                     <p class="guestRank">
-                        用户打分:
                         <el-rate v-model="item.comment_rank" disabled></el-rate>
+                        <span class="commentTime">{{item.comment_time}}</span>
                     </p>
-                    <p class="goodName">评价商品:{{item.good_name}}</p>
-                    <span class="commentTime">评价时间:{{item.comment_time}}</span>
-                    <a class="response" @click="response(index,item)" v-if="!item.reply_comment_id">回复</a>
-                    <a v-if="item.reply_comment_id">该评价已回复</a>
+                    <p class="guestCommentContent">{{item.comment_content}}</p>
+                    <span class="goodName">评价商品:{{item.good_name}}</span>
+                    <p class="reply">
+                        <a class="response" @click="response(index,item)" v-if="!item.reply_comment_id">回复评论</a>
+                        <a v-if="item.reply_comment_id">该评价已回复</a>
+                    </p>
 
                     <div class="commentArea" v-if="ifResponseComment[index]">
                         <el-form ref="commentForm" :rules="rules" :model="commentForm">
@@ -162,6 +163,73 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style>
+    .guestRank .el-rate
+    {
+        display: inline-block;
+    }
+</style>
 
+<style lang="scss" scoped>
+    .commentManageWrapper
+    {
+        height:100%;
+        overflow:auto;
+    }
+    .commentList
+    {
+        margin-left:30px;
+        margin-right: 30px;
+        padding-top:30px;
+        .commentItem
+        {
+            margin-bottom: 30px;
+            border: 1px solid black;
+            padding: 10px;
+
+            .guestCommentContent,.guestRank,.goodName,.commentTime,.reply,.replyComment
+            {
+                margin-left: 20px;
+            }
+            .guestRank
+            {
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .guestCommentContent
+            {
+                margin-bottom: 20px;
+            }
+            .commentTime
+            {
+                margin-left: 50px;
+                vertical-align: sub;
+            }
+            .reply
+            {
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .response
+            {
+                font-style: italic;
+                &:hover
+                {
+                    color: blue;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            }
+
+            .commentArea
+            {
+                padding-left: 20px;
+                padding-right: 20px;
+                margin-bottom: 20px;
+                background-color: #c79292;
+                border: 2px solid #c0c0c0;
+                border-radius: 5px;
+            }
+        }
+    }
 </style>

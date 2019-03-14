@@ -12,7 +12,7 @@ const route = express.Router();
 // 连接数据库
 var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
-
+ 
 route.post('/guestCollection',(req,res)=>{
     let reqData = "";
     req.on('data',(chunk) => {
@@ -62,6 +62,7 @@ route.post('/guestCollection',(req,res)=>{
                     else if(responseData.length == 0)
                     {
                         res.json(response.responseSuccess('无收藏'));
+                        return;  
                     }
                     connection.query(sql,(err,data)=>{
                         if(err)

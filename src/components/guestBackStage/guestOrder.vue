@@ -1,23 +1,38 @@
 <template>
     <div class="wrapper" v-loading="ifLoading">
         <el-form :model="searchForm" :inline="true">
-            <el-form-item label="订单ID">
-                <el-input v-model="searchForm.orderId"></el-input>
-            </el-form-item>
-            <el-form-item label="订单总价">
-                <el-select v-model="searchForm.orderPrice">
-                    <el-option v-for="x in priceList" :key="x" :label="x" :value="x"></el-option>
-                </el-select>
-            </el-form-item>
+            <el-row>
+                <el-form-item label="订单ID">
+                    <el-input v-model="searchForm.orderId"></el-input>
+                </el-form-item>
+                <el-form-item label="订单总价">
+                    <el-select v-model="searchForm.orderPrice">
+                        <el-option v-for="x in priceList" :key="x" :label="x" :value="x"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-row>
+            <el-row>
+                <el-form-item label="开始订单时间">
+                    <el-date-picker v-model="searchForm.startTime" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="完成订单时间">
+                    <el-date-picker v-model="searchForm.finishTime" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
+                </el-form-item>
+            </el-row>
             <div class="btnGroup">
-                <el-button @click="init(orderState)">搜索</el-button>
+                <el-button @click="init(orderState)" type="primary">搜索</el-button>
             </div>
         </el-form>
         <el-tabs @tab-click="changeTab" v-model="activeName">
             <el-tab-pane label="全部">
                 <div class="orderList" v-for="order in responseData" v-if="responseData.length">
-                    <h3>订单</h3>
+                    <h3>订单号:{{order.orderList_id}}</h3>
                     <el-table :data="order.orderDetail">
+                        <el-table-column prop="good_imgurl">
+                            <template slot-scope="scope">
+                                <img :src="scope.row.good_imgurl" class="orderItemPic"/>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="商品名称" prop="good_name"></el-table-column>
                         <el-table-column label="商品数量" prop="good_count"></el-table-column>
                         <el-table-column label="商品单价" prop="good_price"></el-table-column>
@@ -29,7 +44,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>订单总价:{{order.orderList_price}}</p>
+                    <p>订单总金额:￥{{order.orderList_price}}</p>
+                    <p>订单状态:{{order.orderList_state=='f'?"已完成":"未完成"}}</p>
+                    <p>生成订单时间:{{order.orderList_startTime}}</p>
+                    <p v-if="order.orderList_state=='f'">完成订单时间:{{order.orderList_finishTime}}</p>
                 </div>
                 <div v-if="!responseData.length">
                     暂时无相关的订单
@@ -37,14 +55,21 @@
             </el-tab-pane>
             <el-tab-pane label="未发货">
                 <div class="orderList" v-for="(order,index) in responseData" v-if="responseData.length">
-                    <h3>订单{{index}}</h3>
+                    <h3>订单号:{{order.orderList_id}}</h3>
                     <el-table :data="order.orderDetail">
+                        <el-table-column prop="good_imgurl">
+                            <template slot-scope="scope">
+                                <img :src="scope.row.good_imgurl" class="orderItemPic"/>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="商品名称" prop="good_name"></el-table-column>
                         <el-table-column label="商品数量" prop="good_count"></el-table-column>
                         <el-table-column label="商品单价" prop="good_price"></el-table-column>
                         <el-table-column label="商品小计" prop="orderItem_priceSub"></el-table-column>
                     </el-table>
-                    <p>订单总价:{{order.orderList_price}}</p>
+                    <p>订单总金额:￥{{order.orderList_price}}</p>
+                    <p>生成订单时间:{{order.orderList_startTime}}</p>
+                    <p v-if="order.orderList_state=='f'">完成订单时间:{{order.orderList_finishTime}}</p>
                 </div>
                 <div v-if="!responseData.length">
                     暂时无相关的订单
@@ -52,8 +77,13 @@
             </el-tab-pane>
             <el-tab-pane label="已发货">
                 <div class="orderList" v-for="(order,index) in responseData" v-if="responseData.length">
-                    <h3>订单{{index}}</h3>
+                    <h3>订单号:{{order.orderList_id}}</h3>
                     <el-table :data="order.orderDetail">
+                        <el-table-column prop="good_imgurl">
+                            <template slot-scope="scope">
+                                <img :src="scope.row.good_imgurl" class="orderItemPic"/>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="商品名称" prop="good_name"></el-table-column>
                         <el-table-column label="商品数量" prop="good_count"></el-table-column>
                         <el-table-column label="商品单价" prop="good_price"></el-table-column>
@@ -65,7 +95,9 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>订单总价:{{order.orderList_price}}</p>
+                    <p>订单总金额:￥{{order.orderList_price}}</p>
+                    <p>生成订单时间:{{order.orderList_startTime}}</p>
+                    <p v-if="order.orderList_state=='f'">完成订单时间:{{order.orderList_finishTime}}</p>
                 </div>
                 <div v-if="!responseData.length">
                     暂时无相关的订单
@@ -91,7 +123,12 @@ export default {
             // 标记：这是一条假数据，实际情况应该是从vuex里面获取
             username:"",
             ifLoading:false,
-            searchForm:{},
+            searchForm:{
+                startTime:"",
+                finishTime:"",
+                orderId:"",
+                orderPrice:"",
+            },
             priceList:[
                 "0-99",
                 "100-399",
@@ -109,7 +146,7 @@ export default {
         init(orderState){
             console.log(orderState);
             let params = {};
-            if(this.searchForm.orderId=="" && this.searchForm.orderPrice=="")
+            if(this.searchForm.orderId=="" && this.searchForm.orderPrice=="" && !this.searchForm.startTime && !this.searchForm.finishTime)
             {
                 params = {
                     "method":"getGuestOrder",
@@ -129,7 +166,6 @@ export default {
                     "orderState":orderState,
                 };
             }
-
             this.responseData = [];
             this.ifLoading = true;
             this.$http
@@ -217,12 +253,23 @@ export default {
     }
     .wrapper
     {
-        padding-left: 320px;
-        padding-right: 30px;
+        height: 100%;
+        overflow: auto;
+        padding: 30px;
+        box-sizing: border-box;
+        .btnGroup
+        {
+            margin-bottom: 30px;
+        }
         .orderList
         {
             border: 1px solid black;
             margin-top: 10px;
+        }
+        .orderItemPic
+        {
+            width: 100px;
+            height: 100px;
         }
     }
     .makeComment

@@ -1,8 +1,9 @@
 <template>
-    <div>
+    <div class="collectionWrapper">
         <div class="collectionListItem" v-for="item in collectionList">
             <img class="collectionImg" :src="item.good_imgurl"/>
-            <span class="collectionName">{{item.good_name}}</span>
+            <span class="collectionName">商品名称:{{item.good_name}}</span>
+            <span>操作:</span>
             <a class="seeGoodDetail" @click="toGood(item)">点击查看</a>
             <a class="removeCollection" @click="removeCollection(item)">不再收藏</a>
         </div>
@@ -60,7 +61,14 @@ export default {
             .then((data)=>{
                 let responseData = data.data.data;
                 console.log(responseData);
-                this.collectionList = responseData;
+                if(responseData == "无收藏")
+                {
+                    this.collectionList = [];
+                }
+                else
+                {
+                    this.collectionList = responseData;
+                }
             })
             .catch((err)=>{
                 console.log(err);
@@ -74,29 +82,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .collectionListItem
+    .collectionWrapper
     {
-        border-radius: 3px;
-        border: 2px solid #f6f6f6;
-        padding: 20px;
-        background-color: #f7f4f2d3;
-        &:hover
+        padding: 30px;
+        height: calc(100% - 40px);
+        overflow: auto;
+        box-sizing: border-box;
+        .collectionListItem
         {
-            background-color: #f0eeeed3;
-        }
-        .collectionImg
-        {
-            width: 100px;
-            height: 100px;
-        }
-        .removeCollection,.seeGoodDetail
-        {
+            border-radius: 3px;
+            border: 2px solid #f6f6f6;
+            padding: 20px;
+            background-color: #f7f4f2d3;
             &:hover
             {
-                text-decoration: underline;
-                cursor: pointer;
-                color: #1989fa;
+                background-color: #f0eeeed3;
             }
-        }
+            .collectionImg
+            {
+                width: 100px;
+                height: 100px;
+                vertical-align: middle;
+            }
+            .collectionName
+            {
+                margin-left: 100px;
+                margin-right: 100px;
+            }
+            .removeCollection,.seeGoodDetail
+            {
+                &:hover
+                {
+                    text-decoration: underline;
+                    cursor: pointer;
+                    color: #1989fa;
+                }
+            }
+        }   
     }
 </style>

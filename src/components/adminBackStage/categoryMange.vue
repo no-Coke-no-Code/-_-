@@ -1,24 +1,26 @@
 <template>
     <div class="wrapper">
-        <el-form class="addCategory" ref="addCategoryForm" :model="addCategoryForm" :rules="rule">
+        <el-form class="addCategory" ref="addCategoryForm" :model="addCategoryForm" :rules="rule" :inline="true">
             <el-form-item label="请输入需要新增的商品类别名:" prop="addCategoryName">
                 <el-input v-model="addCategoryForm.addCategoryName"></el-input>
             </el-form-item>
-            <el-button type="primary" @click="confirmAddCategory">添加</el-button>
         </el-form>
+        <el-button class="addCatalog" type="primary" @click="confirmAddCategory">添加</el-button>
         <div class="checkCategory">
             <el-collapse accordion>
                 <el-collapse-item v-for="(item,index) in categoryList" :name="index" :key="index" @click.native="getSubCatalog(item)">
-                    <template slot="title" >
-                        <span>{{item.category_name}}</span>
-                        <a @click.stop="addSubCatalog(item)" class="addSubCatalog">添加子类型</a>
+                    <template slot="title">
+                        <p class="catalogTitle">
+                            <span class="catalogName">{{item.category_name}}</span>
+                            <a @click.stop="addSubCatalog(item)" class="addSubCatalog">添加子类型</a>
+                        </p>
                     </template>
-                    <p class="subCatalogItem" v-for="subCatalog in subCatalogList">{{subCatalog}}</p>
+                    <p class="subCatalogItem" v-for="(subCatalog,index) in subCatalogList">{{index+1}} . {{subCatalog}}</p>
                 </el-collapse-item>
             </el-collapse>
         </div>
 
-        <el-dialog :visible.sync='dialogVisible'>
+        <el-dialog :visible.sync='dialogVisible' custom-class='addSubCatalogDialog'>
             <el-form ref="addSubCatalogForm" :model="addSubCatalogForm" :rules="rule2">
                 <el-form-item label="子类型名称" prop="subCatalogName">
                     <el-input v-model="addSubCatalogForm.subCatalogName"></el-input>
@@ -214,12 +216,33 @@ export default {
 }
 </script>
 
+<style>
+    .checkCategory .el-collapse-item__content
+    {
+        padding-bottom:10px !important;
+    }
+    .addSubCatalogDialog .el-dialog__header
+    {
+        padding:0px !important;
+    }
+</style>
 <style lang="scss" scoped>
     .wrapper
     {
         margin-left: 320px;
         height: 100%;
         overflow: auto;
+        .addCategory
+        {
+            margin-top:30px;
+            margin-bottom:10px;
+            padding-left:30px;
+        }
+        .addCatalog
+        {
+            margin-left:30px;
+            margin-bottom:30px;
+        }
         .addSubCatalog
         {
             margin-left: 50px;
@@ -229,15 +252,25 @@ export default {
                 text-decoration: underline;
             }
         }
+        .catalogTitle
+        {
+            width:100%;
+            padding-left:50px;
+            .catalogName
+            {
+                font-size: 16px;
+            }
+            .addSubCatalog
+            {
+                float:right;
+                margin-right:50px;
+            }
+        }
         .subCatalogItem
         {
-            // margin-left: 50px;
-            // padding-left: 20px;
-            // padding-right: 20px;
-            // line-height: 30px;
-            // background-color: #c0c0c0;
-            // border-radius: 3px;
-            margin-left: 50px;
+            margin-left: 100px;
+            font-size:14px;
+            line-height:40px;
         }
     }
 </style>

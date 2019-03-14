@@ -1,6 +1,6 @@
 <template>
     <div class="topGoodManageWrapper">
-        <el-tabs v-model="currentType" @tab-click="handleClick">
+        <el-tabs v-model="currentType" @tab-click="handleClick" class="topGoodManageTabs">
             <el-tab-pane label="热销商品" name="topGood">
                 <!-- :data为左手边框，v-model为右手边框 -->
                 <!-- transfer大概用法：data用于规定数据的key,label,disabled v-model用于右边框数据的初始化 -->
@@ -13,6 +13,7 @@
                 <el-transfer :titles="['所有商品','列表商品']" :data="data3" v-model="value3" @change="handleChange"></el-transfer>
             </el-tab-pane>
         </el-tabs>
+        <div class="testing"></div>
     </div>
 </template>
 
@@ -200,10 +201,31 @@ export default {
 }
 </script>
 
+<style>
+    .topGoodManageTabs .el-tabs__header
+    {
+        margin-bottom:60px !important;
+    }
+    .topGoodManageTabs .el-tab-pane
+    {
+        display:flex;
+        justify-content:center;
+    }
+    .topGoodManageTabs .el-transfer-panel
+    {
+        width:350px !important;
+    }
+</style>
 <style lang="scss" scoped>
     .topGoodManageWrapper
     {
-        overflow: hidden;
+        height:100%;
+        overflow: auto;
+        margin-left:330px;
+        .topGoodManageTabs
+        {
+            margin-top:30px;
+        }
         .topGood,.newGood,.foreignGood
         {
             background-color: #f7f7f7;

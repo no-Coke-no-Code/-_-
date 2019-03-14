@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 // 连接mysql数据库的基本配置
 const mysqlConfig = require("./../../mysql.config.js");
+const response = require("./../response/response.js");
 
 // 实例化express路由
 const route = express.Router();

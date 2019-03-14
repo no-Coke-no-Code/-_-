@@ -276,6 +276,7 @@ export default {
             this.searchForm.name = "";
             this.searchForm.price = "";
             this.searchForm.type = "";
+            this.searchForm.subType = "";
             this.searchForm.from = "";
             this.searchForm.unit = "";
             this.init();

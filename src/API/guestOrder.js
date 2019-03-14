@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 // 连接mysql数据库的基本配置
 const mysqlConfig = require("./../../mysql.config.js");
+const _ = require("./../utils/utils.js");
 
 // 返回数据函数
 const response = require("../response/response");
@@ -23,7 +24,16 @@ route.post('/guestOrder',(req,res) => {
         reqData = JSON.parse(reqData);
         switch(reqData.method){
             case "getGuestOrder":
-            returnOrderList(reqData.user_nickname,reqData.orderState,reqData.orderForm);
+            console.log(reqData);
+            console.log("我想看的东西在这行上米娜"); 
+            if(reqData.orderForm)
+            {
+                returnOrderList(reqData.user_nickname,reqData.orderState,reqData.orderForm);
+            }
+            else
+            {
+                returnOrderList(reqData.user_nickname,reqData.orderState);
+            }
             function returnOrderList(userName,orderState,orderForm){
                 // 判断是否查询所有订单
                 if(orderState == "all")
@@ -36,17 +46,29 @@ route.post('/guestOrder',(req,res) => {
                     var sql = "SELECT * FROM orderList WHERE user_nickname = '"+ userName +"' AND orderList_state='"+ orderState +"' AND ";
                 }
 
-                if(orderForm.orderId)
+                if(orderForm)
                 {
-                    sql += "orderList_id = "+ orderForm.orderId + " AND ";
+                    if(orderForm.orderId)
+                    {
+                        sql += "orderList_id = "+ orderForm.orderId + " AND ";
+                    }
+                    else if(orderForm.orderPrice)
+                    {
+                        let lowPrice = orderForm.orderPrice.split("-")[0];
+                        let highPrice = orderForm.orderPrice.split("-")[1];
+                        sql += " orderList_price BETWEEN " + lowPrice + " AND " + highPrice + " AND ";
+                    }
+                    else if(orderForm.startTime)
+                    {
+                        sql += "orderList_startTime BETWEEN '" + orderForm.startTime[0] + "' AND '" + orderForm.startTime[1] + "' AND ";
+                    }
+                    else if(orderForm.finishTime)
+                    {
+                        sql += "orderList_finishTime BETWEEN '" + orderForm.finishTime[0] + "' AND '" + orderForm.finishTime[1] + "' AND ";
+                    }
+                    // sql = sql.split(" ").slice(0,-2).join(" ")
                 }
-                else if(orderForm.orderPrice)
-                {
-                    let lowPrice = orderForm.orderPrice.split("-")[0];
-                    let highPrice = orderForm.orderPrice.split("-")[1];
-                    sql += " orderList_price BETWEEN " + lowPrice + " AND " + highPrice + " AND ";
-                }
-                sql = sql.split(" ").slice(0,-2).join(" ");
+                sql = _.deleting(sql,"AND",-1);
                 console.log(sql);
                 connection.query(sql,(err,data) => {
                     if(err)
