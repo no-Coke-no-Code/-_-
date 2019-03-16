@@ -27,9 +27,20 @@
                     </div>
 
                     <div class="replyComment" v-for="item2 in replyList" v-if='item2.reply_comment_id==item.comment_id'>
-                        管理员回复：{{item2.comment_content}}
+                        管理员回复：{{item2.reply_content}}
                     </div>
                 </div>
+            </div>
+            <div class="pagination1">
+                <el-pagination
+                    @current-change="handleCurrentChange"
+                    @size-change="pagesizeChange"
+                    :current-page="searchForm.pageIndex"
+                    :page-size="searchForm.pageSize"
+                    :page-sizes="[10,20,30]"
+                    layout="total, sizes,prev, pager, next, jumper"
+                    :total="searchForm.total">
+                </el-pagination>
             </div>
         </div>
     </div>
@@ -51,17 +62,25 @@ export default {
                     { required:true,message:"评价不能为空",trigger:blur }
                 ],
             },
+            searchForm:{
+                pageSize:10,
+                pageIndex:1,
+                total:0,
+            },
         }
     },
     methods:{
         init(){
             let params = {
                 "method":"getGuestComment",
+                "pageSize":this.searchForm.pageSize,
+                "pageIndex":this.searchForm.pageIndex,
             };
             this.$http
             .post('/comment',params)
             .then((data)=>{
                 let commentList = data.data.data;
+                let totalSize = data.data.totalSize;
                 for(let i = 0;i<this.commentList.length;i++)
                 {
                     this.ifResponseComment.push(false);
@@ -75,6 +94,7 @@ export default {
                     let replyList = data.data.data;
                     this.commentList = commentList;
                     this.replyList = replyList;
+                    this.searchForm.total = totalSize;
                     console.log(this.commentList,"用户评论");
                     console.log(this.replyList,"管理员评论");
                 })
@@ -156,6 +176,15 @@ export default {
             this.commentForm.comment_content = "";
             this.$set(this.ifResponseComment,index,false);
         },
+
+        handleCurrentChange(val){
+            this.searchForm.pageIndex = val;
+            this.init();
+        },
+        pagesizeChange(val){
+            this.searchForm.pageSize = val;
+            this.init();
+        },
     },
     created(){
         this.init();
@@ -223,13 +252,16 @@ export default {
 
             .commentArea
             {
-                padding-left: 20px;
-                padding-right: 20px;
+                padding: 20px;
                 margin-bottom: 20px;
-                background-color: #c79292;
+                background-color: #cab1b1;
                 border: 2px solid #c0c0c0;
                 border-radius: 5px;
             }
         }
+    }
+    .pagination1
+    {
+        float: right;
     }
 </style>

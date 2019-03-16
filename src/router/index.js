@@ -25,6 +25,7 @@ import userMange from "@/components/adminBackStage/userMange.vue";
 import categoryMange from "@/components/adminBackStage/categoryMange.vue";
 import topGoodMange from "@/components/adminBackStage/topGoodMange.vue";
 import commentManage from "@/components/adminBackStage/commentManage.vue";
+import countManage from "@/components/adminBackStage/countManage.vue";
 import store from "../store"
 
 
@@ -79,6 +80,11 @@ const router = new Router({
                 path:'commentManage',
                 name:'commentManage',
                 component:commentManage
+            },
+            {
+                path:"countManage",
+                name:"countManage",
+                component:countManage,
             }
         ],
     },

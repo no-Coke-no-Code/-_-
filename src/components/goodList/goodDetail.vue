@@ -26,8 +26,8 @@
                 <el-rate disabled v-model="item.comment_rank" class="commentRank"></el-rate>
                 <p class="commentContent">{{item.comment_content}}</p>
                 <span class="commentTime">{{item.comment_time}}</span>
-                <div v-for="item2 in commentList" v-if="item2.reply_comment_id == item.comment_id" class="adminReply">
-                    管理员admin:{{item2.comment_content}}
+                <div v-for="item2 in replyList" v-if="item2.reply_comment_id == item.comment_id" class="adminReply">
+                    管理员admin:{{item2.reply_content}}
                 </div>
             </div>
             <div v-if="commentList.length == 0">
@@ -48,6 +48,7 @@ export default {
         return{
             goodDetail:{},
             commentList:[],
+            replyList:[],
         }
     },
     components:{
@@ -151,17 +152,37 @@ export default {
                 }
             })
             .then(function(goodDetail){
-                console.log(goodDetail,'I want to see');
+                return new Promise((resolve,reject)=>{
+                    console.log(goodDetail,'I want to see');
+                    let params = {
+                        "method":'getGoodComment',
+                        "good_name":goodDetail.good_name
+                    };
+                    that.$http
+                    .post('/comment',params)
+                    .then((data)=>{
+                        let responseData = data.data.data;
+                        that.commentList = responseData;
+                        console.log(that.commentList,'返回的商品评论');
+                        resolve(goodDetail);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                    });
+                })
+            })
+            .then((goodDetail)=>{
+                console.log(goodDetail);
                 let params = {
-                    "method":'getGoodComment',
+                    "method":"getReplyComment",
                     "good_name":goodDetail.good_name
                 };
-                that.$http
+                this.$http
                 .post('/comment',params)
                 .then((data)=>{
                     let responseData = data.data.data;
-                    that.commentList = responseData;
-                    console.log(that.commentList,'返回的商品评论');
+                    that.replyList = responseData;
+                    console.log(that.replyList,"返回的回复评论");
                 })
                 .catch((err)=>{
                     console.log(err);

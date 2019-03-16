@@ -57,7 +57,7 @@ route.post("/goodMange",(req,res) => {
                                 else
                                 {
                                     let responseData = JSON.parse(JSON.stringify(data));
-                                    res.send({
+                                    res.json({
                                         "code":0,
                                         "message":"查询成功",
                                         "data":responseData,

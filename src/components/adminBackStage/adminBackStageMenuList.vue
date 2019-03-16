@@ -31,6 +31,10 @@
                 <i class="el-icon-setting"></i>
                 <span>用户评论管理</span>
             </el-menu-item>
+            <el-menu-item index="7" @click="toCountManage">
+                <i class="el-icon-setting"></i>
+                <span>交易统计</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -68,6 +72,9 @@ export default {
         },
         toCommentManage(){
             this.$router.push("/adminBackStage/commentManage");
+        },
+        toCountManage(){
+            this.$router.push("/adminBackStage/countManage");
         },
     },
 }

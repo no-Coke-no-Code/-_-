@@ -23,25 +23,58 @@ route.post('/comment',(req,res)=>{
         switch(requestData.method)
         {
             case "getGuestComment": 
-            sql = "SELECT * FROM comment WHERE reply_comment_id IS NULL";
-            connection.query(sql,(err,data)=>{
-                if(err)
-                {
-                    console.log(err);
-                    res.json(response.responseFail(err));
-                    return;
-                }
-                else
-                {
-                    let responseData = JSON.parse(JSON.stringify(data));
-                    res.json(response.responseSuccess(responseData));
-                }
+            let pageIndex = requestData.pageIndex;
+            let pageSize = requestData.pageSize;
+            let promise1 = new Promise((resolve,reject)=>{
+                sql = "SELECT * FROM comment LIMIT " + (pageIndex-1)*pageSize + "," + pageSize;
+                connection.query(sql,(err,data)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail(err));
+                        return;
+                    }
+                    else
+                    {
+                        let responseData = JSON.parse(JSON.stringify(data));
+                        resolve(responseData);
+                    }
+                });
+            });
+            promise1.then((val)=>{
+                sql = "SELECT COUNT(*) FROM comment";
+                connection.query(sql,(err,data)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail(err));
+                    }
+                    else
+                    {
+                        let totalSize = JSON.parse(JSON.stringify(data))[0]['COUNT(*)'];
+                        res.json({
+                            "code":0,
+                            "message":"查询成功",
+                            "data":val,
+                            "totalSize":totalSize
+                        });
+                    }
+                });
             });
             break;
 
             case "getReplyComment":
-            sql = "SELECT * FROM comment WHERE reply_comment_id IS NOT NULL";
-            connection.query(sql,(err,data)=>{
+            if(requestData.good_name)
+            {
+                sql = "SELECT * FROM adminReply WHERE good_name = ?";
+                sqlParams = [requestData.good_name];
+            }
+            else
+            {
+                sql = "SELECT * FROM adminReply";
+                sqlParams = [];
+            }
+            connection.query(sql,sqlParams,(err,data)=>{
                 if(err)
                 {
                     console.log(err);
@@ -125,15 +158,15 @@ route.post('/comment',(req,res)=>{
             
             case "replyComment":
             let currentTime = _.getCurrentTime();
-            sql = "INSERT INTO comment SET ?";
+            sql = "INSERT INTO adminReply SET ?";
             sqlParams = [
                 {
-                    "comment_content":requestData.comment_content,
+                    "reply_content":requestData.comment_content,
                     "good_name":requestData.good_name,
-                    "user_nickname":"admin",
+                    "admin_account":"admin",
                     "reply_to_id":requestData.reply_to_id,
                     "reply_to_nickname":requestData.reply_to_nickname,
-                    "comment_time":currentTime,
+                    "reply_time":currentTime,
                     "reply_comment_id":requestData.reply_to_comment_id
                 }
             ];

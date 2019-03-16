@@ -124,10 +124,14 @@ export default {
                         "method":"makeOrderSuccess",
                         "userName":this.userName,
                         "goodIdList":this.goodIdList,
+                        "goodDetailList":this.goodList,
                     };
-                    this.$http.post('/guestCart',params).then((data)=>{
+                    this.$http
+                    .post('/guestCart',params)
+                    .then((data)=>{
                         console.log(data);
-                    }).catch((err)=>{
+                    })
+                    .catch((err)=>{
                         console.log(err);
                     });
                     this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});

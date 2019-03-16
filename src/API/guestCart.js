@@ -2,6 +2,8 @@ const express = require("express");
 const mysql = require("mysql");
 // 连接mysql数据库的基本配置
 const mysqlConfig = require("./../../mysql.config.js");
+const response = require("./../response/response.js");
+const _ = require("./../utils/utils.js");
 
 // 实例化express路由
 const route = express.Router();
@@ -129,40 +131,80 @@ route.post('/guestCart',(req,res) => {
             break;
 
             case "makeOrderSuccess":
-            sql = "DELETE FROM cart WHERE user_nickname=? AND good_id";
-            sqlParams = [];
-            sqlParams.push(reqData.userName);
-            sql += " IN (";
-            for(let i = 0;i<reqData.goodIdList.length;i++)
-            {
-                if(i == reqData.goodIdList.length-1)
+            // let promise2 = new Promise((resolve,reject)=>{
+            //     let goodIdList = [];
+            //     let goodNameList = [];
+            //     let goodNumList = [];
+            //     let goodSumList = [];
+            //     for(let i = 0;i<reqData.goodDetailList.length;i++)
+            //     {
+            //         console.log(reqData.goodDetailList[i].good_id);
+            //         console.log(reqData.goodDetailList[i].good_name);
+            //         console.log(reqData.goodDetailList[i].num);
+            //         console.log(reqData.goodDetailList[i].sum);
+            //         goodIdList.push(reqData.goodDetailList[i].good_id);
+            //         goodNameList.push(reqData.goodDetailList[i].good_name);
+            //         goodNumList.push(reqData.goodDetailList[i].num);
+            //         goodSumList.push(reqData.goodDetailList[i].sum);
+            //     }
+            //     sql = "INSERT INTO saleCount(good_id,good_name,sale_number,sale_sum) VALUES ";
+            //     for(let i = 0;i<goodIdList.length;i++)
+            //     {
+            //         sql += "('"+goodIdList[i]+"','"+goodNameList[i]+"','"+goodNumList[i]+"','"+goodSumList[i]+"'),";
+            //     }
+            //     sql = _.deleting(sql,",",-1);
+            //     console.log(sql);
+            //     return;
+            //     connection.query(sql,(err)=>{
+            //         if(err)
+            //         {
+            //             console.log(err);
+            //             res.json(response.responseFail(err));
+            //             return;
+            //         }
+            //         else
+            //         {
+            //             resolve();
+            //         }
+            //     });
+            // });
+            // promise2.then(()=>{
+                sql = "DELETE FROM cart WHERE user_nickname=? AND good_id";
+                sqlParams = [];
+                sqlParams.push(reqData.userName);
+                sql += " IN (";
+                for(let i = 0;i<reqData.goodIdList.length;i++)
                 {
-                    sql += "?)";
+                    if(i == reqData.goodIdList.length-1)
+                    {
+                        sql += "?)";
+                    }
+                    else
+                    {
+                        sql += "?,";
+                    }
+                    sqlParams.push(reqData.goodIdList[i]);
+
                 }
-                else
-                {
-                    sql += "?,";
-                }
-                sqlParams.push(reqData.goodIdList[i]);
-            }
-            connection.query(sql,sqlParams,(err)=>{
-                if(err)
-                {
-                    console.log(err);
-                    res.json({
-                        "code":"-1",
-                        "message":err,
-                    });
-                }
-                else
-                {
-                    console.log("生成订单成功，已成功从用户购物车清除生成订单的商品");
-                    res.json({
-                        "code":"0",
-                        "message":"已成功删除生成订单的商品"
-                    });
-                }
-            });
+                connection.query(sql,sqlParams,(err)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json({
+                            "code":"-1",
+                            "message":err,
+                        });
+                    }
+                    else
+                    {
+                        console.log("生成订单成功，已成功从用户购物车清除生成订单的商品");
+                        res.json({
+                            "code":"0",
+                            "message":"已成功删除生成订单的商品"
+                        });
+                    }
+                });
+            // });
         }
     });
 });
