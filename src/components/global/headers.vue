@@ -1,6 +1,7 @@
 <template>
     <div class="headerWrapper">
         <div class="stateArea">
+            <img :src="headImg" class="userHeadImg"/>
             <span v-if="ifLogin">当前账号:{{this.userName}}</span>
             <span v-if="!ifLogin">当前状态:未登录</span>
         </div>
@@ -24,6 +25,7 @@ export default {
         return{
             userName:'',
             ifLogin:false,
+            headImg:'',
         }
     },
     created(){
@@ -31,12 +33,29 @@ export default {
         {
             this.userName = this.$store.getters.getUsername;
             this.ifLogin = true;
+            let params = {
+                "method":"getUserHeadImg",
+                "user_nickname":this.userName
+            };
+            this.$http
+            .post('/userMange',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    this.headImg = responseData.data[0].user_headImg;
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
             console.log(this.userName,this.ifLogin);
         }
         else
         {
             this.userName = "未登录";
             this.ifLogin = false;
+            this.headImg = require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png');;
         }
     },
     methods:{
@@ -77,6 +96,13 @@ export default {
         display: flex;
         justify-content: space-between;
         line-height: 40px;
+        .userHeadImg
+        {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
         .stateArea
         {
             margin-left: 80px;

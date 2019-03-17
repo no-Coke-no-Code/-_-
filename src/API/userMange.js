@@ -17,11 +17,14 @@ route.post("/userMange",(req,res) => {
         requestData += chunk;
     });
     req.on('end',() => {
+        let sql = "";
+        let sqlParams = [];
         requestData = JSON.parse(requestData);
         console.log(requestData.method);
-        if(requestData.method == "searchAll")
+        switch(requestData.method)
         {
-            let sql = "SELECT * FROM user WHERE user_nickname != 'admin'";
+            case "searchAll":
+            sql = "SELECT * FROM user WHERE user_nickname";
             connection.query(sql,(err,data) => {
                 if(err)
                 {
@@ -37,10 +40,10 @@ route.post("/userMange",(req,res) => {
                     });
                 }
             });
-        }
-        if(requestData.method == "searchSome")
-        {
-            let sql = "SELECT * FROM user WHERE ";
+            break;
+
+            case "searchSome":
+            sql = "SELECT * FROM user WHERE ";
             if(requestData.userForm.id != "")
             {
                 sql += "user_id=" + requestData.userForm.id + " AND ";
@@ -85,6 +88,24 @@ route.post("/userMange",(req,res) => {
                     console.log(JSON.parse(JSON.stringify(data)));
                 }
             });
+            break;
+
+            case "getUserHeadImg":
+            sql = "SELECT user_headImg FROM user WHERE user_nickname = ?"
+            sqlParams = [requestData.user_nickname];
+            connection.query(sql,sqlParams,(err,data)=>{
+                if(err)
+                {
+                    console.log(err);
+                    res.json(response.responseFail(err));
+                }
+                else
+                {
+                    let responseData = JSON.parse(JSON.stringify(data));
+                    res.json(response.responseSuccess(responseData));
+                }
+            });
+            break;
         }
     });
 })

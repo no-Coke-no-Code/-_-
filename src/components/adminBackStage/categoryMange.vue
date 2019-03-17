@@ -12,10 +12,14 @@
                     <template slot="title">
                         <p class="catalogTitle">
                             <span class="catalogName">{{item.category_name}}</span>
+                            <a @click.stop="deleteCatalog(item)">删除该类型</a>
                             <a @click.stop="addSubCatalog(item)" class="addSubCatalog">添加子类型</a>
                         </p>
                     </template>
-                    <p class="subCatalogItem" v-for="(subCatalog,index) in subCatalogList">{{index+1}} . {{subCatalog}}</p>
+                    <p class="subCatalogItem" v-for="(subCatalog,index) in subCatalogList">
+                        <span>{{index+1}} . {{subCatalog}}</span>
+                        <a @click="deleteSubCatalog(subCatalog)">删除</a>
+                    </p>
                 </el-collapse-item>
             </el-collapse>
         </div>
@@ -150,6 +154,50 @@ export default {
         addSubCatalog(item){
             this.dialogVisible = true;
             this.choosingCatalog = item.category_name;
+        },
+        deleteCatalog(item){
+            let params = {
+                "method":"deleteCatalog",
+                "category_name":item.category_name,
+            };
+            this.$http
+            .post('/categoryMange',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    this.$message.success("删除目录成功");
+                    this.init();
+                }
+            })
+            .catch((err)=>{
+                if(err)
+                {
+                    this.$message.error("删除目录失败");
+                }
+            });
+        },
+        deleteSubCatalog(subCatalog){
+            let params = {
+                "method":"deleteSubCatalog",
+                "subCatalog_name":subCatalog,
+            };
+            this.$http
+            .post('/categoryMange',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    this.$message.success("删除子目录成功");
+                    this.init();
+                }
+            })
+            .catch((err)=>{
+                if(err)
+                {
+                    this.$message.error("删除子目录失败");
+                }
+            });
         },
         getSubCatalog(item){
             this.subCatalogList = [];

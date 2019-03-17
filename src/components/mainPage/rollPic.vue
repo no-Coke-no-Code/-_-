@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="content">
-            <h2>毕设生鲜超市</h2>
+            <h2>网上生鲜超市</h2>
             <p>让最新鲜的美味立刻送到你手上</p>
         </div>
         <el-carousel trigger="click" height="500px">

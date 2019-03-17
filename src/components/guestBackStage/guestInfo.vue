@@ -1,25 +1,39 @@
 <template>
     <div class="wrapper userInfo">
-        <!-- <div class="userHeadImg">
+        <div class="userHeadImg">
             <img :src="userHeadImg" class="userHead"  @click="showHeadImgDialog"/>
             <p>点击头像进行更改</p>
-        </div> -->
+        </div>
         <template>
-        <!-- <el-dialog :visible.sync="ifshowing" title="上传新的头像" class="userHeadImgDialog">
-            <el-upload
-            class="avatar-uploader"
-            action="http://localhost:3333/guestInfo/getGuestHeadImg"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-            <div class="dialogBtnGroup">
-                <el-button  @click="confirmHeadImg">确定上传</el-button>
-                <el-button @click="cancelHeadImgDialog">取消</el-button>
-            </div>
-        </el-dialog> -->
+            <el-dialog :visible.sync="ifshowing" title="上传新的头像" class="userHeadImgDialog">
+                <!-- <el-upload
+                class="avatar-uploader"
+                action="http://localhost:3333/guestInfo/getGuestHeadImg"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <div class="dialogBtnGroup">
+                    <el-button  @click="confirmHeadImg">确定上传</el-button>
+                    <el-button @click="cancelHeadImgDialog">取消</el-button>
+                </div> -->
+
+                <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    action="http://localhost:3333/guestInfo/changeGuestHeadImg"
+                    :data="{userNickname:editForm.nickname}"
+                    :on-success="handleSuccess"
+                    :limit="1"
+                    :file-list="fileList"
+                    :auto-upload="false">
+                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success" @click="confirmImg">确定上传</el-button>
+                </el-upload>
+                <el-button @click="cancelImg">取消</el-button>
+            </el-dialog>
         </template>
         <el-form :inline="true" :model="editForm" :rules="rules" ref="guestInfoForm">
             <el-col :span="8">
@@ -108,6 +122,7 @@ export default {
             }
         };
         return{
+            fileList:[],
             currentHeadImg:"",
             previewImg:"",
             user:"",
@@ -192,13 +207,29 @@ export default {
         },
     },
     methods:{
+        cancelImg(){
+            this.ifshowing = false;
+            this.fileList = [];
+        },
+        handleSuccess(res){
+            if(res.data)
+            {
+                this.ifshowing = false;
+                this.fileList = [];
+                this.init();
+            }
+        },
+        confirmImg(){
+            this.$refs.upload.submit();
+        },
         init(){
             let params = {
                 "method":"refresh",
                 "userName":this.$store.state.userName
                 // "userName":this.editForm.nickname
             };
-            this.$http.post("/guestInfo",params)
+            this.$http
+            .post("/guestInfo",params)
             .then((data) => {
                 let responseData = data.data.data[0];
                 console.log(responseData);
@@ -214,7 +245,7 @@ export default {
                 }
                 else
                 {
-                    this.userHeadImg = require("D:/hemashengxian/hema/static/pic/userHeadImg/" + responseData.user_headImg);
+                    this.userHeadImg = responseData.user_headImg;
                 }
                 this.currentHeadImg = responseData.user_headImg;
                 if(responseData.user_sex == "m")
@@ -227,7 +258,8 @@ export default {
                 }
                 this.temForm = JSON.parse(JSON.stringify(this.editForm));
                 console.log(this.temForm);
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 console.log(err);
             });
         },
@@ -369,7 +401,7 @@ export default {
 
 
 <style>
-    .userHeadImgDialog .el-upload
+    /* .userHeadImgDialog .el-upload
     {
         border: 1px dotted #c0c0c0;
         width: 178px;
@@ -383,7 +415,7 @@ export default {
     {
         font-size: 30px;
         transition: .2s ease;
-    }
+    } */
     
 </style>
 

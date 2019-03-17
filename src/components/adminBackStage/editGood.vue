@@ -50,7 +50,7 @@
             <el-upload
             class="upload-demo"
             ref="upload"
-            action="http://localhost:3333/goodMange/getGoodImg"
+            action="http://localhost:3333/goodMange/changeGoodImg"
             :data="{goodName:editForm.name}"
             :on-success="handleSuccess"
             :limit="1"

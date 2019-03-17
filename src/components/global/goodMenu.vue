@@ -1,35 +1,11 @@
 <template>
     <div class="goodMenuWrapper">
         <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-submenu index="1">
-                <template slot="title">蔬菜</template>
-                <el-menu-item index="叶类蔬菜">叶类蔬菜</el-menu-item>
-                <el-menu-item index="地下蔬菜">地下蔬菜</el-menu-item>
-                <el-menu-item index="山货">山货</el-menu-item>
-            </el-submenu>
-            <el-submenu index="2">
-                <template slot="title">水果</template>
-                <el-menu-item index="苹果">苹果</el-menu-item>
-                <el-menu-item index="雪梨">雪梨</el-menu-item>
-                <el-menu-item index="香蕉">香蕉</el-menu-item>
-            </el-submenu>
-            <el-submenu index="3">
-                <template slot="title">海鲜</template>
-                <el-menu-item index="鱼">鱼</el-menu-item>
-                <el-menu-item index="龙虾">龙虾</el-menu-item>
-                <el-menu-item index="鲍鱼">鲍鱼</el-menu-item>
-            </el-submenu>
-            <el-submenu index="4">
-                <template slot="title">肉类</template>
-                <el-menu-item index="牛肉">牛肉</el-menu-item>
-                <el-menu-item index="猪肉">猪肉</el-menu-item>
-                <el-menu-item index="羊肉">羊肉</el-menu-item>
-            </el-submenu>
-            <el-submenu index="5">
-                <template slot="title">零食</template>
-                <el-menu-item index="巧克力">巧克力</el-menu-item>
-                <el-menu-item index="糖果">糖果</el-menu-item>
-                <el-menu-item index="汽水">汽水</el-menu-item>
+            <el-submenu v-for="(catalog,index1) in catalogList" :index="catalog.category_name">
+                <template slot="title">{{catalog.category_name}}</template>
+                <el-menu-item v-if="catalog.subCatalog_name" v-for="(subCatalog,index2) in catalog.subCatalog_name" :index="subCatalog">
+                    {{subCatalog}}
+                </el-menu-item>
             </el-submenu>
         </el-menu>
     </div>
@@ -40,12 +16,42 @@ export default {
     name:"goodMenu",
     data(){
         return{
-
+            catalogList:[],
+            subCatalogList:[],
         }
     },
+    created(){
+        let params = {
+            "method":"checkCategory"
+        };
+        this.$http
+        .post('/categoryMange',params)
+        .then((data)=>{
+            let responseData = data.data;
+            if(responseData.code == 0)
+            {
+                for(let i = 0;i<responseData.data.length;i++)
+                {
+                    this.catalogList.push(responseData.data[i]);
+                }
+                console.log(this.catalogList,'1111');
+            }
+        })
+        .catch((err)=>{
+            if(err)
+            {
+                console.log(err);
+            }
+        });
+    },
     methods:{
+        testing(){
+            alert("哈哈沙雕");
+        },
         // 这里面的key是导航栏项里面的index
         handleSelect(key){
+            // alert("CMD");
+            alert(key,'this one');
             this.$router.push({path:'searchResult',query:{search:key,searchType:'category'}});
         },
     },

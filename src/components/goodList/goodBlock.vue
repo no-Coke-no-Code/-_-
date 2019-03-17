@@ -2,7 +2,8 @@
     <div class="blockWrapper">
         <div class="blockTitle">
             <h2>{{this.title}}</h2>
-            <a @click="changeBatch">换一批</a>
+            <!-- <a @click="changeBatch">查看更多</a> -->
+            <a @click="seeMore">查看更多</a>
         </div>
         <div>
             <el-row :gutter="40">
@@ -13,7 +14,7 @@
                             <span>{{item.good_name}}</span>
                             <div class="bottom clearfix">
                                 <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
-                                <el-button type="warning" class="button" @click="collect">收藏</el-button>
+                                <el-button type="warning" class="button" @click="collect(item)">收藏</el-button>
                                 <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
                             </div>
                         </div>
@@ -68,16 +69,22 @@ export default {
                 "type":this.type,
             };
 
-            this.$http.post('/mainPageGoodBlock',params)
+            this.$http
+            .post('/mainPageGoodBlock',params)
             .then((data) => {
                 this.responseData = data.data.data;
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 console.log(err);
             });
         },
         // 换一批按钮的操作，重新随机请求一批数据
         changeBatch(){
             this.init();
+        },
+        // 查看更多操作
+        seeMore(){
+            this.$router.push(({path:'searchResult',query:{search:this.title}}));
         },
         // 查看商品详情
         toGoodDetail(item){
@@ -86,8 +93,9 @@ export default {
             }});
         },
         // 收藏操作
-        collect(){
+        collect(item){
             let userName = this.$store.getters.getUsername;
+            let userId = this.$store.getters.getUserid;
             if(userName===null)
             {
                 this.$store.state.location = decodeURI(window.location.href);
@@ -97,7 +105,9 @@ export default {
             let params = {
                 "method":"addToCollection",
                 "userName":userName,
-                "goodId":this.goodDetail.good_id,
+                "userId":userId,
+                "goodId":item.good_id,
+                "goodName":item.good_name,
             };
             this.$http.post('/guestCollection',params)
             .then((data)=>{

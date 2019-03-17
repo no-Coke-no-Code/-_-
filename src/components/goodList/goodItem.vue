@@ -9,7 +9,7 @@
                         <span>{{item.good_name}}</span>
                         <div class="bottom clearfix">
                             <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
-                            <el-button type="warning" class="button" @click="collect">收藏</el-button>
+                            <el-button type="warning" class="button" @click="collect(item)">收藏</el-button>
                             <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
                         </div>
                     </div>
@@ -35,15 +35,23 @@ export default {
         }
     },
     created(){
-        let params = {
-            "searchType":"goodName",
-            "searchKeyWord":this.searchKeyWord
-        };
+        let params = {};
+        if(this.searchKeyWord=="精品推介"||this.searchKeyWord=="劲爆新品"||this.searchKeyWord=="异国风情")
+        {
+            params.searchType = "goodBlock"
+            params.searchKeyWord = this.searchKeyWord;
+        }
+        else
+        {
+            params.searchType = "goodName";
+            params.searchKeyWord = this.searchKeyWord;
+        }
         this.$http
         .post('/goodSearch',params)
         .then((data)=>{
             console.log(data);
             this.responseData = data.data.data;
+            console.log(this.responseData);
         })
         .catch((err)=>{
             console.log(err);
@@ -57,8 +65,9 @@ export default {
             }});
         },
         // 收藏操作
-        collect(){
+        collect(item){
             let userName = this.$store.getters.getUsername;
+            let userId = this.$store.getters.getUserid;
             if(userName===null)
             {
                 this.$store.state.location = decodeURI(window.location.href);
@@ -68,7 +77,9 @@ export default {
             let params = {
                 "method":"addToCollection",
                 "userName":userName,
-                "goodId":this.goodDetail.good_id,
+                "userId":userId,
+                "goodId":item.good_id,
+                "goodName":item.good_name,
             };
             this.$http.post('/guestCollection',params)
             .then((data)=>{

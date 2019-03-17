@@ -3,6 +3,7 @@ const mysql = require("mysql");
 // 连接mysql数据库的基本配置
 const mysqlConfig = require("./../../mysql.config.js");
 const response = require("./../response/response.js");
+const _ = require("./../utils/utils.js");
 
 // 实例化express路由
 const route = express.Router();
@@ -70,8 +71,10 @@ route.post("/categoryMange",(req,res) => {
                         }
                     });
                 break;
-                // 查看所有商品种类
+
+                // 查看所有商品种类（每个父类包含各自的子类）
                 case "checkCategory":
+                let promise3 = new Promise((resolve,reject)=>{
                     sql = "SELECT category_name FROM category";
                     connection.query(sql,(err,data)=>{
                         if(err)
@@ -81,14 +84,68 @@ route.post("/categoryMange",(req,res) => {
                         else
                         {
                             let responseData = JSON.parse(JSON.stringify(data));
-                            res.json({
-                                "code":"0",
-                                "message":"查询商品类别成功",
-                                "data":responseData
-                            });
+                            // res.json({
+                            //     "code":"0",
+                            //     "message":"查询商品类别成功",
+                            //     "data":responseData
+                            // });
+                            console.log(responseData);
+                            console.log("我想看看这个");
+                            resolve(responseData);
+                        }
+                    });
+                });
+                promise3.then((value)=>{
+                    sql = "SELECT subCatalog_name,catalog_name FROM subCatalog WHERE catalog_name IN (";
+                    for(let i = 0;i<value.length;i++)
+                    {
+                        sql += "'" + value[i].category_name + "',";
+                    }
+                    sql = _.deleting(sql,",",-1);
+                    sql += ")";
+                    connection.query(sql,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            for(let i = 0;i<value.length;i++)
+                            {
+                                value[i].subCatalog_name = [];
+                                for(let x = 0;x<responseData.length;x++)
+                                {
+                                    if(responseData[x].catalog_name == value[i].category_name)
+                                    {
+                                        value[i].subCatalog_name.push(responseData[x].subCatalog_name);
+                                    }
+                                }
+                            }
+                            console.log(value);
+                            res.json(response.responseSuccess(value));
+                        }
+                    });
+                });
+                break;
+
+                // 查询所有的商品子种类
+                case "checkAllSubCatalog":
+                    sql = "SELECT subCatalog_name,catalog_name FROM subCatalog";
+                    connection.query(sql,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                            res.json(response.responseFail(err));
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            res.json(response.responseSuccess(responseData));
                         }
                     });
                 break;
+
                 // 根据选择的父类查询相对应商品子种类
                 case "checkSubCatalog":
                     sql = "SELECT subCatalog_name FROM subCatalog WHERE catalog_name = ?";
@@ -150,6 +207,39 @@ route.post("/categoryMange",(req,res) => {
                         });
                     });
                 break;
+
+                case "deleteCatalog":
+                sql = "DELETE FROM category WHERE category_name = ?";
+                sqlParams = [requestData.category_name];
+                connection.query(sql,sqlParams,(err)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail(err));
+                    }
+                    else
+                    {
+                        res.json(response.responseSuccess("删除成功"));
+                    }
+                });
+                break;
+
+                case "deleteSubCatalog":
+                sql = "DELETE FROM subCatalog WHERE subCatalog_name = ?";
+                sqlParams = [requestData.subCatalog_name];
+                connection.query(sql,sqlParams,(err)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail(err));
+                    }
+                    else
+                    {
+                        res.json(response.responseSuccess("删除成功"));
+                    }
+                });
+                break;
+
                 default:break;
         }
     });

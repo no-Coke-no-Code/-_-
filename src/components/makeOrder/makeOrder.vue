@@ -7,12 +7,16 @@
                 <h2>商品信息</h2>
                 <el-table :data="goodList">
                     <!-- 下面这个是用来放图片的 -->
-                    <el-table-column label="图片"></el-table-column>
+                    <el-table-column label="图片" prop="good_imgurl">
+                        <template slot-scope="scope">
+                            <img class="goodImg" :src="scope.row.good_imgurl"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="商品名称" prop="good_name"></el-table-column>
-                    <el-table-column label="单价" prop="good_price"></el-table-column>
+                    <el-table-column label="单价（￥）" prop="good_price"></el-table-column>
                     <el-table-column label="单位" prop="good_unit"></el-table-column>
                     <el-table-column label="数量" prop="num"></el-table-column>
-                    <el-table-column label="小计" prop="sum"></el-table-column>
+                    <el-table-column label="小计（￥）" prop="sum"></el-table-column>
                 </el-table>
             </div>
             <div class="totalPrice">
@@ -21,9 +25,9 @@
             <div class="userInfo">
                 <h2>用户信息</h2>
                 <div>
-                    <p>收货人姓名：{{this.userName}}</p>
-                    <p>联系电话：{{this.userPhone}}</p>
-                    <p>送货地址：{{this.userAddress}}</p>
+                    <p>收货人姓名：<el-input class="orderInfo" v-model="userRealname"></el-input></p>
+                    <p>联系电话：<el-input class="orderInfo" v-model="userPhone"></el-input></p>
+                    <p>送货地址：<el-input class="orderInfo" v-model="userAddress"></el-input></p>
                 </div>
             </div>
             <el-button @click="confirmOrder" type="primary">确定生成</el-button>
@@ -47,6 +51,7 @@ export default {
             userName:"",
             userPhone:"",
             userAddress:"",
+            userRealname:"",
             goodIdList:[],
         }
     },
@@ -78,6 +83,7 @@ export default {
             let responseData = data.data.data[0];
             this.userPhone = responseData.user_phone;
             this.userAddress = responseData.user_address;
+            this.userRealname = responseData.user_realname;
         })
         .catch((err)=>{
             console.log(err);
@@ -91,54 +97,61 @@ export default {
                 cancelButtonText:"我再想想"
             })
             .then(() => {
-                this.$message({
+                if(this.userPhone && this.address && this.userRealname)
+                {
+                    this.$message({
                     message:"正在生成，请稍后",
                     type:"success"
-                });
-                let goodList = [];
-                for(let i = 0;i<this.goodList.length;i++)
-                {
-                    goodList.push(this.goodList[i]);
-                }
-                this.ifLoading = true;
-                // 生成订单接口所需参数：用户名，商品信息，数量，单价，小计，创建时间(后端生成吧)
-                let params = {
-                    "method":"makeGuestOrder",
-                    "userName":this.userName,
-                    "goodList":this.goodList,
-                    "totalPrice":this.totalPrice,
-                    "address":this.userAddress,
-                    "phone":this.userPhone,
-                };
-                console.log(this.goodList);
-                this.$http
-                .post('/guestOrder',params)
-                .then((data) => {
-                    console.log(data);
-                    this.ifLoading = false;
+                    });
+                    let goodList = [];
                     for(let i = 0;i<this.goodList.length;i++)
                     {
-                        this.goodIdList.push(this.goodList[i].good_id);
+                        goodList.push(this.goodList[i]);
                     }
-                    params = {
-                        "method":"makeOrderSuccess",
+                    this.ifLoading = true;
+                    // 生成订单接口所需参数：用户名，商品信息，数量，单价，小计，创建时间(后端生成吧)
+                    let params = {
+                        "method":"makeGuestOrder",
                         "userName":this.userName,
-                        "goodIdList":this.goodIdList,
-                        "goodDetailList":this.goodList,
+                        "goodList":this.goodList,
+                        "totalPrice":this.totalPrice,
+                        "address":this.userAddress,
+                        "phone":this.userPhone,
                     };
+                    console.log(this.goodList);
                     this.$http
-                    .post('/guestCart',params)
-                    .then((data)=>{
+                    .post('/guestOrder',params)
+                    .then((data) => {
                         console.log(data);
-                    })
-                    .catch((err)=>{
-                        console.log(err);
+                        this.ifLoading = false;
+                        for(let i = 0;i<this.goodList.length;i++)
+                        {
+                            this.goodIdList.push(this.goodList[i].good_id);
+                        }
+                        params = {
+                            "method":"makeOrderSuccess",
+                            "userName":this.userName,
+                            "goodIdList":this.goodIdList,
+                            "goodDetailList":this.goodList,
+                        };
+                        this.$http
+                        .post('/guestCart',params)
+                        .then((data)=>{
+                            console.log(data);
+                        })
+                        .catch((err)=>{
+                            console.log(err);
+                        });
+                        this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
+                        })
+                        .catch((err) => {
+                            console.log(err);
                     });
-                    this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+                }
+                else
+                {
+                    this.$message.error("请先完善订单信息");
+                }
             })
             .catch((err)=>{
                 console.log(err);
@@ -156,6 +169,16 @@ export default {
     .mainBlock
     {
         padding: 50px 80px;
+        .goodImg
+        {
+            width: 100px;
+            height: 100px;
+        }
+        .orderInfo
+        {
+            display: inline-block;
+            width: 400px;
+        }
     }
 </style>
 

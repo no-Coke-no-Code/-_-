@@ -11,7 +11,7 @@ const guestCart = require("./src/API/guestCart.js");
 const mainPageGoodBlock = require("./src/API/mainPageGoodBlock.js");
 const goodDetail = require("./src/API/goodDetail.js");
 const guestCollection = require('./src/API/guestCollection.js');
-const getGuestHeadImg = require("./src/API/getGuestHeadImg");
+const changeGuestHeadImg = require("./src/API/changeGuestHeadImg");
 const deleteGuestHeadImg = require("./src/API/deleteGuestHeadImg");
 const goodSearch = require("./src/API/goodSearch.js");
 const mangeOrder = require('./src/API/mangeOrder.js');
@@ -40,7 +40,6 @@ module.exports = () => {
     route.post("/mangeOrder",mangeOrder);
     // 后台修改商品图片功能
     route.post('/goodMange/changeGoodImg',changeGoodImg);
-    route.post('/goodMange/getGoodImg',changeGoodImg);
     // 后台操作商品类别功能
     route.post("/categoryMange",categoryMange);
     // 后台管理首页三种商品类别功能
@@ -49,8 +48,7 @@ module.exports = () => {
     // 用户获取/修改个人信息功能
     route.post("/guestInfo",guestInfo);
     // 用户设置个人头像功能接口
-    route.post("/guestInfo/getGuestHeadImg",getGuestHeadImg);
-    route.post("/guestInfo/changeGuestHeadImg",getGuestHeadImg);
+    route.post("/guestInfo/changeGuestHeadImg",changeGuestHeadImg);
     // 删除用户个人头像功能接口
     // (需要落实如何接收delete请求的参数)
     route.post("/guestInfo/deleteGuestHeadImg",deleteGuestHeadImg);

@@ -7,6 +7,7 @@
             <a class="seeGoodDetail" @click="toGood(item)">点击查看</a>
             <a class="removeCollection" @click="removeCollection(item)">不再收藏</a>
         </div>
+        <h2 v-if="!collectionList.length">您的收藏夹还是空空如也哦   去逛逛吧</h2>
     </div>
 </template>
 

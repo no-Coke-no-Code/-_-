@@ -107,6 +107,8 @@ route.post('/guestCollection',(req,res)=>{
                     "good_id":reqData.goodId,
                     "good_name":reqData.goodName
                 };
+                console.log(sqlParams);
+                console.log('为毛没反应');
                 connection.query(sql,sqlParams,(err)=>{
                     if(err)
                     {

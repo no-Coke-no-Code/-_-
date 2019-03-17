@@ -9,11 +9,12 @@
             </div>
             <div class="goodInfo">
                 <h2>{{this.goodDetail.good_name}}</h2>
-                <p>售价:{{this.goodDetail.good_price}}</p>
-                <p>描述:{{this.goodDetail.good_detail}}</p>
-                <p>单位:{{this.goodDetail.good_unit}}</p>
+                <p>售价 : {{this.goodDetail.good_price}}</p>
+                <p>描述 : {{this.goodDetail.good_detail}}</p>
+                <p>单位 : {{this.goodDetail.good_unit}}</p>
                 <p>所属类别 : {{this.goodDetail.category_name}} - {{this.goodDetail.subCatalog_name}}</p>
-                <p>总销量:</p>
+                <p>来源地 : {{this.goodDetail.good_from}}</p>
+                <!-- <p>总销量:</p> -->
                 <el-button @click="addToCart" type="primary">加入购物车</el-button>
                 <el-button @click="collect" type="warning">收藏</el-button>
             </div>
@@ -100,7 +101,6 @@ export default {
                 "goodId":this.goodDetail.good_id,
                 "goodName":this.goodDetail.good_name,
             };
-            console.log(params,"商品详细信息");
             this.$http.post('/guestCollection',params)
             .then((data)=>{
                 console.log(data);

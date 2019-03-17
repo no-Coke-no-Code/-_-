@@ -16,40 +16,6 @@ connection.connect();
 
 
 route.post('/goodMange/changeGoodImg',(req,res) => {
-    var reqData = "";
-    req.on('data',(chunk) => {
-        reqData += chunk;
-    });
-    req.on('end',() => {
-        reqData = JSON.parse(reqData);
-        console.log("更改头像的用户名"+reqData.userName);
-        let newUserHeadImgArray = reqData.newUserHeadImg.split("\\");
-        let newUserHeadImg = newUserHeadImgArray[newUserHeadImgArray.length-1];
-        console.log("用户新的头像的地址"+newUserHeadImg);
-        let sql = "UPDATE user SET user_headImg=? WHERE user_nickname=?";
-        let sqlParams = [newUserHeadImg,reqData.userName];
-        connection.query(sql,sqlParams,(err,data)=>{
-            if(err)
-            {
-                console.log(err);
-                res.json({
-                    "code":-1,
-                    "message":"更改商品图片失败"
-                });
-            }
-            else
-            {
-                console.log(JSON.parse(JSON.stringify(data)));
-                res.json({
-                    "code":0,
-                    "message":"更改商品图片成功"
-                });
-            }
-        });
-    });
-});
-
-route.post('/goodMange/getGoodImg',(req,res) => {
     var form = new formidable.IncomingForm();
         form.encoding = "utf-8";
         // 接收后的图片所存放的位置
@@ -106,20 +72,6 @@ route.post('/goodMange/getGoodImg',(req,res) => {
                     });
                 }
             });
-
-            // let sql = "UPDATE good SET good_imgurl=? WHERE good_name=?";
-            // let sqlParams = [newPath,fields.goodName];
-            // connection.query(sql,sqlParams,(err,data)=>{
-            //     if(err)
-            //     {
-            //         console.log(err);
-            //     }
-            //     res.json({
-            //         "state":"200",
-            //         "message":"成功接收到上传的图片",
-            //         "data":newPath
-            //     });
-            // });
         });
 });
 

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <table class="cartTable">
+        <table class="cartTable" v-if="responseData.length">
             <thead class="cartHead">
                 <tr>
                     <th><input type="checkbox" @click="chooseAll" ref="chooseAll" v-model="ifChooseAll"/></th>
@@ -51,6 +51,7 @@
                 </td>
             </tfoot>
         </table>
+        <h2 v-if="!responseData.length">您的购物车空空如也哦   再去逛逛吧</h2>
     </div>
 </template>
 

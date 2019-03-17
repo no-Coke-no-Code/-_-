@@ -2,10 +2,11 @@
     <div class="searchInputWrapper">
         <el-input v-model="searchText" placeholder="请输入搜索内容">
             <template slot="append">
-                <el-button type="primary" class="searchBtn" @click="searching"><i class="el-icon-search"></i>搜索</el-button>
+                <el-button type="primary" class="searchBtn" @click="searching">
+                    <i class="el-icon-search"></i>搜索
+                </el-button>
             </template>
         </el-input>
-        <!-- <el-button type="primary" class="searchBtn" @click="searching"><i class="el-icon-search"></i>搜索</el-button> -->
     </div>
 </template>
 
