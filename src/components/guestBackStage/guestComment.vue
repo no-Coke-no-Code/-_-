@@ -20,6 +20,7 @@ export default {
         "commentDialog",
         "commentGood",
         "commentOrder",
+        "commentGoodIndex"
     ],
     data(){
         return{
@@ -62,7 +63,8 @@ export default {
                         "user_id":userId,
                         "comment_content":this.commentForm.goodComment,
                         "comment_rank":this.commentForm.goodRank,
-                        "comment_order":this.commentOrder
+                        "comment_order":this.commentOrder,
+                        "commen_goodIndex":this.commentGoodIndex,
                     };
                     this.$http
                     .post('/comment',params)

@@ -82,8 +82,8 @@
                 <li>
                     <div class="introduceItem">
                         <img src="../../assets/img/introduce/introducePic2.png"/>
-                        <h2>准时送达</h2>
-                        <p>我们确保你的商品准时送达</p>
+                        <h2>送货到家</h2>
+                        <p>我们确保你的商品送货到家</p>
                     </div>
                 </li>
                 <li>
@@ -96,8 +96,8 @@
                 <li>
                     <div class="introduceItem">
                         <img src="../../assets/img/introduce/introducePic4.png"/>
-                        <h2>准时送达</h2>
-                        <p>我们确保你的商品准时送达</p>
+                        <h2>确保安全</h2>
+                        <p>我们确保你的商品百分百安全无公害</p>
                     </div>
                 </li>
             </ul>

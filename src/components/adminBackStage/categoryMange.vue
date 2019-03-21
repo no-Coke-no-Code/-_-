@@ -12,13 +12,13 @@
                     <template slot="title">
                         <p class="catalogTitle">
                             <span class="catalogName">{{item.category_name}}</span>
-                            <a @click.stop="deleteCatalog(item)">删除该类型</a>
+                            <a @click.stop="deleteCatalog(item)" class="deleteCatalog">删除该类型</a>
                             <a @click.stop="addSubCatalog(item)" class="addSubCatalog">添加子类型</a>
                         </p>
                     </template>
                     <p class="subCatalogItem" v-for="(subCatalog,index) in subCatalogList">
                         <span>{{index+1}} . {{subCatalog}}</span>
-                        <a @click="deleteSubCatalog(subCatalog)">删除</a>
+                        <a @click="deleteSubCatalog(subCatalog)" class="deleteSubCatalog">删除</a>
                     </p>
                 </el-collapse-item>
             </el-collapse>
@@ -291,13 +291,13 @@ export default {
             margin-left:30px;
             margin-bottom:30px;
         }
-        .addSubCatalog
+        .addSubCatalog,.deleteCatalog
         {
-            margin-left: 50px;
             &:hover
             {
                 color: blue;
                 text-decoration: underline;
+                cursor: pointer;
             }
         }
         .catalogTitle
@@ -311,7 +311,12 @@ export default {
             .addSubCatalog
             {
                 float:right;
-                margin-right:50px;
+                margin-right:20px;
+            }
+            .deleteCatalog
+            {
+                float: right;
+                margin-right: 20px;
             }
         }
         .subCatalogItem
@@ -319,6 +324,17 @@ export default {
             margin-left: 100px;
             font-size:14px;
             line-height:40px;
+            .deleteSubCatalog
+            {
+                float:right;
+                margin-right:50px;
+                &:hover
+                {
+                    color: blue;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            }
         }
     }
 </style>

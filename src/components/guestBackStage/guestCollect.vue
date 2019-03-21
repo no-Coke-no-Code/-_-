@@ -1,5 +1,5 @@
 <template>
-    <div class="collectionWrapper">
+    <div class="collectionWrapper" v-loading="ifLoading">
         <div class="collectionListItem" v-for="item in collectionList">
             <img class="collectionImg" :src="item.good_imgurl"/>
             <span class="collectionName">商品名称:{{item.good_name}}</span>
@@ -18,6 +18,7 @@ export default {
         return{
             userId:"",
             collectionList:[],
+            ifLoading:false,
         }
     },
     methods:{
@@ -52,6 +53,7 @@ export default {
         },
         // 初始化收藏商品页面列表
         init(){
+            this.ifLoading = true;
             this.userId = this.$store.getters.getUserid;
             let params = {
                 "method":"refreshCollection",
@@ -62,6 +64,7 @@ export default {
             .then((data)=>{
                 let responseData = data.data.data;
                 console.log(responseData);
+                this.ifLoading = false;
                 if(responseData == "无收藏")
                 {
                     this.collectionList = [];
@@ -72,6 +75,7 @@ export default {
                 }
             })
             .catch((err)=>{
+                this.ifLoading = false;
                 console.log(err);
             });
         },

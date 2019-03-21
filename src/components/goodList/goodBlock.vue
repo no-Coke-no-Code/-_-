@@ -2,17 +2,22 @@
     <div class="blockWrapper">
         <div class="blockTitle">
             <h2>{{this.title}}</h2>
-            <!-- <a @click="changeBatch">查看更多</a> -->
-            <a @click="seeMore">查看更多</a>
+            <div class="action">
+                <a @click="changeBatch">换一批</a>
+                <a @click="seeMore">查看更多</a>
+            </div>
         </div>
         <div>
             <el-row :gutter="40">
-                <el-col :span="8" v-for="(item, index) in responseData" :key="index">
+                <el-col :span="8" v-for="(item, index) in responseData" :key="index" style="margin-bottom:20px;">
                     <el-card :body-style="{ padding: '0px' }">
                         <img :src="item.good_imgurl" class="image">
-                        <div style="padding: 14px;">
-                            <span>{{item.good_name}}</span>
-                            <div class="bottom clearfix">
+                        <div class="contentArea">
+                            <p class="describeArea">
+                                <span>{{item.good_name}}</span>
+                                <span>￥{{item.good_price}}/{{item.good_unit}}</span>
+                            </p>
+                            <div class="bottomBtn clearfix">
                                 <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
                                 <el-button type="warning" class="button" @click="collect(item)">收藏</el-button>
                                 <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
@@ -152,6 +157,18 @@ export default {
 }
 </script>
 
+<style>
+    .bottomBtn .el-button:nth-child(2)
+    {
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+    }
+    .blockWrapper .el-button+.el-button
+    {
+        margin: 0px;
+    }
+</style>
+
 <style lang="scss" scoped>
     .blockWrapper
     {
@@ -170,11 +187,18 @@ export default {
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
+            .action
+            {
+                a:nth-child(1)
+                {
+                    margin-right: 20px;
+                }
+            }
         }
         .image
         {
-            width: 300px;
-            height: 200px;
+            width: 100%;
+            height: 300px;
         }
     }
     .el-card
@@ -186,14 +210,19 @@ export default {
             transition: .2s ease;
         }
     }
-    // .testing
-    // {
-    //     opacity: 1;
-    //     transition: 2s ease;
-    // }
-    // .testing2
-    // {
-    //     opacity: 0;
-    //     transition: 2s ease;
-    // }
+
+    .bottomBtn
+    {
+        display: flex;
+        justify-content: center;
+    }
+    .contentArea
+    {
+        padding: 14px;
+        background-color: #EEEFF3;
+        .describeArea
+        {
+            margin: 20px 0px;
+        }
+    }
 </style>

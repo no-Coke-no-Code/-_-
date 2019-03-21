@@ -71,6 +71,7 @@ export default {
     },
     methods:{
         init(){
+            // 获取用户评论
             let params = {
                 "method":"getGuestComment",
                 "pageSize":this.searchForm.pageSize,
@@ -85,6 +86,7 @@ export default {
                 {
                     this.ifResponseComment.push(false);
                 }
+                // 获取管理员回复
                 let params2 = {
                     "method":"getReplyComment",
                 };
@@ -95,8 +97,18 @@ export default {
                     this.commentList = commentList;
                     this.replyList = replyList;
                     this.searchForm.total = totalSize;
-                    console.log(this.commentList,"用户评论");
-                    console.log(this.replyList,"管理员评论");
+                    // 获取用户头像
+                    // let params3 = {
+                    //     "method":"",
+                    // };
+                    // this.$http
+                    // .post('/userMange',params3)
+                    // .then((data)=>{
+                    //     let responseData = data.data;
+                    // })
+                    // .catch((err)=>{
+                    //     console.log(err);
+                    // });
                 })
                 .catch((err)=>{
                     console.log(err);
@@ -213,9 +225,23 @@ export default {
         .commentItem
         {
             margin-bottom: 30px;
-            border: 1px solid black;
+            border: 1px solid #EEEFF3;
             padding: 10px;
+            border-radius: 5px;
+            transition: .5s ease;
+            &:hover
+            {
+                transform: scale(1.01);
+                transition: .2s ease;
+                border: 1px solid #2E9EFF;
+                box-shadow: 0 0 24px 0 rgba(82,94,102,0.15);
+                cursor: pointer;
+            }
 
+            .guestName
+            {
+                margin-left: 20px;
+            }
             .guestCommentContent,.guestRank,.goodName,.commentTime,.reply,.replyComment
             {
                 margin-left: 20px;
@@ -254,8 +280,7 @@ export default {
             {
                 padding: 20px;
                 margin-bottom: 20px;
-                background-color: #cab1b1;
-                border: 2px solid #c0c0c0;
+                background-color: #EEEFF3;
                 border-radius: 5px;
             }
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <h1>后台管理</h1>
+        <h1 class="listTitle">后台管理</h1>
     <el-menu
         class="el-menu-vertical-demo"
 
@@ -80,12 +80,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .wrapper
     {
         width: 300px;
         float: left;
         height: 100%;
         background: rgb(84, 92, 100);   
+        .listTitle
+        {
+            text-align: center;
+            line-height: 80px;
+            color:#fff;
+        }
     }
 </style>

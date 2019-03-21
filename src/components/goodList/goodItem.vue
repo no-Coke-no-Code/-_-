@@ -2,17 +2,20 @@
     <div class="goodItemWrapper">
         <div v-if="responseData.length">
             <el-row :gutter="40">
-                <el-col :span="8" v-for="(item, index) in responseData" :key="index">
+                <el-col :span="8" v-for="(item, index) in responseData" :key="index" style="margin-bottom:20px;">
                     <el-card :body-style="{ padding: '0px' }">
-                    <img :src="item.good_imgurl" class="image">
-                    <div style="padding: 14px;">
-                        <span>{{item.good_name}}</span>
-                        <div class="bottom clearfix">
-                            <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
-                            <el-button type="warning" class="button" @click="collect(item)">收藏</el-button>
-                            <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
+                        <img :src="item.good_imgurl" class="image">
+                        <div class="contentArea">
+                            <p class="describeArea">
+                                <span>{{item.good_name}}</span>
+                                <span>￥{{item.good_price}}/{{item.good_unit}}</span>
+                            </p>
+                            <div class="bottomBtn clearfix">
+                                <el-button type="primary" class="button" @click="toGoodDetail(item)">查看详情</el-button>
+                                <el-button type="warning" class="button" @click="collect(item)">收藏</el-button>
+                                <el-button type="danger" class="button" @click="addToCart(item)">加入购物车</el-button>
+                            </div>
                         </div>
-                    </div>
                     </el-card>
                 </el-col>
             </el-row>
@@ -140,19 +143,49 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-    .image
+<style>
+    .bottomBtn .el-button:nth-child(2)
     {
-        width: 300px;
-        height: 200px;
+        margin-left: 15px !important;
+        margin-right: 15px !important;
     }
-    .el-card
+    .goodItemWrapper .el-button+.el-button
     {
-        transition: .2s ease;
-        &:hover
+        margin: 0px;
+    }
+</style>
+
+<style lang="scss" scoped>
+    .goodItemWrapper
+    {
+        padding: 20px;
+        .image
         {
-            transform: scale(1.05,1.05);
+            width: 100%;
+            height: 300px;
+        }
+        .el-card
+        {
             transition: .2s ease;
+            &:hover
+            {
+                transform: scale(1.05,1.05);
+                transition: .2s ease;
+            }
+        }
+        .bottomBtn
+        {
+            display: flex;
+            justify-content: center;
+        }
+        .contentArea
+        {
+            padding: 14px;
+            background-color: #EEEFF3;
+            .describeArea
+            {
+                margin: 20px 0px;
+            }
         }
     }
 </style>

@@ -1,9 +1,9 @@
 <template>
     <div class="goodMenuWrapper">
         <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-submenu v-for="(catalog,index1) in catalogList" :index="catalog.category_name">
+            <el-submenu v-for="(catalog,index1) in catalogList" :index="catalog.category_name" :key="catalog.category_name">
                 <template slot="title">{{catalog.category_name}}</template>
-                <el-menu-item v-if="catalog.subCatalog_name" v-for="(subCatalog,index2) in catalog.subCatalog_name" :index="subCatalog">
+                <el-menu-item v-if="catalog.subCatalog_name" v-for="(subCatalog,index2) in catalog.subCatalog_name" :index="subCatalog" :key="subCatalog">
                     {{subCatalog}}
                 </el-menu-item>
             </el-submenu>

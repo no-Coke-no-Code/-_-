@@ -141,7 +141,8 @@ route.post('/comment',(req,res)=>{
                 return new Promise((resolve,reject)=>{
                     // 需要修改orderItem表中的ifComment字段
                     sql = "UPDATE orderitem SET ifComment = 1 WHERE orderItem_id = ?";
-                    sqlParams = [requestData.comment_order.orderDetail[0].orderItem_id];
+                    let commentGoodIndex = requestData.commen_goodIndex;
+                    sqlParams = [requestData.comment_order.orderDetail[commentGoodIndex].orderItem_id];
                     connection.query(sql,sqlParams,(err,data)=>{
                         if(err)
                         {

@@ -30,52 +30,59 @@
                     :file-list="fileList"
                     :auto-upload="false">
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="confirmImg">确定上传</el-button>
+                        <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="confirmImg">确定上传</el-button> -->
                 </el-upload>
-                <el-button @click="cancelImg">取消</el-button>
+                <div slot="footer" style="overflow:hidden;padding-top:0px !important;">
+                    <el-button style="margin-left: 20px;" size="small" type="success" @click="confirmImg">确定上传</el-button>
+                    <el-button size="small" @click="cancelImg" class="cancelBtn">取消</el-button>
+                </div>
             </el-dialog>
         </template>
-        <el-form :inline="true" :model="editForm" :rules="rules" ref="guestInfoForm">
-            <el-col :span="8">
-                <el-form-item label="账号">
-                    <el-input v-model="editForm.nickname" :disabled="true"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="8">
-                <el-form-item label="真实姓名">
-                    <el-input v-model="editForm.realname" :disabled="true"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="8">
-                <el-form-item label="性别">
-                    <el-input v-model="editForm.sex" :disabled="true"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="8">
-                <el-form-item label="密码" prop="password">
-                    <el-input v-model="editForm.password"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="8">
-                <el-form-item label="联系电话" prop="phone">
-                    <el-input v-model="editForm.phone"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="8">
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="editForm.email"></el-input>
-                </el-form-item>
-            </el-col>
+        <el-form :inline="true" :model="editForm" :rules="rules" ref="guestInfoForm" class="guestInfoForm">
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="账号">
+                        <el-input v-model="editForm.nickname" :disabled="true"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="真实姓名">
+                        <el-input v-model="editForm.realname" :disabled="true"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="性别">
+                        <el-input v-model="editForm.sex" :disabled="true"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="密码" prop="password">
+                        <el-input v-model="editForm.password"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="联系电话" prop="phone">
+                        <el-input v-model="editForm.phone"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="邮箱" prop="email">
+                        <el-input v-model="editForm.email"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
             <el-col :span="24">
                 <el-form-item label="送货地址" prop="address">
                     <el-input v-model="editForm.address" style="width:780px;"></el-input>
                 </el-form-item>
             </el-col>
+            <div class="btnGrounp" v-if="ifChanged">
+                <el-button type="primary" @click="saveChange">保存</el-button>
+                <el-button type="danger" @click="removeChange">取消</el-button>
+            </div>
         </el-form>
-        <div class="btnGrounp" v-if="ifChanged">
-            <el-button type="primary" @click="saveChange">保存</el-button>
-            <el-button type="danger" @click="removeChange">取消</el-button>
-        </div>
     </div>
 </template>
 
@@ -401,22 +408,10 @@ export default {
 
 
 <style>
-    /* .userHeadImgDialog .el-upload
+    .userInfo .el-form-item .el-form-item__label
     {
-        border: 1px dotted #c0c0c0;
-        width: 178px;
-        height: 178px;
+        width: 100px !important;
     }
-    .userHeadImgDialog .el-upload:hover
-    {
-        border: 1px solid #c0c0c0;
-    }
-    .userHeadImgDialog .el-upload:hover .avatar-uploader-icon
-    {
-        font-size: 30px;
-        transition: .2s ease;
-    } */
-    
 </style>
 
 <style lang="scss" scoped>
@@ -446,20 +441,18 @@ export default {
     }
     .userHeadImg
     {
-        width: 300px;
+        text-align: center;
         height: 300px;
         .userHead
         {
             border-radius: 50%;
             width: 200px;
             height: 200px;
-            border: 1px solid #c0c0c0;
             transition: .2s ease;
+            margin-bottom: 30px;
             &:hover
             {
-                border: 1px solid #666;
-                width: 201px;
-                height: 201px;
+                transform: scale(1.01,1.01);
                 cursor: pointer;
                 transition: .2s ease;
             }
@@ -476,5 +469,21 @@ export default {
             display: inline-block;
             width: 80px !important;
         }
+    }
+
+    .guestInfoForm
+    {
+        max-width: 1400px;
+        margin: 0px auto;
+    }
+    .cancelBtn
+    {
+        float: right;
+        margin-right: 40px;
+    }
+    .btnGrounp
+    {
+        float: right;
+        margin-right: 10%;
     }
 </style>

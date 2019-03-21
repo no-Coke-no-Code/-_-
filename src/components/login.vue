@@ -27,7 +27,9 @@
                             <el-button class="login" type="primary" @click="login">登录</el-button>
                         </p>
                         <p>
-                            <el-button class="login"><router-link to="/register">注册</router-link></el-button>
+                            <el-button class="login">
+                                <router-link to="/register" style="display:block;height:100%;">注册</router-link>
+                            </el-button>
                         </p>
                     </div>
                 </form>

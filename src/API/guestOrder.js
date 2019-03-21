@@ -123,7 +123,7 @@ route.post('/guestOrder',(req,res) => {
                     "orderList_state":"b",
                     "orderList_price":reqData.totalPrice,
                     "user_address":reqData.address,
-                    "user_phone":reqData.phone
+                    "user_phone":reqData.phone,
                 };
                 connection.query(sql,sqlParams,(err,data)=>{
                     if(err)
@@ -132,7 +132,7 @@ route.post('/guestOrder',(req,res) => {
                     }
                     else
                     {
-                        sql = "INSERT INTO orderitem (good_name,good_count,good_price,orderList_id,orderItem_priceSub,good_imgurl) VALUES ?";
+                        sql = "INSERT INTO orderitem (good_name,good_count,good_price,orderList_id,orderItem_priceSub,good_imgurl,ifComment) VALUES ?";
                         sqlParams = [];
                         for(let i = 0;i<reqData.goodList.length;i++)
                         {
@@ -147,6 +147,7 @@ route.post('/guestOrder',(req,res) => {
                                 reqData.goodList[i].orderList_id,
                                 reqData.goodList[i].orderItem_priceSub,
                                 reqData.goodList[i].good_imgurl,
+                                "0"
                             );
                         }
                         connection.query(sql,[sqlParams],(err)=>{

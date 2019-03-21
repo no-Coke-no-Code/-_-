@@ -24,7 +24,7 @@ route.post("/userMange",(req,res) => {
         switch(requestData.method)
         {
             case "searchAll":
-            sql = "SELECT * FROM user WHERE user_nickname";
+            sql = "SELECT * FROM user";
             connection.query(sql,(err,data) => {
                 if(err)
                 {

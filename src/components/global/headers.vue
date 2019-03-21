@@ -6,11 +6,9 @@
             <span v-if="!ifLogin">当前状态:未登录</span>
         </div>
         <div class="controlArea">
-            <!-- <button class="back" @click="goBack">返回</button> -->
             <button class="back" @click="backToMainPage">返回主页</button>
             <button class="primary" @click="login" v-if="!ifLogin">登录</button>
             <button class="primary" @click="iftoguestBack">
-                <!-- <router-link to="guestBackStage">个人信息</router-link> -->
                 个人信息
             </button>
             <button class="danger" @click="logout" v-if="ifLogin">退出登录</button>
@@ -44,6 +42,10 @@ export default {
                 if(responseData.code == 0)
                 {
                     this.headImg = responseData.data[0].user_headImg;
+                    if(this.headImg == "")
+                    {
+                        this.headImg = require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png');
+                    }
                 }
             })
             .catch((err)=>{
@@ -55,7 +57,7 @@ export default {
         {
             this.userName = "未登录";
             this.ifLogin = false;
-            this.headImg = require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png');;
+            this.headImg = require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png');
         }
     },
     methods:{
@@ -91,7 +93,7 @@ export default {
 <style lang="scss" scoped>
     .headerWrapper
     {
-        background-color: #999;
+        background-color: #EEEFF3;
         height: 40px;
         display: flex;
         justify-content: space-between;

@@ -14,7 +14,6 @@
                 <p>单位 : {{this.goodDetail.good_unit}}</p>
                 <p>所属类别 : {{this.goodDetail.category_name}} - {{this.goodDetail.subCatalog_name}}</p>
                 <p>来源地 : {{this.goodDetail.good_from}}</p>
-                <!-- <p>总销量:</p> -->
                 <el-button @click="addToCart" type="primary">加入购物车</el-button>
                 <el-button @click="collect" type="warning">收藏</el-button>
             </div>
@@ -22,7 +21,6 @@
         <div class="goodComment">
             <h2>最新评论</h2>
             <div v-for="item in commentList" class="commentItem" v-if="commentList.length != 0 && !item.reply_comment_id">
-                <!-- <img :src="item.user_" class="userImg"/> -->
                 <span class="userName">{{item.user_nickname}}</span>
                 <el-rate disabled v-model="item.comment_rank" class="commentRank"></el-rate>
                 <p class="commentContent">{{item.comment_content}}</p>
@@ -270,10 +268,10 @@ export default {
             margin-bottom: 10px;
             .adminReply
             {
-                border: 1px solid black;
                 border-radius: 3px;
                 background: #cccbcbd3;
-                margin: 20px 0px 0px 50px;
+                margin-top: 20px;
+                padding:5px;
             }
             &:hover
             {

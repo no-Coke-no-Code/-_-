@@ -30,7 +30,6 @@ route.post("/categoryMange",(req,res) => {
                     sqlParams = [requestData.categoryName];
                     if(!requestData.categoryName)
                     {
-                        console.log("传了空值过来了，沙雕");
                         return;
                     }
                     connection.query(sql,sqlParams,(err,data)=>{
@@ -84,13 +83,6 @@ route.post("/categoryMange",(req,res) => {
                         else
                         {
                             let responseData = JSON.parse(JSON.stringify(data));
-                            // res.json({
-                            //     "code":"0",
-                            //     "message":"查询商品类别成功",
-                            //     "data":responseData
-                            // });
-                            console.log(responseData);
-                            console.log("我想看看这个");
                             resolve(responseData);
                         }
                     });

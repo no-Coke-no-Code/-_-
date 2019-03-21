@@ -45,8 +45,11 @@
                 <td colspan="7">
                     <div>
                         <p>共计:<span class="totalMoney">￥{{this.total}}</span></p>
-                        <!-- <button @click="makeOrder" class="ordering"><i class="el-icon-edit"></i>生成订单</button> -->
-                        <button @click="makeOrder" class="ordering"><router-link :to="targetUrl"><i class="el-icon-edit"></i>生成订单</router-link></button>
+                        <button @click="makeOrder" class="ordering">
+                            <router-link :to="targetUrl">
+                            <i class="el-icon-edit"></i>生成订单
+                            </router-link>
+                        </button>
                     </div>
                 </td>
             </tfoot>

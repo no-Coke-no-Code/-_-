@@ -97,7 +97,7 @@ export default {
                 cancelButtonText:"我再想想"
             })
             .then(() => {
-                if(this.userPhone && this.address && this.userRealname)
+                if(this.userPhone && this.userAddress && this.userRealname)
                 {
                     this.$message({
                     message:"正在生成，请稍后",

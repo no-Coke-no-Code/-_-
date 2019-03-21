@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" v-loading="ifLoading">
+    <div class="wrapper guestOrder" v-loading="ifLoading">
         <el-form :model="searchForm" :inline="true">
             <el-row>
                 <el-form-item label="订单ID">
@@ -33,13 +33,13 @@
                                 <img :src="scope.row.good_imgurl" class="orderItemPic"/>
                             </template>
                         </el-table-column>
-                        <el-table-column label="商品名称" prop="good_name"></el-table-column>
-                        <el-table-column label="商品数量" prop="good_count"></el-table-column>
-                        <el-table-column label="商品单价" prop="good_price"></el-table-column>
+                        <el-table-column label="商品名称" prop="good_name" ></el-table-column>
+                        <el-table-column label="商品数量" prop="good_count" ></el-table-column>
+                        <el-table-column label="商品单价" prop="good_price" ></el-table-column>
                         <el-table-column label="商品小计" prop="orderItem_priceSub"></el-table-column>
-                        <el-table-column v-if="order.orderList_state=='f'" prop="ifComment">
+                        <el-table-column v-if="order.orderList_state=='f'" prop="ifComment" >
                             <template slot-scope="scope">
-                                <a v-if="!scope.row.ifComment" @click="makeComment(scope.row,order)" class="makeComment">添加评价</a>
+                                <a v-if="!scope.row.ifComment" @click="makeComment(scope.row,order,scope)" class="makeComment">添加评价</a>
                                 <a v-if="scope.row.ifComment">该商品已评价</a>
                             </template>
                         </el-table-column>
@@ -90,7 +90,7 @@
                         <el-table-column label="商品小计" prop="orderItem_priceSub"></el-table-column>
                         <el-table-column prop="ifComment">
                             <template slot-scope="scope">
-                                <a v-if="!scope.row.ifComment" @click="makeComment(scope.row,order)" class="makeComment">添加评价</a>
+                                <a v-if="!scope.row.ifComment" @click="makeComment(scope.row,order,scope)" class="makeComment">添加评价</a>
                                 <a v-if="scope.row.ifComment">该商品已评价</a>
                             </template>
                         </el-table-column>
@@ -104,7 +104,7 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
-        <guest-comment :commentDialog='commentDialog' @closeDialog='closeDialog' :commentGood='commentGood' :commentOrder='commentOrder'></guest-comment>
+        <guest-comment :commentDialog='commentDialog' @closeDialog='closeDialog' :commentGood='commentGood' :commentGoodIndex='commentGoodIndex' :commentOrder='commentOrder'></guest-comment>
     </div>
 </template>
 
@@ -140,6 +140,7 @@ export default {
             commentDialog:false,
             commentGood:{},
             commentOrder:{},
+            commentGoodIndex:"",
         }
     },
     methods:{
@@ -227,13 +228,15 @@ export default {
                 console.log(err);
             });
         },
-        makeComment(scope,order){
+        makeComment(row,order,scope){
             this.commentDialog = true;
-            this.commentGood = scope;
-            this.commentOrder = order
+            this.commentGood = row;
+            this.commentOrder = order;
+            this.commentGoodIndex = scope.$index
         },
         closeDialog(){
             this.commentDialog = false;
+            this.init("all");
         },
     },
     created(){
@@ -241,6 +244,13 @@ export default {
     },
 }
 </script>
+
+<style>
+    .guestOrder .el-tabs__content
+    {
+        overflow: unset !important;
+    }
+</style>
 
 <style lang="scss" scoped>
     .el-form-item::after, .el-form-item::before
@@ -265,6 +275,15 @@ export default {
         {
             border: 1px solid black;
             margin-top: 10px;
+            padding: 20px;
+            border-radius: 5px;
+            transition: .2s ease;
+            position: relative;
+            &:hover
+            {
+                transition: .2s ease;
+                transform: scale(1.01,1.01);
+            }
         }
         .orderItemPic
         {

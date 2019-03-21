@@ -8,9 +8,9 @@
             <el-form-item label="密码" prop="password">
                 <el-input v-model="registerForm.password"></el-input>
             </el-form-item>
-            <el-form-item label="确认密码">
+            <!-- <el-form-item label="确认密码">
                 <el-input v-model="registerForm.confirmPassword" @blur="confirmPassword"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="真实姓名" prop="name">
                 <el-input v-model="registerForm.name"></el-input>
             </el-form-item>
@@ -100,18 +100,14 @@ export default {
             if(this.registerForm.password !== this.registerForm.confirmPassword)
             {
                 alert("两次输入的密码并不正确");
-                return false;
-            }
-            else
-            {
-                return true;
+                return;
             }
         },
         register(form){
-            var confirmPassword = this.confirmPassword;
             this.$refs[form].validate((valid) => {
                 if(valid)
                 {
+                    // this.confirmPassword();
                     let params = {
                         "registerUsername":this.registerForm.username,
                         "registerUserpassword":this.registerForm.password,
@@ -164,7 +160,7 @@ export default {
     {
         display: inline-block;
         margin-left: 120px;
-        width: 300px;
+        width: 400px;
     }
     .registerForm .el-select
     {
@@ -197,7 +193,7 @@ export default {
             .registerFormBtn
             {
                 display: block;
-                width: 400px;
+                width: 500px;
                 margin-top: 50px;
                 margin-left: 20px;
             }
