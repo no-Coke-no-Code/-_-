@@ -22,6 +22,10 @@
                 <i class="el-icon-setting"></i>
                 <span>我的收藏</span>
             </el-menu-item>
+            <el-menu-item index="5" @click="toGuestCredit">
+                <i class="el-icon-setting"></i>
+                <span>我的会员积分</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -58,6 +62,9 @@ export default {
         },
         toGuestCollect(){
             this.$router.push("/guestBackStage/guestCollect");
+        },
+        toGuestCredit(){
+            this.$router.push("/guestBackStage/guestCredit");
         },
     },
 }

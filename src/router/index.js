@@ -11,6 +11,7 @@ import guestOrder from "@/components/guestBackStage/guestOrder.vue";
 import guestCart from "@/components/guestBackStage/guestCart.vue";
 import guestCollect from "@/components/guestBackStage/guestCollect.vue";
 import searchResult from "@/components/searchResult/searchResult.vue";
+import guestCredit from "@/components/guestBackStage/guestCredit.vue";
 // 在这里面路由注册模块可以使用懒加载的方式进行引入，有利于提高首屏的渲染速度提高体验
 const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],resolve)};
 // 懒加载好像会引起一点奇怪的问题：二级路由跳到一级路由好像没有反应？？
@@ -18,6 +19,7 @@ const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],re
 import makeOrder from "@/components/makeOrder/makeOrder.vue";
 import makeOrderSuccess from "@/components/makeOrder/makeOrderSuccess.vue";
 
+import adminLogin from "@/components/adminLogin.vue";
 import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
 import goodMange from "@/components/adminBackStage/goodMange.vue";
 import orderMange from "@/components/adminBackStage/orderMange.vue";
@@ -88,11 +90,17 @@ const router = new Router({
             }
         ],
     },
-    // 登录路由
+    // 用户登录路由
     {
         path:'/login',
         name:'login',
         component:login
+    },
+    // 管理员登录路由
+    {
+        path:"/adminLogin",
+        name:"adminLogin",
+        component: adminLogin,
     },
     // 用户后台路由(包括个人信息，购物车，订单列表)
     {
@@ -136,6 +144,11 @@ const router = new Router({
                 meta:{
                     // requireAuth:true
                 },
+            },
+            {
+                path:"guestCredit",
+                name:"guestCredit",
+                component:guestCredit
             }
         ],
     },

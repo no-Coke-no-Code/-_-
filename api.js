@@ -5,6 +5,7 @@ const userMange = require("./src/API/userMange.js");
 const goodMange = require("./src/API/goodMange.js");
 const register = require("./src/API/register.js");
 const login = require("./src/API/login.js");
+const adminLogin = require("./src/API/adminLogin");
 const guestInfo = require("./src/API/guestInfo.js");
 const guestOrder = require("./src/API/guestOrder.js");
 const guestCart = require("./src/API/guestCart.js");
@@ -19,12 +20,15 @@ const changeGoodImg = require('./src/API/changeGoodImg');
 const categoryMange = require("./src/API/categoryMange");
 const topGoodMange = require("./src/API/topGoodMange");
 const comment = require("./src/API/comment");
+const credit = require("./src/API/credit");
 
 module.exports = () => {
     const route = express.Router();
 
     // 客户端发起登录请求
     route.post("/index",login);
+    // 管理员登录接口
+    route.post("/adminLogin",adminLogin);
 
     // 客户端发起注册请求
     route.post("/register",register);
@@ -73,6 +77,12 @@ module.exports = () => {
 
     // 评论功能接口
     route.post('/comment',comment);
+
+    // 根据积分查询会员等级接口
+    // 情况1
+    // route.get("/checkCreditRank/",checkCreditRank);
+    // 情况2
+    route.post("/credit",credit);
 
     return route;
 };

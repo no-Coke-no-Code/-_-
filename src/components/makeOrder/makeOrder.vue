@@ -21,6 +21,7 @@
             </div>
             <div class="totalPrice">
                 <h1>总价:￥{{this.totalPrice}}</h1>
+                <h1>会员价:￥{{this.discountPrice}}</h1>
             </div>
             <div class="userInfo">
                 <h2>用户信息</h2>
@@ -48,6 +49,9 @@ export default {
             ifLoading:false,
             goodList:[],
             totalPrice:"",
+            user_creditMark:"",
+            discount:0,
+            discountPrice:"",
             userName:"",
             userPhone:"",
             userAddress:"",
@@ -84,12 +88,34 @@ export default {
             this.userPhone = responseData.user_phone;
             this.userAddress = responseData.user_address;
             this.userRealname = responseData.user_realname;
+            this.creditMark = responseData.user_creditMark;
+            this.getCreditRank();
         })
         .catch((err)=>{
             console.log(err);
         });
     },
     methods:{
+        // 获取当前用户会员等级，折扣优惠
+        getCreditRank(){
+            let params = {
+                "method":"getCredit",
+                "creditMark":this.creditMark
+            };
+            console.log(params,'i want to see that');
+            this.$http
+            .post('/credit',params)
+            .then((data)=>{
+                console.log(data);
+                let responseData = data.data;
+                console.log(responseData);
+                this.discount = responseData.data.user_discount;
+                this.discountPrice = this.totalPrice * this.discount;
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
         // 最终确认生成订单
         confirmOrder(){
             this.$confirm('是否确定生成订单？？','提示',{
@@ -115,6 +141,7 @@ export default {
                         "userName":this.userName,
                         "goodList":this.goodList,
                         "totalPrice":this.totalPrice,
+                        "discountPrice":this.discountPrice,
                         "address":this.userAddress,
                         "phone":this.userPhone,
                     };
@@ -134,18 +161,37 @@ export default {
                             "goodIdList":this.goodIdList,
                             "goodDetailList":this.goodList,
                         };
+                        // 删除购物车中商品操作
                         this.$http
                         .post('/guestCart',params)
                         .then((data)=>{
                             console.log(data);
+                            // 更新用户积分操作
+                            let params33 = {
+                                "method":"updataUserCredit",
+                                "user_nickname":this.userName,
+                                "addCreditMark":Math.round(this.totalPrice*0.1)
+                            };
+                            this.$http
+                            .post('/credit',params33)
+                            .then((data)=>{
+                                let responseData = data.data;
+                                console.log("更新用户积分成功");
+                                this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
+                            })
+                            .catch((err)=>{
+                                if(err)
+                                {
+                                    console.log(err);
+                                }
+                            });
                         })
                         .catch((err)=>{
                             console.log(err);
                         });
-                        this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
                         })
-                        .catch((err) => {
-                            console.log(err);
+                    .catch((err) => {
+                        console.log(err);
                     });
                 }
                 else

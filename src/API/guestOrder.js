@@ -122,6 +122,7 @@ route.post('/guestOrder',(req,res) => {
                     "orderList_startTime":createOrderTime,
                     "orderList_state":"b",
                     "orderList_price":reqData.totalPrice,
+                    "orderList_discountPrice":reqData.discountPrice,
                     "user_address":reqData.address,
                     "user_phone":reqData.phone,
                 };

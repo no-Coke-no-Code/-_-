@@ -39,6 +39,11 @@
         <!-- 展示数据表格 -->
         <el-table :data="resultUsers" border>
             <el-table-column label="ID" prop="user_id"></el-table-column>
+            <el-table-column label="头像" prop="user_headImg">
+                <template slot-scope="scope">
+                    <img :src="scope.row.user_headImg?scope.row.user_headImg:require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png')" class="userHeadImg"/>
+                </template>
+            </el-table-column>
             <el-table-column label="昵称" prop="user_nickname"></el-table-column>
             <el-table-column label="姓名" prop="user_realname"></el-table-column>
             <el-table-column label="性别" prop="user_sex"></el-table-column>
@@ -77,6 +82,7 @@ export default {
                 address:"",
                 phone:"",
                 email:"",
+                headImg:"",
                 pageSize:10,
                 pageIndex:1,
                 total:0,
@@ -184,6 +190,12 @@ export default {
         {
             float:right;
             margin:20px 45px 20px 0px;
+        }
+        .userHeadImg
+        {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
         }
     }
 </style>
