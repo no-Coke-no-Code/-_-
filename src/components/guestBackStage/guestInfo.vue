@@ -479,7 +479,6 @@ export default {
     .cancelBtn
     {
         float: right;
-        margin-right: 40px;
     }
     .btnGrounp
     {

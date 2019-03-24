@@ -18,6 +18,7 @@ const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],re
 // const makeOrder = (resolve) => {require(["@/components/makeOrder/makeOrder"]),resolve};
 import makeOrder from "@/components/makeOrder/makeOrder.vue";
 import makeOrderSuccess from "@/components/makeOrder/makeOrderSuccess.vue";
+import myComment from "@/components/guestBackStage/myComment.vue";
 
 import adminLogin from "@/components/adminLogin.vue";
 import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
@@ -145,10 +146,17 @@ const router = new Router({
                     // requireAuth:true
                 },
             },
+            // 用户积分页面
             {
                 path:"guestCredit",
                 name:"guestCredit",
                 component:guestCredit
+            },
+            // 用户个人评论页面
+            {
+                path:"myComment",
+                name:"myComment",
+                component:myComment,
             }
         ],
     },
@@ -175,7 +183,7 @@ const router = new Router({
         path:'makeOrderSuccess',
         name:'makeOrderSuccess',
         component:makeOrderSuccess
-    }
+    },
   ]
 })
 

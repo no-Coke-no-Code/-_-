@@ -263,7 +263,7 @@ export default {
     }
     .wrapper
     {
-        height: 100%;
+        height: calc(100% - 40px);
         overflow: auto;
         padding: 30px;
         box-sizing: border-box;

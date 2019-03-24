@@ -1,10 +1,18 @@
 <template>
     <div class="wrapper">
-        用户当前积分为{{user_creditMark}}
-        用户当前身份为{{user_creditRank}}
-        用户当前可享受折扣为{{user_discount==1?"无折扣优惠":user_discount}}
-        下个等级{{user_creditRank==user_nextRank?"最高等级":user_nextRank}}
-        下个积分{{user_creditMark==user_nextMark?"最高等级":user_nextMark}}
+        <p>用户当前会员积分：{{user_creditMark}}</p>
+        <p>用户当前会员身份：{{user_creditRank}}</p>
+
+        <p v-if="user_discount!=1">用户当前可享受折扣：{{user_discount}}</p>
+        <p v-if="user_discount==1">用户当前未可享受会员优惠</p>
+
+        <p v-if="user_creditRank==user_nextRank">用户当卡已是最高会员等级</p>
+        <p v-if="user_creditRank!=user_nextRank">下个会员等级：{{user_nextRank}}</p>
+
+        <p v-if="user_creditMark!=user_nextMark">下个会员等级所需积分：{{user_nextMark}}</p>
+        <p v-if="user_creditMark==user_nextMark">用户当前已是最高等级</p>
+
+        <el-progress :text-inside="true" :stroke-width="18" :percentage="creditPercentage"></el-progress>
     </div>
 </template>
 
@@ -18,7 +26,13 @@ export default {
             user_discount:"",
             user_nextRank:"",
             user_nextMark:0,
+            creditPercentage:0,
         }
+    },
+    computed:{
+        creditPercentage1(){
+            return this.user_creditMark/this.user_nextMark;
+        },
     },
     methods:{
         init(){
@@ -104,6 +118,7 @@ export default {
                     this.user_creditRank = responseData.data.user_creditRank;
                     this.user_nextRank = responseData.data.user_nextRank;
                     this.user_nextMark = responseData.data.user_nextMark;
+                    this.creditPercentage = Math.floor(this.user_creditMark/this.user_nextMark*100);
                     if(responseData.data.user_discount != 1)
                     {
                         this.user_discount = responseData.data.user_discount.toString().split(".")[1];
@@ -126,5 +141,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+    .wrapper
+    {
+        box-sizing: border-box;
+        height: calc(100% - 40px);
+        margin-left: 300px;
+        padding: 30px;
+    }
 </style>

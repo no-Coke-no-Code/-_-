@@ -26,6 +26,10 @@
                 <i class="el-icon-setting"></i>
                 <span>我的会员积分</span>
             </el-menu-item>
+            <el-menu-item index="6" @click="toMyComment">
+                <i class="el-icon-setting"></i>
+                <span>我的评论</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -66,6 +70,9 @@ export default {
         toGuestCredit(){
             this.$router.push("/guestBackStage/guestCredit");
         },
+        toMyComment(){
+            this.$router.push("/guestBackStage/myComment");
+        },
     },
 }
 </script>
@@ -73,9 +80,10 @@ export default {
 <style lang="scss" scoped>
     .wrapper
     {
+        box-sizing: border-box;
+        height: calc(100% - 40px);
         width: 300px;
         float: left;
-        min-height: 100%;
         background-color: rgb(84, 92, 100);
         .userName
         {

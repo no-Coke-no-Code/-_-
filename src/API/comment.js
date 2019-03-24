@@ -63,6 +63,70 @@ route.post('/comment',(req,res)=>{
             });
             break;
 
+            case "getOwnComment":
+                let promise0 = new Promise((resolve,reject)=>{
+                    sql = "SELECT * FROM comment WHERE user_nickname = ?";
+                    sqlParams = [requestData.user_nickname];
+                    connection.query(sql,sqlParams,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            resolve(responseData);
+                        }
+                    });
+                });
+                promise0.then((value)=>{
+                    console.log(value);
+                    sql = "SELECT * FROM adminReply WHERE reply_comment_id";
+                    if(value.length > 1)
+                    {
+                        sql += " IN(";
+                        for(let i = 0;i<value.length;i++)
+                        {
+                            sql += value[i].comment_id + ",";
+                        }
+                        sql = _.deleting(sql,",",-1);
+                        sql += ")";
+                    }
+                    else if(value.length == 1)
+                    {
+                        sql += " = " + value[0].comment_id;
+                    }
+                    else if(value.length == 0)
+                    {
+                        res.json(response.responseSuccess("暂无回复"));
+                        return
+                    }
+                    connection.query(sql,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            for(let i = 0;i<responseData.length;i++)
+                            {
+                                for(let x = 0;x<value.length;x++)
+                                {
+                                    value[x].adminReply = [];
+                                    if(responseData[i].reply_comment_id == value[x].comment_id)
+                                    {
+                                        value[x].adminReply.push(responseData[i]);
+                                    }
+                                }
+                            }
+                            console.log(value);
+                            res.json(response.responseSuccess(value));
+                        }
+                    });
+                });
+            break;
+
             case "getReplyComment":
             if(requestData.good_name)
             {

@@ -27,7 +27,7 @@ export default {
         height: 100%;
         .menuList
         {
-            height:100%;
+            height:calc(100% - 40px);
         }
     }
 </style>

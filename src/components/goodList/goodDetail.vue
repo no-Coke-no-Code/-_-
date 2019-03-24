@@ -5,7 +5,8 @@
         <good-menu></good-menu>
         <div class="goodDetail_wrapper">
             <div class="goodImgs">
-                <img :src="goodDetail.good_imgurl"/>
+                <!-- <img :src="goodDetail.good_imgurl"/> -->
+                <vue-photo-zoom-pro :url="goodDetail.good_imgurl" :scale='2' :width='130'></vue-photo-zoom-pro>
             </div>
             <div class="goodInfo">
                 <h2>{{this.goodDetail.good_name}}</h2>
