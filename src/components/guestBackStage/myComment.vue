@@ -79,6 +79,7 @@ export default {
         height: calc(100% - 40px);
         margin-left: 300px;
         padding: 30px;
+        overflow: auto;
         .commentList
         {
             margin-left:30px;

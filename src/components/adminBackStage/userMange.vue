@@ -6,6 +6,9 @@
                 <el-form-item label="用户ID">
                     <el-input v-model="searchForm.id"></el-input>
                 </el-form-item>
+                <!-- <el-form-item label="用户身份" clearable>
+                    <el-select v-model="searchForm.credit"></el-select>
+                </el-form-item> -->
                 <el-form-item label="用户昵称">
                     <el-input v-model="searchForm.nickname"></el-input>
                 </el-form-item>
@@ -44,6 +47,7 @@
                     <img :src="scope.row.user_headImg?scope.row.user_headImg:require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png')" class="userHeadImg"/>
                 </template>
             </el-table-column>
+            <!-- <el-table-column label="身份" prop=""></el-table-column> -->
             <el-table-column label="昵称" prop="user_nickname"></el-table-column>
             <el-table-column label="姓名" prop="user_realname"></el-table-column>
             <el-table-column label="性别" prop="user_sex"></el-table-column>

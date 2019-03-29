@@ -1,5 +1,5 @@
 <template>
-    <div class="blockWrapper">
+    <div class="blockWrapper" v-loading="ifLoading">
         <div class="blockTitle">
             <h2>{{this.title}}</h2>
             <div class="action">
@@ -10,7 +10,7 @@
         <div>
             <el-row :gutter="40">
                 <el-col :span="8" v-for="(item, index) in responseData" :key="index" style="margin-bottom:20px;">
-                    <el-card :body-style="{ padding: '0px' }">
+                    <el-card :body-style="{ padding: '0px' }" class="goodCard">
                         <img :src="item.good_imgurl" class="image">
                         <div class="contentArea">
                             <p class="describeArea">
@@ -39,6 +39,7 @@ export default {
     ],
     data(){
         return{
+            ifLoading:false,
             responseData:[
                 // {
                 //     category_name: "",
@@ -63,7 +64,7 @@ export default {
             },
         }
     },
-    created(){
+    mounted(){
         this.init();
         // foreignGood
     },
@@ -73,11 +74,12 @@ export default {
             let params = {
                 "type":this.type,
             };
-
+            this.ifLoading = true;
             this.$http
             .post('/mainPageGoodBlock',params)
             .then((data) => {
                 this.responseData = data.data.data;
+                this.ifLoading = false;
             })
             .catch((err) => {
                 console.log(err);
@@ -170,6 +172,11 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.fadeOut
+{
+    visibility: hidden;
+    transition: .5s all;
+}
     .blockWrapper
     {
         a

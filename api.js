@@ -21,6 +21,9 @@ const categoryMange = require("./src/API/categoryMange");
 const topGoodMange = require("./src/API/topGoodMange");
 const comment = require("./src/API/comment");
 const credit = require("./src/API/credit");
+const countManage = require('./src/API/countManage');
+const order = require("./src/API/order");
+const coupon = require("./src/API/coupon");
 
 module.exports = () => {
     const route = express.Router();
@@ -78,11 +81,20 @@ module.exports = () => {
     // 评论功能接口
     route.post('/comment',comment);
 
+    // 获取订单项接口
+    route.post("/order",order);
+
     // 根据积分查询会员等级接口
     // 情况1
     // route.get("/checkCreditRank/",checkCreditRank);
     // 情况2
     route.post("/credit",credit);
+
+    // 交易统计功能接口
+    route.post("/countManage",countManage);
+
+    // 优惠券操作功能接口
+    route.post("/coupon",coupon);
 
     return route;
 };

@@ -30,6 +30,10 @@
                 <i class="el-icon-setting"></i>
                 <span>我的评论</span>
             </el-menu-item>
+            <el-menu-item index="7" @click="toMyCoupon">
+                <i class="el-icon-setting"></i>
+                <span>我的优惠券</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -72,6 +76,9 @@ export default {
         },
         toMyComment(){
             this.$router.push("/guestBackStage/myComment");
+        },
+        toMyCoupon(){
+            this.$router.push("/guestBackStage/myCoupon");
         },
     },
 }

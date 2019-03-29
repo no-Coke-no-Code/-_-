@@ -6,11 +6,12 @@
             <span v-if="!ifLogin">当前状态:未登录</span>
         </div>
         <div class="controlArea">
-            <button class="back" @click="backToMainPage">返回主页</button>
+            <button class="back" @click="backToMainPage" v-if="$route.fullPath != '/'">返回主页</button>
             <button class="primary" @click="login" v-if="!ifLogin">登录</button>
-            <button class="primary" @click="iftoguestBack">
+            <button class="primary" v-if="$route.fullPath != '/guestBackStage/'+$route.name" @click="iftoguestBack">
                 个人信息
             </button>
+            <button class="primary" v-if="$route.fullPath != '/couponCenter'" @click="toCouponCenter">抢券中心</button>
             <button class="danger" @click="logout" v-if="ifLogin">退出登录</button>
         </div>
     </div>
@@ -85,6 +86,9 @@ export default {
         },
         backToMainPage(){
             this.$router.push({path:"/"});
+        },
+        toCouponCenter(){
+            this.$router.push({path:"/couponCenter"});
         },
     },
 }

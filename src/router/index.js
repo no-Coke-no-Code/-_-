@@ -19,6 +19,8 @@ const goodDetail = (resolve) => {require(["@/components/goodList/goodDetail"],re
 import makeOrder from "@/components/makeOrder/makeOrder.vue";
 import makeOrderSuccess from "@/components/makeOrder/makeOrderSuccess.vue";
 import myComment from "@/components/guestBackStage/myComment.vue";
+import myCoupon from "@/components/guestBackStage/myCoupon.vue";
+import couponCenter from "@/components/couponCenter/couponCenter.vue";
 
 import adminLogin from "@/components/adminLogin.vue";
 import adminBackStage from "@/components/adminBackStage/adminBackStage.vue";
@@ -29,6 +31,7 @@ import categoryMange from "@/components/adminBackStage/categoryMange.vue";
 import topGoodMange from "@/components/adminBackStage/topGoodMange.vue";
 import commentManage from "@/components/adminBackStage/commentManage.vue";
 import countManage from "@/components/adminBackStage/countManage.vue";
+import couponManage from "@/components/adminBackStage/couponManage";
 import store from "../store"
 
 
@@ -88,6 +91,11 @@ const router = new Router({
                 path:"countManage",
                 name:"countManage",
                 component:countManage,
+            },
+            {
+                path:"couponManage",
+                name:"couponManage",
+                component:couponManage,
             }
         ],
     },
@@ -157,6 +165,12 @@ const router = new Router({
                 path:"myComment",
                 name:"myComment",
                 component:myComment,
+            },
+            // 用户优惠券页面
+            {
+                path:"myCoupon",
+                name:"myCoupon",
+                component:myCoupon,
             }
         ],
     },
@@ -180,10 +194,16 @@ const router = new Router({
     },
     // 生成订单成功页面路由
     {
-        path:'makeOrderSuccess',
+        path:'/makeOrderSuccess',
         name:'makeOrderSuccess',
         component:makeOrderSuccess
     },
+    // 抢券中心页面路由
+    {
+        path:"/couponCenter",
+        name:"couponCenter",
+        component:couponCenter,
+    }
   ]
 })
 

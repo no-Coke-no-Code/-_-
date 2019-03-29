@@ -35,6 +35,10 @@
                 <i class="el-icon-setting"></i>
                 <span>交易统计</span>
             </el-menu-item>
+            <el-menu-item index="8" @click="toCouponManage">
+                <i class="el-icon-setting"></i>
+                <span>优惠券管理</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -75,6 +79,9 @@ export default {
         },
         toCountManage(){
             this.$router.push("/adminBackStage/countManage");
+        },
+        toCouponManage(){
+            this.$router.push("/adminBackStage/couponManage");
         },
     },
 }

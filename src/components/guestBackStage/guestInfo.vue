@@ -460,10 +460,10 @@ export default {
     }
     .userInfo
     {
-        overflow: hidden;
-        margin-left: 320px;
-        margin-top: 50px;
-        height: auto;
+        height: calc(100% - 40px);
+        padding: 30px;
+        overflow: auto;
+        box-sizing: border-box;
         .el-form--inline>.el-form-item__label
         {
             display: inline-block;
