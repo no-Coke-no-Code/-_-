@@ -12,6 +12,8 @@
             <a>关于我们</a>
             <span>|</span>
             <a>我要提议</a>
+            <span>|</span>
+            <router-link to="adminLogin">后台入口</router-link>
         </div>
     </div>
 </template>

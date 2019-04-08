@@ -101,23 +101,6 @@ route.post('/coupon',(req,res)=>{
                     }
                 });
             break;
-
-            // 用户使用券后删除该券方法
-            // case 'deleteUserCoupon':
-            //     sql = "DELETE FROM coupon WHERE id = ?";
-            //     sqlParam = [requestData.id];
-            //     connection.query(sql,sqlParam,(err)=>{
-            //         if(err)
-            //         {
-            //             console.log(err);
-            //             res.json(response.responseFail("删除失败"));
-            //         }
-            //         else
-            //         {
-            //             res.json(response.responseSuccess("删除成功"));
-            //         }
-            //     });
-            // break;
         
             // 用户查看自己的优惠券方法
             case "checkUserCoupon":
@@ -183,7 +166,8 @@ route.post('/coupon',(req,res)=>{
 
             // 管理员查看所有券方法
             case "checkAllCoupon":
-                sql = "SELECT * FROM coupon ";
+            let promise1 = new Promise((resolve,reject)=>{
+                sql = "SELECT * FROM coupon LIMIT "+(requestData.pageIndex-1)*requestData.pageSize + "," + requestData.pageSize;
                 connection.query(sql,(err,data)=>{
                     if(err)
                     {
@@ -192,8 +176,145 @@ route.post('/coupon',(req,res)=>{
                     else
                     {
                         let responseData = JSON.parse(JSON.stringify(data));
-                        res.json(response.responseSuccess(responseData));
+                        resolve(responseData);
                     }
+                });
+            });
+            promise1.then((val)=>{
+                sql = "SELECT COUNT(*) FROM coupon";
+                connection.query(sql,(err,data)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail("窝可"));
+                    }
+                    else
+                    {
+                        let totalSize = JSON.parse(JSON.stringify(data))[0]['COUNT(*)'];
+                        res.json({
+                            code:0,
+                            data:val,
+                            totalSize:totalSize,
+                            message:"成功查询优惠券"
+                        });
+                    }
+                });
+            });
+            break;
+
+            // 管理员按条件查看券方法
+            case "checkCouponByCondition":
+                let promise2 = new Promise((resolve,reject)=>{
+                    sql = "SELECT * FROM coupon WHERE ";
+                    console.log(requestData.coupon_id);
+                    if(requestData.coupon_id)
+                    {
+                        sql += "id = " + requestData.coupon_id + " AND ";
+                    }
+                    if(requestData.coupon_name)
+                    {
+                        sql += "coupon_name = '" + requestData.coupon_name + "' AND ";
+                    }
+                    if(requestData.coupon_limit)
+                    {
+                        sql += "coupon_limit = " + requestData.coupon_limit + " AND ";
+                    }
+                    if(requestData.coupon_type)
+                    {
+                        sql += "coupon_type = '" + requestData.coupon_type + " AND ";
+                    }
+                    if(requestData.coupon_ifOwner)
+                    {
+                        sql += "user_nickname IS NOT NULL AND ";
+                    }
+                    else
+                    {
+                        sql += "user_nickname IS NULL AND ";
+                    }
+                    if(requestData.coupon_owner)
+                    {
+                        sql += "user_nickname = '" + requestData.coupon_owner + "' AND ";
+                    }
+                    if(requestData.coupon_startTime.length)
+                    {
+                        sql += "coupon_startTime BETWEEN '" + requestData.coupon_startTime[0] + "' AND '" + requestData.coupon_startTime[1] + "' AND ";
+                    }
+                    if(requestData.coupon_endTime.length)
+                    {
+                        sql += "coupon_endTime BETWEEN '" + requestData.coupon_endTime[0] + "' AND '" + requestData.coupon_endTime[1] + "' AND ";
+                    }
+                    sql = sql.split(" ").slice(0,-2).join(" ");
+                    console.log(sql);
+                    console.log("问题出现了");
+                    sql += " LIMIT " + (requestData.pageIndex-1)*requestData.pageSize + "," + requestData.pageSize;
+                    connection.query(sql,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let responseData = JSON.parse(JSON.stringify(data));
+                            resolve(responseData);
+                        }
+                    });
+                });
+                promise2.then((val)=>{
+                    sql = "SELECT COUNT(*) FROM coupon WHERE ";
+                    if(requestData.coupon_id)
+                    {
+                        sql += "id = " + requestData.coupon_id + " AND ";
+                    }
+                    if(requestData.coupon_name)
+                    {
+                        sql += "coupon_name = '" + requestData.coupon_name + "' AND ";
+                    }
+                    if(requestData.coupon_limit)
+                    {
+                        sql += "coupon_limit = " + requestData.coupon_limit + " AND ";
+                    }
+                    if(requestData.coupon_type)
+                    {
+                        sql += "coupon_type = '" + requestData.coupon_type + " AND ";
+                    }
+                    if(requestData.coupon_ifOwner)
+                    {
+                        sql += "user_nickname IS NOT NULL AND ";
+                    }
+                    else
+                    {
+                        sql += "user_nickname IS NULL AND ";
+                    }
+                    if(requestData.coupon_owner)
+                    {
+                        sql += "user_nickname = '" + requestData.coupon_owner + "' AND ";
+                    }
+                    if(requestData.coupon_startTime.length)
+                    {
+                        sql += "coupon_startTime BETWEEN '" + requestData.coupon_startTime[0] + "' AND '" + requestData.coupon_startTime[1] + "' AND ";
+                    }
+                    if(requestData.coupon_endTime.length)
+                    {
+                        sql += "coupon_endTime BETWEEN '" + requestData.coupon_endTime[0] + "' AND '" + requestData.coupon_endTime[1] + "' AND ";
+                    }
+                    sql = sql.split(" ").slice(0,-2).join(" ");
+                    sql += " LIMIT " + (requestData.pageIndex-1)*requestData.pageSize + "," + requestData.pageSize;
+                    console.log(sql);
+                    connection.query(sql,(err,data)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            let totalSize = JSON.parse(JSON.stringify(data))[0]['COUNT(*)'];
+                            res.json({
+                                code:0,
+                                data:val,
+                                totalSize:totalSize
+                            });
+                        }
+                    });
                 });
             break;
 
@@ -221,9 +342,6 @@ route.post('/coupon',(req,res)=>{
                     }
                 });
             break;
-
-            // 删除到期优惠券方法
-
 
             default:
             break;

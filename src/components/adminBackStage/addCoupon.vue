@@ -166,7 +166,7 @@ export default {
                         "coupon_limit":this.couponInfo.coupon_limit,
                         "coupon_type":this.couponInfo.coupon_type,
                     };
-                    if(params.coupon_type == "无限制")
+                    if(params.coupon_type == "无限制" || params.coupon_type == "")
                     {
                         params.coupon_type = "all";
                     }

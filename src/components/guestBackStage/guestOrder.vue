@@ -44,7 +44,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>订单总金额:￥{{order.orderList_price}}</p>
+                    <p>订单总金额:￥{{order.orderList_discountPrice}}</p>
                     <p>订单状态:{{order.orderList_state=='f'?"已完成":"未完成"}}</p>
                     <p>生成订单时间:{{order.orderList_startTime}}</p>
                     <p v-if="order.orderList_state=='f'">完成订单时间:{{order.orderList_finishTime}}</p>
