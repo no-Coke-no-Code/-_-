@@ -16,6 +16,49 @@ const route = express.Router();
 var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
 
+route.delete('/coupon',(req,res)=>{
+    let sql;
+    let sqlParams = [];
+    console.log(req.query);
+    switch(req.query.method)
+    {
+        case "deleteCouponById":
+            sql = "DELETE FROM coupon WHERE id = ?";
+            sqlParams = [req.query.couponId];
+            connection.query(sql,sqlParams,(err,data)=>{
+                if(err)
+                {
+                    console.log(err);
+                    res.json(response.responseFail("删除失败"));
+                }
+                else
+                {
+                    res.json(response.responseSuccess('删除成功'));
+                }
+            });
+        break;
+
+        case "deleteCouponByDate":
+            let currentTime = Date.now();
+            sql = "DELETE FROM coupon WHERE coupon_endTime < ?";
+            sqlParams = [currentTime];
+            connection.query(sql,sqlParams,(err,data)=>{
+                if(err)
+                {
+                    console.log(err);
+                    res.json(response.responseFail("删除失败"));
+                }
+                else
+                {
+                    res.json(response.responseSuccess("删除成功"));
+                }
+            });
+        break;
+
+        default:
+        break;
+    }
+});
 
 route.post('/coupon',(req,res)=>{
     let requestData = "";
@@ -60,8 +103,21 @@ route.post('/coupon',(req,res)=>{
             break;
 
             // 用户使用券后删除该券方法
-            case 'deleteUserCoupon':
-            break;
+            // case 'deleteUserCoupon':
+            //     sql = "DELETE FROM coupon WHERE id = ?";
+            //     sqlParam = [requestData.id];
+            //     connection.query(sql,sqlParam,(err)=>{
+            //         if(err)
+            //         {
+            //             console.log(err);
+            //             res.json(response.responseFail("删除失败"));
+            //         }
+            //         else
+            //         {
+            //             res.json(response.responseSuccess("删除成功"));
+            //         }
+            //     });
+            // break;
         
             // 用户查看自己的优惠券方法
             case "checkUserCoupon":
@@ -98,12 +154,36 @@ route.post('/coupon',(req,res)=>{
             break;
 
             // 管理员发放新券方法
-            case "postCoupon":
+            case "addCoupon":
+                requestData.coupon_endTime = requestData.coupon_endTime.split(" ");
+                requestData.coupon_endTime.splice(1,1,"23:59:59");
+                requestData.coupon_endTime = requestData.coupon_endTime.join(" ");
+
+                sql = "INSERT INTO coupon SET ?";
+                sqlParam = [{
+                    "coupon_name":requestData.coupon_name,
+                    "coupon_price":requestData.coupon_price,
+                    "coupon_startTime":requestData.coupon_startTime,
+                    "coupon_endTime":requestData.coupon_endTime,
+                    "coupon_limit":requestData.coupon_limit,
+                    "coupon_type":requestData.coupon_type
+                }];
+                connection.query(sql,sqlParam,(err,data)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail("添加优惠券失败"));
+                    }
+                    else
+                    {
+                        res.json(response.responseSuccess("添加优惠券成功"));
+                    }
+                });
             break;
 
             // 管理员查看所有券方法
             case "checkAllCoupon":
-                sql = "SELECT * FROM coupon";
+                sql = "SELECT * FROM coupon ";
                 connection.query(sql,(err,data)=>{
                     if(err)
                     {
@@ -117,9 +197,33 @@ route.post('/coupon',(req,res)=>{
                 });
             break;
 
-            // 管理员删除券方法
-            case "deleteCoupon":
+            // 管理员编辑优惠券方法
+            case "editCoupon":
+                sql = "UPDATE coupon SET coupon_name=?,coupon_price=?,coupon_startTime=?,coupon_endTime=?,coupon_limit=?,coupon_type=? WHERE id = ?";
+                sqlParams = [
+                    requestData.coupon_name,
+                    requestData.coupon_price,
+                    requestData.coupon_startTime,
+                    requestData.coupon_endTime,
+                    parseInt(requestData.coupon_limit),
+                    requestData.coupon_type,
+                    requestData.id
+                ];
+                connection.query(sql,sqlParams,(err,data)=>{ 
+                    if(err)
+                    {
+                        console.log(err);
+                        res.json(response.responseFail("编辑失败"));
+                    }
+                    else
+                    {
+                        res.json(response.responseSuccess("编辑成功"));
+                    }
+                });
             break;
+
+            // 删除到期优惠券方法
+
 
             default:
             break;

@@ -7,11 +7,11 @@
             <el-form-item label="完成订单时间段:">
                 <el-date-picker v-model="endTimeRange" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
             </el-form-item>
-            <el-row>
-                <el-form-item label="用户名:">
-                    <el-input v-model="currentGuest"></el-input>
-                </el-form-item>
-            </el-row>
+            <el-form-item label="用户名:">
+                <el-input v-model="currentGuest"></el-input>
+            </el-form-item>
+            <!-- <el-row> -->
+            <!-- </el-row> -->
         </el-form>
         <div class="btn_group">
             <el-button type="primary" @click="searchByName"><i class="el-icon-search"></i>搜索</el-button>

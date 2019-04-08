@@ -8,6 +8,9 @@ const _ = require("../utils/utils.js");
 // 实例化express路由
 const route = express.Router();
 
+// 引入方法
+const functions = require("./function.js");
+
 // 连接数据库
 var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
@@ -163,9 +166,53 @@ route.post('/comment',(req,res)=>{
                 }
                 else
                 {
-                    console.log(JSON.stringify(data),'i want see');
                     let responseData = JSON.parse(JSON.stringify(data));
-                    res.json(response.responseSuccess(responseData));
+                    let userHeadImgList = [];
+
+                    let commentList = [];
+                    commentList = JSON.parse(JSON.stringify(data));
+                    let sql = "SELECT user_headImg FROM user WHERE user_nickname = ?";
+                    let sqlParams = [];
+                    let funcList = [];
+                    // 这里使用了效率比较低的方法，看看以后会不会有更优的方法
+                    // 通过传进来的用户ID数组，按照顺序，分别查询N次数据库（promise）
+                    // 最后通过Promise.all将所有操作整合再返回
+                    function createPromise(commentList,i){
+                        var promises = new Promise((resolve,reject)=>{
+                            sqlParams = [];
+                            sqlParams.push(commentList[i].user_nickname);
+                            connection.query(sql,sqlParams,(err,data)=>{
+                                if(err)
+                                {
+                                    console.log(err);
+                                }
+                                else
+                                {
+                                    // 这里返回的其实是一个数组
+                                    let responseData = JSON.parse(JSON.stringify(data));
+                                    resolve(responseData[0].user_headImg);
+                                }
+                            });
+                        });
+                        return promises;
+                    };
+                    for(let i = 0;i<commentList.length;i++)
+                    {
+                        funcList.push(createPromise(commentList,i));
+                    };
+                    let promiseAll = Promise.all(funcList);
+                    promiseAll
+                    .then((value)=>{
+                        userHeadImgList = JSON.parse(JSON.stringify(value));
+                        for(let i = 0;i<responseData.length;i++)
+                        {
+                            responseData[i].user_headImg = userHeadImgList[i];
+                        }
+                        res.json(response.responseSuccess(responseData));
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                    });
                 }
             });
             break;

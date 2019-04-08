@@ -3,9 +3,11 @@
         <div class="collectionListItem" v-for="item in collectionList">
             <img class="collectionImg" :src="item.good_imgurl"/>
             <span class="collectionName">商品名称:{{item.good_name}}</span>
-            <span>操作:</span>
-            <a class="seeGoodDetail" @click="toGood(item)">点击查看</a>
-            <a class="removeCollection" @click="removeCollection(item)">不再收藏</a>
+            <div class="action">
+                <span>操作:</span>
+                <a class="seeGoodDetail" @click="toGood(item)">点击查看</a>
+                <a class="removeCollection" @click="removeCollection(item)">不再收藏</a>
+            </div>
         </div>
         <h2 v-if="!collectionList.length">您的收藏夹还是空空如也哦   去逛逛吧</h2>
     </div>
@@ -99,6 +101,7 @@ export default {
             border: 2px solid #f6f6f6;
             padding: 20px;
             background-color: #f7f4f2d3;
+            line-height: 100px;
             &:hover
             {
                 background-color: #f0eeeed3;
@@ -124,5 +127,11 @@ export default {
                 }
             }
         }   
+    }
+
+    .action
+    {
+        float: right;
+        margin-right: 50px;
     }
 </style>

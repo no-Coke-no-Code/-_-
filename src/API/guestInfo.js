@@ -6,6 +6,9 @@ const mysqlConfig = require("./../../mysql.config.js");
 // 实例化express路由
 const route = express.Router();
 
+// 引入方法
+const functions = require("./function.js");
+
 // 连接数据库
 var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
@@ -72,6 +75,11 @@ route.post("/guestInfo",(req,res) => {
                 });
                 break;
             }
+
+            // 获取用户头像
+            case "getUserHeadImg":
+                functions.getUserHeadImg(reqData,connection,req,res,);
+            break;
         }
     });
 });

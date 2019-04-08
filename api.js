@@ -94,7 +94,7 @@ module.exports = () => {
     route.post("/countManage",countManage);
 
     // 优惠券操作功能接口
-    route.post("/coupon",coupon);
+    route.all("/coupon",coupon);
 
     return route;
 };

@@ -4,6 +4,7 @@
         <search-input></search-input>
         <good-menu></good-menu>
         <good-item :searchKeyWord="search" @searchDone="searchDone"></good-item>
+        <footers></footers>
     </div>
 </template>
 
@@ -12,6 +13,7 @@ import headers from "../global/headers.vue";
 import searchInput from "./../global/searchInput.vue";
 import goodMenu from "./../global/goodMenu.vue";
 import goodItem from "./../goodList/goodItem.vue";
+import footers from "./../global/footers.vue";
 
 export default {
     name:"searchResult",
@@ -19,7 +21,8 @@ export default {
         headers,
         searchInput,
         goodMenu,
-        goodItem
+        goodItem,
+        footers,
     },
     data(){
         return{

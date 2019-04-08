@@ -23,6 +23,27 @@
                 <h1>总价:￥{{this.totalPrice}}</h1>
                 <h1>会员价:￥{{this.discountPrice}}</h1>
             </div>
+            <div class="userCoupon">
+                <p>可使用优惠券:<el-button @click="noUseCoupon">不使用优惠券</el-button></p>
+                <div class="coupon" v-for="item in couponList" @click="chooseCoupon(item)">
+                    <div class="coupon_left">
+                        <p>{{item.coupon_name}}</p>
+                        <p>有效日期:</p>
+                        <p>{{item.coupon_startTime.split(" ")[0]}} 至 {{item.coupon_endTime.split(" ")[0]}}</p>
+                        <p v-text="item.coupon_type=='all'?'全类型可用':'限'+item.coupon_type+'商品可用'"></p>
+                        <p v-if="item.coupon_limit" >限消费￥{{item.coupon_limit}}以上可用</p>
+                    </div>
+                    <div class="coupon_right">
+                        <p>￥{{item.coupon_price}}</p>
+                        <div class="chosenTick" v-if="chosenCoupon.id == item.id">
+                            <img src="@/../static/pic/price_icon_payment_success@2x.png">
+                        </div>
+                    </div>
+                    <div class="triangleTop"></div>
+                    <div class="triangleBottom"></div>
+                    <div class="divideLine"></div>
+                </div>
+            </div>
             <div class="userInfo">
                 <h2>用户信息</h2>
                 <div>
@@ -49,14 +70,18 @@ export default {
             ifLoading:false,
             goodList:[],
             totalPrice:"",
+            normalTotalPrice:"",
             user_creditMark:"",
             discount:0,
             discountPrice:"",
+            normalDiscountPrice:"",
             userName:"",
             userPhone:"",
             userAddress:"",
             userRealname:"",
             goodIdList:[],
+            couponList:[],
+            chosenCoupon:{},
         }
     },
     created(){
@@ -68,31 +93,55 @@ export default {
         this.totalPrice = window.localStorage.getItem("totalPrice");
     },
     mounted(){
-        // 初始化订单用户信息(需要调用用户数据表)
         this.userName = this.$store.state.userName;
-        let params = {
-            "method":"refresh",
-            "userName":this.userName
-        };
-        console.log("将要发送的数据",params);
-        // 关于VUEX使用两个注意点
-        // 1:如果要对VUEX中的数据进行操作，动态绑定，则需要将VUEX的数据在computed里面进行监听，才能够实时把握住它里面数据的变化
-        // 2：貌似无法直接在created钩子函数中获取VUEX中的数据（除非通过computed进行监听）
-        // 获取直接在mounted钩子函数中获取也行
-        // 根据用户名调用用户信息
-        this.$http
-        .post('/guestInfo',params)
-        .then((data)=>{
-            console.log("服务器返回的数据",data.data.data[0]);
-            let responseData = data.data.data[0];
-            this.userPhone = responseData.user_phone;
-            this.userAddress = responseData.user_address;
-            this.userRealname = responseData.user_realname;
-            this.creditMark = responseData.user_creditMark;
-            this.getCreditRank();
-        })
-        .catch((err)=>{
-            console.log(err);
+        let promise = new Promise((resolve,reject)=>{
+            let params = {
+                "method":"checkUserCoupon",
+                "user_nickname":this.userName
+            };
+            this.$http
+            .post('/coupon',params)
+            .then((data)=>{
+                let responseData = data.data;
+                if(responseData.code == 0)
+                {
+                    for(let i = 0;i<responseData.data.length;i++)
+                    {
+                        this.couponList.push(responseData.data[i]);
+                    }
+                    console.log(this.couponList);
+                    resolve();
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        });
+        promise.then(()=>{
+            // 初始化订单用户信息(需要调用用户数据表)
+            let params = {
+                "method":"refresh",
+                "userName":this.userName
+            };
+            // 关于VUEX使用两个注意点
+            // 1:如果要对VUEX中的数据进行操作，动态绑定，则需要将VUEX的数据在computed里面进行监听，才能够实时把握住它里面数据的变化
+            // 2：貌似无法直接在created钩子函数中获取VUEX中的数据（除非通过computed进行监听）
+            // 获取直接在mounted钩子函数中获取也行
+            // 根据用户名调用用户信息
+            this.$http
+            .post('/guestInfo',params)
+            .then((data)=>{
+                console.log("服务器返回的数据",data.data.data[0]);
+                let responseData = data.data.data[0];
+                this.userPhone = responseData.user_phone;
+                this.userAddress = responseData.user_address;
+                this.userRealname = responseData.user_realname;
+                this.creditMark = responseData.user_creditMark;
+                this.getCreditRank();
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
         });
     },
     methods:{
@@ -111,6 +160,8 @@ export default {
                 console.log(responseData);
                 this.discount = responseData.data.user_discount;
                 this.discountPrice = this.totalPrice * this.discount;
+                this.normalTotalPrice = this.totalPrice;
+                this.normalDiscountPrice = this.discountPrice;
             })
             .catch((err)=>{
                 console.log(err);
@@ -126,8 +177,8 @@ export default {
                 if(this.userPhone && this.userAddress && this.userRealname)
                 {
                     this.$message({
-                    message:"正在生成，请稍后",
-                    type:"success"
+                        message:"正在生成，请稍后",
+                        type:"success"
                     });
                     let goodList = [];
                     for(let i = 0;i<this.goodList.length;i++)
@@ -172,12 +223,37 @@ export default {
                                 "user_nickname":this.userName,
                                 "addCreditMark":Math.round(this.totalPrice*0.1)
                             };
+                            // 更新会员积分
                             this.$http
                             .post('/credit',params33)
                             .then((data)=>{
                                 let responseData = data.data;
                                 console.log("更新用户积分成功");
-                                this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
+                                // 删除用户所使用优惠券
+                                if(this.chosenCoupon.id)
+                                {
+                                    this.$http
+                                    .delete('/coupon',{
+                                        params:{
+                                            method:"deleteCouponById",
+                                            couponId:this.chosenCoupon.id
+                                        }
+                                    })
+                                    .then((data)=>{
+                                        let responseData = data.data;
+                                        if(responseData.code == 0)
+                                        {
+                                            this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
+                                        }
+                                    })
+                                    .catch((err)=>{
+                                        console.log(err);
+                                    });
+                                }
+                                else
+                                {
+                                    this.$router.push({path:"/makeOrderSuccess",name:"makeOrderSuccess"});
+                                }
                             })
                             .catch((err)=>{
                                 if(err)
@@ -207,11 +283,31 @@ export default {
         cancelOrder(){
             window.localStorage.removeItem('selectedGoodList');
         },
+
+        // 选择将要使用的优惠券
+        chooseCoupon(coupon){
+            this.chosenCoupon = JSON.parse(JSON.stringify(coupon));
+            this.totalPrice = this.normalTotalPrice - this.chosenCoupon.coupon_price;
+            this.discountPrice = this.normalDiscountPrice - this.chosenCoupon.coupon_price;
+            if(this.discountPrice < 0)
+            {
+                this.discountPrice = 0;
+            }
+        },
+
+        // 不适用优惠券
+        noUseCoupon(){
+            this.chosenCoupon = {};
+            this.totalPrice = this.normalTotalPrice;
+            this.discountPrice = this.normalDiscountPrice;
+        },
     },
 }
 </script>
 
 <style lang="scss" scoped>
+@import "./static/global/coupon.scss";
+
     .mainBlock
     {
         padding: 50px 80px;
@@ -224,6 +320,21 @@ export default {
         {
             display: inline-block;
             width: 400px;
+        }
+        .chosenTick
+        {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            border-radius: 50%;
+            background-color: #fff;
+            width: 29px;
+            height: 29px;
+            img
+            {
+                width: 30px;
+                height: 30px;
+            }
         }
     }
 </style>

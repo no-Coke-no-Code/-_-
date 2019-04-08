@@ -39,7 +39,7 @@
                 </el-form-item>
                 <el-form-item label="商品图片" prop="imgurl">
                     <img :src="editForm.imgurl" class="goodImg" @click="changeImg"/>
-                </el-form-item>
+                </el-form-item> 
             </el-form>
             <div class="btn-group">
                 <el-button type="primary" @click="edit">编辑</el-button>

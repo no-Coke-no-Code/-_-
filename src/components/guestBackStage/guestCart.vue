@@ -335,6 +335,7 @@ export default {
                         cursor: pointer;
                         background: #00C1DF;
                         line-height: 40px;
+                        margin-right: 20px;
                         a
                         {
                             color: white;

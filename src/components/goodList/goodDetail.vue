@@ -22,6 +22,7 @@
         <div class="goodComment">
             <h2>最新评论</h2>
             <div v-for="item in commentList" class="commentItem" v-if="commentList.length != 0 && !item.reply_comment_id">
+                <img :src="item.user_headImg?item.user_headImg:require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png')" class="userHeadImg"/>
                 <span class="userName">{{item.user_nickname}}</span>
                 <el-rate disabled v-model="item.comment_rank" class="commentRank"></el-rate>
                 <p class="commentContent">{{item.comment_content}}</p>
@@ -34,6 +35,7 @@
                 <p>暂无评论</p>
             </div>
         </div>
+        <footers></footers>
     </div>
 </template>
 
@@ -41,6 +43,7 @@
 import headers from "./../global/headers";
 import searchInput from "./../global/searchInput.vue";
 import goodMenu from "./../global/goodMenu.vue";
+import footers from "./../global/footers.vue";
 
 export default {
     name:"goodItem",
@@ -54,7 +57,8 @@ export default {
     components:{
         headers,
         searchInput,
-        goodMenu
+        goodMenu,
+        footers,
     },
     methods:{
         addToCart(){
@@ -245,6 +249,12 @@ export default {
         {
             display: inline-block;
             width: 130px;
+        }
+        .userHeadImg
+        {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
         }
         .commentRank
         {
