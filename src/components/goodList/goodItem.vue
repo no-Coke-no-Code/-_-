@@ -1,5 +1,19 @@
 <template>
-    <div class="goodItemWrapper">
+    <div class="goodItemWrapper" v-loading='ifloading'>
+        <div class="searchCriteria">
+            <p>搜索条件：</p>
+            <div>
+                <a @click="noneActive" :class="{active:criteria=='none'}">无</a>
+                <a @click="saleCountActive" :class="{active:criteria=='saleCount'}">
+                    销量
+                    <i class="arrowDown"></i>
+                </a>
+                <a @click="priceCountActive" :class="{active:criteria=='priceCount'}">
+                    价格
+                    <i class="arrowDown"></i>
+                </a>
+            </div>
+        </div>
         <div v-if="responseData.length">
             <el-row :gutter="40">
                 <el-col :span="8" v-for="(item, index) in responseData" :key="index" style="margin-bottom:20px;">
@@ -35,32 +49,42 @@ export default {
     data(){
         return{
             responseData:[],
+            criteria:"none",
+            ifloading:false,
         }
     },
     created(){
-        let params = {};
-        if(this.searchKeyWord=="精品推介"||this.searchKeyWord=="劲爆新品"||this.searchKeyWord=="异国风情")
-        {
-            params.searchType = "goodBlock"
-            params.searchKeyWord = this.searchKeyWord;
-        }
-        else
-        {
-            params.searchType = "goodName";
-            params.searchKeyWord = this.searchKeyWord;
-        }
-        this.$http
-        .post('/goodSearch',params)
-        .then((data)=>{
-            console.log(data);
-            this.responseData = data.data.data;
-            console.log(this.responseData);
-        })
-        .catch((err)=>{
-            console.log(err);
-        });
+        this.searchGood();
     },
     methods:{
+        searchGood(sortType){
+            this.ifloading = true;
+            let params = {};
+            if(this.searchKeyWord=="精品推介"||this.searchKeyWord=="劲爆新品"||this.searchKeyWord=="异国风情")
+            {
+                params.searchType = "goodBlock"
+                params.searchKeyWord = this.searchKeyWord;
+            }
+            else
+            {
+                params.searchType = "goodName";
+                params.searchKeyWord = this.searchKeyWord;
+            }
+            if(sortType)
+            {
+                params.sortType = sortType;
+            }
+            this.$http
+            .post('/goodSearch',params)
+            .then((data)=>{
+                this.responseData = data.data.data;
+                this.ifloading = false;
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        },
+
         // 查看商品详情
         toGoodDetail(item){
             this.$router.push({path:"/goodDetail",name:"goodDetail",query:{goodName:item.good_name},params:{
@@ -123,6 +147,19 @@ export default {
                 console.log(err);
             });
         },
+
+        noneActive(){
+            this.criteria = "none";
+            this.searchGood();
+        },
+        saleCountActive(){
+            this.criteria = "saleCount";
+            this.searchGood("saleCount");
+        },
+        priceCountActive(){
+            this.criteria = "priceCount";
+            this.searchGood("priceCount");
+        },
     },
     watch:{
         searchKeyWord(val){
@@ -159,6 +196,61 @@ export default {
     .goodItemWrapper
     {
         padding: 20px;
+        .searchCriteria
+        {
+            margin-bottom: 20px;
+            padding: 10px;
+            padding-left: 20px;
+            background-color: #f7f5f5;
+            p
+            {
+                margin-bottom: 10px;
+                font-weight: bold;
+                font-size: 18px;
+            }
+            .arrowDown
+            {
+                display: inline-block;
+                width: 10px;
+                height: 20px;
+                background-image: url("../../../static/pic/sprite-arrow.png");
+                background-position: 253px 67px;
+                transform: scale(1.5);
+            }
+            a
+            {
+                display: inline-block;
+                margin-right: 40px;
+                width: 80px;
+                height: 30px;
+                line-height: 30px;
+                vertical-align: middle;
+                text-align: center;
+                border: 1px solid black;
+                border-radius: 5px;
+                cursor: pointer;
+                &:hover
+                {
+                    background: #66b1ff;
+                    color: #fff;
+                    .arrowDown
+                    {
+                        color: #fff;
+                        background-position: 253px 47px;
+                    }
+                }
+            }
+            .active
+            {
+                background-color: #66b1ff;
+                color: #fff;
+                .arrowDown
+                {
+                    color: #fff;
+                    background-position: 253px 47px;
+                }
+            }
+        }
         .image
         {
             width: 100%;

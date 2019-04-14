@@ -36,6 +36,7 @@ route.post('/credit',(req,res)=>{
             let user_discount = "1";
             let user_nextRank = "普通会员";
             let user_nextMark = "100";
+            let user_creditLevel = "";
             console.log(requestData.creditMark);
             sql = "SELECT * FROM credit";
             connection.query(sql,(err,data)=>{
@@ -53,9 +54,9 @@ route.post('/credit',(req,res)=>{
                         {
                             user_creditRank = responseData[i].credit_rank;
                             user_discount = responseData[i].credit_discount;
+                            user_creditLevel = responseData[i].credit_level;
                             if(i != responseData.length-1)
                             {
-                                console.log("吗各级");
                                 console.log(responseData[i+1]);
                                 user_nextMark = responseData[i+1].credit_mark;
                                 user_nextRank = responseData[i+1].credit_rank;
@@ -66,6 +67,7 @@ route.post('/credit',(req,res)=>{
                         "user_creditRank":user_creditRank,
                         "user_discount":user_discount,
                         "user_creditMark":user_creditMark,
+                        "user_creditLevel":user_creditLevel,
                         "user_nextMark":user_nextMark,
                         "user_nextRank":user_nextRank,
                     };
@@ -91,6 +93,22 @@ route.post('/credit',(req,res)=>{
                     }
                 });
             break;
+
+            case "getAllRank":
+                sql = "SELECT * FROM credit";
+                connection.query(sql,(err,data)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                    }
+                    else
+                    {
+                        let responseData = JSON.parse(JSON.stringify(data));
+                        res.json(response.responseSuccess(responseData));
+                    }
+                });
+            break;
+
             default:
             break;
         }

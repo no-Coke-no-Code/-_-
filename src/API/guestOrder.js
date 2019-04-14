@@ -157,9 +157,51 @@ route.post('/guestOrder',(req,res) => {
                             }
                             else
                             {
-                                res.json({
-                                    "code":0,
-                                    "message":"生成订单接口响应成功"
+                                // 这里使用了效率比较低的方法，看看以后会不会有更优的方法
+                                // 通过传进来的用户ID数组，按照顺序，分别查询N次数据库（promise）
+                                // 最后通过Promise.all将所有操作整合再返回
+                                let goodNameList = [];
+                                let countList = [];
+                                let funcList = [];
+                                for(let i = 0;i<reqData.goodList.length;i++)
+                                {
+                                    goodNameList[i] = reqData.goodList[i].good_name;
+                                    countList[i] = reqData.goodList[i].good_count;
+                                }
+                                console.log(goodNameList);
+                                console.log(countList);
+                                function createPromise(countList,goodNameList,i){
+                                    var promises = new Promise((resolve,reject)=>{
+                                        let sql = "UPDATE good SET good_saleCount = ? WHERE good_name = ?";
+                                        let sqlParams = [];
+                                        sqlParams.push(countList[i],goodNameList[i]);
+                                        connection.query(sql,sqlParams,(err,data)=>{
+                                            if(err)
+                                            {
+                                                console.log(err);
+                                            }
+                                            else
+                                            {
+                                                resolve();
+                                            }
+                                        });
+                                    });
+                                    return promises;
+                                };
+                                for(let i = 0;i<goodNameList.length;i++)
+                                {
+                                    funcList.push(createPromise(countList,goodNameList,i));
+                                };
+                                let promiseAll = Promise.all(funcList);
+                                promiseAll
+                                .then(()=>{
+                                    res.json({
+                                        "code":0,
+                                        "message":"生成订单接口响应成功"
+                                    });
+                                })
+                                .catch((err)=>{
+                                    console.log(err);
                                 });
                             }
                         });

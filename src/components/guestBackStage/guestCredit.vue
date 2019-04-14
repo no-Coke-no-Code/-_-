@@ -1,16 +1,23 @@
 <template>
-    <div class="wrapper">
-        <p>用户当前会员积分：{{user_creditMark}}</p>
-        <p>用户当前会员身份：{{user_creditRank}}</p>
+    <div class="creditWrapper">
 
-        <p v-if="user_discount!=1">用户当前可享受折扣：{{user_discount}}</p>
-        <p v-if="user_discount==1">用户当前未可享受会员优惠</p>
+        <el-steps :active="user_creditLevel" align-center>
+            <el-step v-for="item in rankList" :key="item.credit_id" :title="item.credit_rank" :description="'可以享受'+item.credit_discount+'折优惠'"></el-step>
+        </el-steps>
 
-        <p v-if="user_creditRank==user_nextRank">用户当卡已是最高会员等级</p>
-        <p v-if="user_creditRank!=user_nextRank">下个会员等级：{{user_nextRank}}</p>
+        <div class="content">
+            <p class="content_item">用户当前会员积分：{{user_creditMark}}</p>
+            <p class="content_item">用户当前会员身份：{{user_creditRank}}</p>
 
-        <p v-if="user_creditMark!=user_nextMark">下个会员等级所需积分：{{user_nextMark}}</p>
-        <p v-if="user_creditMark==user_nextMark">用户当前已是最高等级</p>
+            <p class="content_item" v-if="user_discount!=1">用户当前可享受折扣：{{user_discount}}</p>
+            <p class="content_item" v-if="user_discount==1">用户当前未可享受会员优惠</p>
+
+            <p class="content_item" v-if="user_creditRank==user_nextRank">用户当卡已是最高会员等级</p>
+            <p class="content_item" v-if="user_creditRank!=user_nextRank">下个会员等级：{{user_nextRank}}</p>
+
+            <p class="content_item" v-if="user_creditMark!=user_nextMark">下个会员等级所需积分：{{user_nextMark}}</p>
+            <p class="content_item" v-if="user_creditMark==user_nextMark">用户当前已是最高等级</p>
+        </div>
 
         <el-progress :text-inside="true" :stroke-width="18" :percentage="creditPercentage"></el-progress>
     </div>
@@ -26,7 +33,9 @@ export default {
             user_discount:"",
             user_nextRank:"",
             user_nextMark:0,
+            user_creditLevel:0,
             creditPercentage:0,
+            rankList:[],
         }
     },
     computed:{
@@ -118,6 +127,7 @@ export default {
                     this.user_creditRank = responseData.data.user_creditRank;
                     this.user_nextRank = responseData.data.user_nextRank;
                     this.user_nextMark = responseData.data.user_nextMark;
+                    this.user_creditLevel = parseInt(responseData.data.user_creditLevel);
                     this.creditPercentage = Math.floor(this.user_creditMark/this.user_nextMark*100);
                     if(responseData.data.user_discount != 1)
                     {
@@ -126,6 +136,24 @@ export default {
                     else
                     {
                         this.user_discount = responseData.data.user_discount;
+                    }
+                    return;
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+            })
+            .then(()=>{
+                let params = {
+                    "method":"getAllRank"
+                };
+                this.$http
+                .post('/credit',params)
+                .then((data)=>{
+                    this.rankList = data.data.data;
+                    for(let i = 0;i<this.rankList.length;i++)
+                    {
+                        this.rankList[i].credit_discount = this.rankList[i].credit_discount.toString().split(".")[1];
                     }
                 })
                 .catch((err)=>{
@@ -140,12 +168,35 @@ export default {
 }
 </script>
 
+<style>
+    .creditWrapper .el-progress-bar__outer
+    {
+        width: 80%;
+        margin: auto;
+    }
+</style>
+
 <style lang="scss" scoped>
-    .wrapper
+    .creditWrapper
     {
         box-sizing: border-box;
         height: calc(100% - 40px);
         margin-left: 300px;
         padding: 30px;
+        .content
+        {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            .content_item
+            {
+                flex: 0 0 50%;
+                margin-top: 30px;
+                padding-left: 150px;
+                box-sizing: border-box;
+            }
+        }
     }
 </style>

@@ -8,8 +8,8 @@
         <div class="controlArea">
             <button class="back" @click="backToMainPage" v-if="$route.fullPath != '/'">返回主页</button>
             <button class="primary" @click="login" v-if="!ifLogin">登录</button>
-            <button class="primary" v-if="$route.fullPath != '/guestBackStage/'+$route.name" @click="iftoguestBack">
-                个人信息
+            <button class="primary" v-if="($route.fullPath != '/guestBackStage/'+$route.name)&&($route.fullPath != '/guestBackStage')" @click="iftoguestBack">
+                个人中心
             </button>
             <button class="primary" v-if="$route.fullPath != '/couponCenter'" @click="toCouponCenter">抢券中心</button>
             <button class="danger" @click="logout" v-if="ifLogin">退出登录</button>

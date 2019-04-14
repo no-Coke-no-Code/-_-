@@ -15,6 +15,7 @@
                 <p>单位 : {{this.goodDetail.good_unit}}</p>
                 <p>所属类别 : {{this.goodDetail.category_name}} - {{this.goodDetail.subCatalog_name}}</p>
                 <p>来源地 : {{this.goodDetail.good_from}}</p>
+                <p>累计销量 : {{this.goodDetail.good_saleCount}}</p>
                 <el-button @click="addToCart" type="primary">加入购物车</el-button>
                 <el-button @click="collect" type="warning">收藏</el-button>
             </div>

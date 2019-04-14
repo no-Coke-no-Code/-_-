@@ -22,7 +22,6 @@ const topGoodMange = require("./src/API/topGoodMange");
 const comment = require("./src/API/comment");
 const credit = require("./src/API/credit");
 const countManage = require('./src/API/countManage');
-const order = require("./src/API/order");
 const coupon = require("./src/API/coupon");
 
 module.exports = () => {
@@ -81,8 +80,6 @@ module.exports = () => {
     // 评论功能接口
     route.post('/comment',comment);
 
-    // 获取订单项接口
-    route.post("/order",order);
 
     // 根据积分查询会员等级接口
     // 情况1

@@ -15,6 +15,7 @@
             <div class="triangleBottom"></div>
             <div class="divideLine"></div>
         </div>
+        <h2 v-if="couponList.length == 0">当前您并没有优惠券，快去抢券中心看看吧</h2>
     </div>
 </template>
 

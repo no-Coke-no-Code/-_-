@@ -25,6 +25,18 @@ route.post('/goodSearch',(req,res)=>{
         {   
             case "goodName":
                 sql = "SELECT * FROM good WHERE good_name LIKE '%" + reqData.searchKeyWord + "%' OR category_name LIKE '%" + reqData.searchKeyWord + "%' OR subCatalog_name LIKE '%" + reqData.searchKeyWord + "%'";
+                if(reqData.sortType)
+                {
+                    sql += " ORDER BY "; 
+                    if(reqData.sortType == 'saleCount')
+                    {
+                        sql += "good_saleCount DESC";
+                    }
+                    if(reqData.sortType == 'priceCount')
+                    {
+                        sql += "good_price DESC";
+                    }
+                }
                 connection.query(sql,(err,data)=>{
                     if(err)
                     {
@@ -83,6 +95,18 @@ route.post('/goodSearch',(req,res)=>{
                     }
                     sql = _.deleting(sql,',',-1);
                     sql += ")";
+                    if(reqData.sortType)
+                    {
+                        sql += " ORDER BY "; 
+                        if(reqData.sortType == 'saleCount')
+                        {
+                            sql += "good_saleCount DESC";
+                        }
+                        if(reqData.sortType == 'priceCount')
+                        {
+                            sql += "good_price DESC";
+                        }
+                    }
                     connection.query(sql,(err,data)=>{
                         if(err)
                         {

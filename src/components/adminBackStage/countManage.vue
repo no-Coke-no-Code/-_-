@@ -1,6 +1,5 @@
 <template>
     <div class="CountManageWrapper">
-        统计管理页面
         <el-form>
             <el-form-item label="开始时间">
                 <el-date-picker v-model="searchForm.startTime" type="date" value-format="yyyy-M-d H:m:s"></el-date-picker>
@@ -9,13 +8,29 @@
                 <el-date-picker v-model="searchForm.endTime" type="date" value-format="yyyy-M-d"></el-date-picker>
             </el-form-item>
         </el-form>
+        <div class="btnGroup">
+            <el-button @click="search">搜索</el-button>
+        </div>
         <p>总成交金额:{{this.totalMoney}}</p>
         <p>总订单数:{{this.totalOrderNum}}</p>
         <p>最畅销商品:{{this.hottestGood}}</p>
         <p>销量:{{this.hottestGoodNum}}</p>
-        <div class="btnGroup">
-            <el-button @click="search">搜索</el-button>
-        </div>
+        <el-table :data="hottestRankTable" :default-sort = "{prop: 'count', order: 'descending'}">
+            <el-table-column label="商品图片">
+                <template slot-scope="scope">
+                    <img :src="scope.row.img" class="goodImg"/>
+                </template>
+            </el-table-column>
+            <el-table-column label="商品名称" prop="name">
+            </el-table-column>
+            <el-table-column label="商品单价" prop="price"></el-table-column>
+            <el-table-column label="销售数量" prop="count"></el-table-column>
+            <!-- <el-table-column label="小计">
+                <template slot-scope="scope">
+                    <p>{{scope.row.price * scope.row.count}}</p>
+                </template>
+            </el-table-column> -->
+        </el-table>
     </div>
 </template>
 
@@ -33,6 +48,7 @@ export default {
             totalOrderNum:0,
             hottestGood:"",
             hottestGoodNum:0,
+            hottestRankTable:[],
         }
     },
     created(){
@@ -45,6 +61,7 @@ export default {
             this.totalOrderNum = 0;
             this.hottestGood = "";
             this.hottestGoodNum = 0;
+            this.hottestRankTable = [];
 
             let promise = new Promise((resolve,reject)=>{
                 let params = {
@@ -121,7 +138,7 @@ export default {
                 .post('/order',params)
                 .then((data)=>{
                     let responseData = data.data.data;
-                    console.log(responseData);
+                    console.log(responseData,'我想看看这个');
 
                     // 对订单项进行统计
                     let hottestRank = {};
@@ -129,20 +146,28 @@ export default {
                     {
                         if(!hottestRank[responseData[i].good_name])
                         {
-                            hottestRank[responseData[i].good_name] = 1;
+                            hottestRank[responseData[i].good_name] = {};
+                            hottestRank[responseData[i].good_name].count = responseData[i].good_count;
+                            hottestRank[responseData[i].good_name].name = responseData[i].good_name;
+                            hottestRank[responseData[i].good_name].img = responseData[i].good_imgurl;
+                            hottestRank[responseData[i].good_name].price = responseData[i].good_price;
                         }
                         else
                         {
-                            hottestRank[responseData[i].good_name] += responseData[i].good_count;
+                            hottestRank[responseData[i].good_name].count += responseData[i].good_count;
                         }
                     }
-                    console.log(hottestRank,"畅销排行榜");
+                    for(var x in hottestRank)
+                    {
+                        this.hottestRankTable.push(hottestRank[x]);
+                    }
+                    console.log(this.hottestRankTable,"畅销排行榜");
                     for(let good in hottestRank)
                     {
-                        if(hottestRank[good] > this.hottestGoodNum)
+                        if(hottestRank[good].count > this.hottestGoodNum)
                         {
-                            this.hottestGood = good;
-                            this.hottestGoodNum = hottestRank[good];
+                            this.hottestGood = hottestRank[good].name;
+                            this.hottestGoodNum = hottestRank[good].count;
                         }
                     }
                 })
@@ -166,6 +191,11 @@ export default {
         height: calc(100% - 40px);
         margin-left: 300px;
         padding: 30px;
-        overflow: hidden;
+        overflow: auto;
+    }
+    .goodImg
+    {
+        width: 100px;
+        height:100px;
     }
 </style>
