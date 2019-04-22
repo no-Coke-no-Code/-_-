@@ -23,13 +23,17 @@
         <div class="goodComment">
             <h2>最新评论</h2>
             <div v-for="item in commentList" class="commentItem" v-if="commentList.length != 0 && !item.reply_comment_id">
-                <img :src="item.user_headImg?item.user_headImg:require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png')" class="userHeadImg"/>
-                <span class="userName">{{item.user_nickname}}</span>
-                <el-rate disabled v-model="item.comment_rank" class="commentRank"></el-rate>
-                <p class="commentContent">{{item.comment_content}}</p>
-                <span class="commentTime">{{item.comment_time}}</span>
-                <div v-for="item2 in replyList" v-if="item2.reply_comment_id == item.comment_id" class="adminReply">
-                    管理员admin:{{item2.reply_content}}
+                <div class="comment_left">
+                    <img :src="item.user_headImg?item.user_headImg:require('D:/hemashengxian/hema/static/pic/userHeadImg/noHeadImg.png')" class="userHeadImg"/>
+                    <span class="userName">{{item.user_nickname}}</span>
+                </div>
+                <div class="comment_right">
+                    <el-rate disabled v-model="item.comment_rank" class="commentRank"></el-rate>
+                    <p class="commentContent">{{item.comment_content}}</p>
+                    <span class="commentTime">{{item.comment_time}}</span>
+                    <div v-for="item2 in replyList" v-if="item2.reply_comment_id == item.comment_id" class="adminReply">
+                        管理员admin:{{item2.reply_content}}
+                    </div>
                 </div>
             </div>
             <div v-if="commentList.length == 0">
@@ -221,7 +225,12 @@ export default {
             width: calc(100% - 405px);
             font-size: 16px;
             vertical-align: top;
-            padding-left: calc(100% - 800px);
+            margin-left: calc(100% - 800px);
+            background: #f0f0f0;
+            padding-left: 50px;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            border-radius: 10px;
             // 两个元素都是行内块元素。前一个元素是图片标签，基线为下边缘
             // 这个是文字内容块，基线是最后一行文本的基线（若没有文本，基线为下边框）
             // vertical-align：top就是让当前元素的顶部与当前行的最高的元素的顶部重合
@@ -248,28 +257,30 @@ export default {
         }
         .userName
         {
-            display: inline-block;
-            width: 130px;
+            display: block;
         }
         .userHeadImg
         {
             border-radius: 50%;
             width: 50px;
             height: 50px;
+            vertical-align: top;
+            margin-right: 10px;
+            margin-bottom: 10px;
         }
         .commentRank
         {
-            display: inline-block;
+            // display: inline-block;
             margin-bottom: 10px;
         }
         .commentContent
         {
-            margin-left: 135px;
+            // margin-left: 135px;
             margin-bottom: 10px;
         }
         .commentTime
         {
-            margin-left: 135px;
+            // margin-left: 135px;
         }
         .commentItem
         {
@@ -278,6 +289,16 @@ export default {
             padding: 30px;
             background-color: #f7f4f2d3;
             margin-bottom: 10px;
+            overflow: hidden;
+            .comment_left
+            {
+                float: left;
+            }
+            .comment_right
+            {
+                float: left;
+                padding-left: 80px;
+            }
             .adminReply
             {
                 border-radius: 3px;

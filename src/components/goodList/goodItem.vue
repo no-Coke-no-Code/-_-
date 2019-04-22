@@ -79,6 +79,14 @@ export default {
             .then((data)=>{
                 this.responseData = data.data.data;
                 this.ifloading = false;
+                if(!this.responseData.length)
+                {
+                    this.$emit('searchDone',"noValue");
+                }
+                else
+                {
+                    this.$emit("searchDone","havaValue");
+                }
             })
             .catch((err)=>{
                 console.log(err);
@@ -171,6 +179,14 @@ export default {
             .post('/goodSearch',params)
             .then((data)=>{
                 this.responseData = data.data.data;
+                if(!this.responseData.length)
+                {
+                    this.$emit('searchDone',"noValue");
+                }
+                else
+                {
+                    this.$emit("searchDone","havaValue");
+                }
             })
             .catch((err)=>{
                 console.log(err);

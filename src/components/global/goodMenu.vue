@@ -50,7 +50,6 @@ export default {
         },
         // 这里面的key是导航栏项里面的index
         handleSelect(key){
-            // alert("CMD");
             alert(key,'this one');
             this.$router.push({path:'searchResult',query:{search:key,searchType:'category'}});
         },

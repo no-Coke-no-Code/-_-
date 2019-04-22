@@ -1,10 +1,5 @@
 <template>
     <div class="couponManageWrapper">
-        <div class="btnGroup">
-            <el-button @click="search" icon="el-icon-search" type="primary">查询</el-button>
-            <el-button @click="addCoupon" icon="el-icon-plus" type="primary">添加新券</el-button>
-            <el-button @click="reset" icon="el-icon-refresh">重置</el-button>
-        </div>
         <el-form :model="searchForm" :inline='true'>
             <el-form-item label="代金券ID">
                 <el-input v-model="searchForm.coupon_id"></el-input>
@@ -23,19 +18,24 @@
                     <el-option v-for="item in typeList" :value="item" :key="item">{{item}}</el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="开始时间">
-                <el-date-picker v-model="searchForm.coupon_startTime" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="结束时间">
-                <el-date-picker v-model="searchForm.coupon_endTime" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
-            </el-form-item>
             <el-form-item label="是否已被领取">
                 <el-switch v-model="searchForm.coupon_ifOwner"></el-switch>
             </el-form-item>
             <el-form-item label="持有人" v-if="searchForm.coupon_ifOwner">
                 <el-input v-model="searchForm.coupon_owner"></el-input>
             </el-form-item>
+            <el-form-item label="开始时间">
+                <el-date-picker v-model="searchForm.coupon_startTime" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="结束时间">
+                <el-date-picker v-model="searchForm.coupon_endTime" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
+            </el-form-item>
         </el-form>
+        <div class="btnGroup">
+            <el-button @click="search" icon="el-icon-search" type="primary">查询</el-button>
+            <el-button @click="addCoupon" icon="el-icon-plus" type="primary">添加新券</el-button>
+            <el-button @click="reset" icon="el-icon-refresh">重置</el-button>
+        </div>
         <el-table :data="couponList">
             <el-table-column label="编号" prop="id"></el-table-column>
             <el-table-column label="名称" prop="coupon_name"></el-table-column>
@@ -339,6 +339,10 @@ export default {
                 cursor: pointer;
                 color: blue;
             }
+        }
+        .btnGroup
+        {
+            margin-bottom: 40px;
         }
     }
 </style>

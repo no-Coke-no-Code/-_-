@@ -39,6 +39,10 @@
                 <i class="el-icon-setting"></i>
                 <span>优惠券管理</span>
             </el-menu-item>
+            <el-menu-item index="9" @click="logout">
+                <i class="el-icon-setting"></i>
+                <span>退出</span>
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -82,6 +86,9 @@ export default {
         },
         toCouponManage(){
             this.$router.push("/adminBackStage/couponManage");
+        },
+        logout(){
+            this.$router.push("/");
         },
     },
 }

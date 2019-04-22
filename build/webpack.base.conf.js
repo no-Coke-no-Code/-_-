@@ -36,6 +36,11 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      // 'imgDoc' : resolve("static/pic"),
+      // 这里与全局变量里面定义的有什么不同？？
+      // 这里应该是引入JS等文件时文件路径的简写
+      // 如const response = require("@/xx");
+      // 如import xx from "@/xx";
     }
   },
   module: {

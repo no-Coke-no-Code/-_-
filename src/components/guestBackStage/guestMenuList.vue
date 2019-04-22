@@ -1,11 +1,12 @@
 <template>
     <div class="wrapper">
-        <!-- <h1 class="userName">你好，{{username}}</h1> -->
         <el-menu
             class="el-menu-vertical-demo"
+            :default-active="defaultActive"
             background-color="#545c64"
             text-color="#fff"
-            active-text-color="#ffd04b">
+            active-text-color="#ffd04b"
+            >
             <el-menu-item index="1" @click="toGuestInfo">
                 <i class="el-icon-menu"></i>
                 <span>个人信息</span>
@@ -48,6 +49,7 @@ export default {
         return {
             menuList:{
             },
+            defaultActive:'0',
         }
     },
     computed:{
@@ -55,8 +57,27 @@ export default {
             return this.$store.state.userName;
         },
     },
+    watch:{
+        $route:(val)=>{
+            if(val.fullPath == "/guestBackStage/guestCart")
+            {
+                this.defaultActive = '2';
+            }
+            else if(val.fullPath == "/guestBackStage/guestCollect")
+            {
+                this.defaultActive = '4';
+            }
+        },
+    },
     created(){
-        
+        if(this.$route.fullPath == "/guestBackStage/guestCart")
+        {
+            this.defaultActive = '2';
+        }
+        else if(this.$route.fullPath == "/guestBackStage/guestCollect")
+        {
+            this.defaultActive = '4';
+        }
     },
     methods:{
         toGuestInfo(){
@@ -91,7 +112,7 @@ export default {
         height: calc(100% - 40px);
         width: 300px;
         float: left;
-        background-color: rgb(84, 92, 100);
+        background-color: #545c64;
         .userName
         {
             text-align: center;

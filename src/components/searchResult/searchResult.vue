@@ -1,10 +1,10 @@
 <template>
-    <div v-loading="ifLoading">
+    <div v-loading="ifLoading" :class="{wrapper:!ifGoodItem}">
         <headers></headers>
         <search-input></search-input>
         <good-menu></good-menu>
         <good-item :searchKeyWord="search" @searchDone="searchDone"></good-item>
-        <footers></footers>
+        <footers :class="{footers:!ifGoodItem}"></footers>
     </div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
             searchText:"",
             responseData:[],
             ifLoading:false,
+            ifGoodItem:true,
         }
     },
     created(){
@@ -69,13 +70,32 @@ export default {
                 alert("成功搜索:" + goods);
             }
         },
-        searchDone(){
-
+        searchDone(val){
+            if(val == "noValue")
+            {
+                this.ifGoodItem = false;
+            }
+            else
+            {
+                this.ifGoodItem = true;
+            }
+            console.log(this.ifGoodItem);
         },
     },
 }
 </script>
 
 <style lang="scss" scoped>
-
+    .wrapper
+    {
+        position:relative;
+        height:100%;
+    }
+    .footers
+    {
+        position: absolute;
+        bottom: 0;
+        right:0;
+        left:0;
+    }
 </style>

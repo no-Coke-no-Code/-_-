@@ -1,20 +1,27 @@
 <template>
     <div class="CountManageWrapper">
-        <el-form>
-            <el-form-item label="开始时间">
+        <el-form inline>
+            <el-form-item label="开始时间:">
                 <el-date-picker v-model="searchForm.startTime" type="date" value-format="yyyy-M-d H:m:s"></el-date-picker>
             </el-form-item>
-            <el-form-item label="结束时间">
+            <el-form-item label="结束时间:">
                 <el-date-picker v-model="searchForm.endTime" type="date" value-format="yyyy-M-d"></el-date-picker>
             </el-form-item>
+            <el-form-item>
+                <div class="btnGroup">
+                    <el-button @click="search" type="primary"><i class="el-icon-search"></i>查询</el-button>
+                </div>
+            </el-form-item>
         </el-form>
-        <div class="btnGroup">
-            <el-button @click="search">搜索</el-button>
-        </div>
-        <p>总成交金额:{{this.totalMoney}}</p>
-        <p>总订单数:{{this.totalOrderNum}}</p>
-        <p>最畅销商品:{{this.hottestGood}}</p>
-        <p>销量:{{this.hottestGoodNum}}</p>
+        <p class="countContent">
+            <span>总成交金额:{{this.totalMoney}}</span>
+            <span>总订单数:{{this.totalOrderNum}}</span>
+        </p>
+        <p class="countContent">
+            <span>最畅销商品:{{this.hottestGood}}</span>
+            <span>销量:{{this.hottestGoodNum}}</span>
+        </p>
+        <h2 class="countRankTable">商品销售排行榜</h2>
         <el-table :data="hottestRankTable" :default-sort = "{prop: 'count', order: 'descending'}">
             <el-table-column label="商品图片">
                 <template slot-scope="scope">
@@ -24,6 +31,7 @@
             <el-table-column label="商品名称" prop="name">
             </el-table-column>
             <el-table-column label="商品单价" prop="price"></el-table-column>
+            <el-table-column label="单位" prop="good_unit"></el-table-column>
             <el-table-column label="销售数量" prop="count"></el-table-column>
             <!-- <el-table-column label="小计">
                 <template slot-scope="scope">
@@ -101,6 +109,7 @@ export default {
                     this.$message.error("请填写完整的时间");
                     return
                 }
+
                 console.log(params);
                 this.$http
                 .post('/countManage',params)
@@ -135,10 +144,10 @@ export default {
                     "orderList":value
                 };
                 this.$http
-                .post('/order',params)
+                .post('/countManage',params)
                 .then((data)=>{
                     let responseData = data.data.data;
-                    console.log(responseData,'我想看看这个');
+                    console.log(data,'我想看看这个');
 
                     // 对订单项进行统计
                     let hottestRank = {};
@@ -151,6 +160,7 @@ export default {
                             hottestRank[responseData[i].good_name].name = responseData[i].good_name;
                             hottestRank[responseData[i].good_name].img = responseData[i].good_imgurl;
                             hottestRank[responseData[i].good_name].price = responseData[i].good_price;
+                            hottestRank[responseData[i].good_name].good_unit = responseData[i].good_unit;
                         }
                         else
                         {
@@ -192,6 +202,23 @@ export default {
         margin-left: 300px;
         padding: 30px;
         overflow: auto;
+        .el-form-item
+        {
+            margin-right: 50px;
+        }
+        .countRankTable
+        {
+            margin-bottom: 40px;
+            margin-top: 40px;
+        }
+        .countContent
+        {
+            width: 428px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
     }
     .goodImg
     {

@@ -575,40 +575,6 @@ route.post('/mangeOrder',(req,res) => {
                     });
                 break;
 
-                case "checkOrderDetail":
-                sql = "SELECT * FROM orderitem WHERE orderList_id ";
-                if(reqData.orderList.length == 1)
-                {
-                    sql += "=" + reqData.orderList[0];
-                }
-                else if(reqData.orderList.length > 1)
-                {
-                    sql += "IN (";
-                    for(let i = 0;i<reqData.orderList.length;i++)
-                    {
-                        sql += reqData.orderList[i] + ",";
-                    }
-                    sql = _.deleting(sql,",",-1);
-                    sql += ")";
-                }
-                else if(!reqData.orderList.length)
-                {
-                    return;
-                }
-                connection.query(sql,(err,data)=>{
-                    if(err)
-                    {
-                        console.log(err);
-                    }
-                    else
-                    {
-                        let responseData = JSON.parse(JSON.stringify(data));
-                        console.log(responseData);
-                        res.json(response.responseSuccess(responseData));
-                    }
-                });
-                break;
-
                 default:
                 break;
             }

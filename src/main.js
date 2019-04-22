@@ -21,6 +21,9 @@ Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3333/";
 Vue.prototype.$http = axios;    //从此在项目的其它位置$http即原axios
 
+// 图片地址全局变量
+Vue.prototype.imgDoc = "/static/pic/";
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

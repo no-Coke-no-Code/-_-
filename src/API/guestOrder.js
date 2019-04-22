@@ -133,7 +133,7 @@ route.post('/guestOrder',(req,res) => {
                     }
                     else
                     {
-                        sql = "INSERT INTO orderitem (good_name,good_count,good_price,orderList_id,orderItem_priceSub,good_imgurl,ifComment) VALUES ?";
+                        sql = "INSERT INTO orderitem (good_name,good_unit,good_count,good_price,orderList_id,orderItem_priceSub,good_imgurl,ifComment) VALUES ?";
                         sqlParams = [];
                         for(let i = 0;i<reqData.goodList.length;i++)
                         {
@@ -143,6 +143,7 @@ route.post('/guestOrder',(req,res) => {
                             sqlParams[i] = [];
                             sqlParams[i].push(
                                 reqData.goodList[i].good_name,
+                                reqData.goodList[i].good_unit,
                                 reqData.goodList[i].good_count,
                                 reqData.goodList[i].good_price,
                                 reqData.goodList[i].orderList_id,

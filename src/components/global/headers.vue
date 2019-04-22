@@ -12,6 +12,8 @@
                 个人中心
             </button>
             <button class="primary" v-if="$route.fullPath != '/couponCenter'" @click="toCouponCenter">抢券中心</button>
+            <button @click="toCart" class="primary">购物车</button>
+            <button @click="toCollect" class="primary">收藏夹</button>
             <button class="danger" @click="logout" v-if="ifLogin">退出登录</button>
         </div>
     </div>
@@ -90,6 +92,34 @@ export default {
         toCouponCenter(){
             this.$router.push({path:"/couponCenter"});
         },
+        toCart(){
+            if(this.$route.fullPath == "/guestBackStage")
+            {
+                this.$router.push("/guestBackStage/guestCart");
+            }
+            else if(this.$route.fullPath == "/guestBackStage/guestCart")
+            {
+                return;
+            }
+            else
+            {
+                this.$router.push("/guestBackStage/guestCart");
+            }
+        },
+        toCollect(){
+            if(this.$route.fullPath == "/guestBackStage")
+            {
+                this.$router.push("/guestBackStage/guestCollect");
+            }
+            else if(this.$route.fullPath == "/guestBackStage/guestCollect")
+            {
+                return;
+            }
+            else
+            {
+                this.$router.push("/guestBackStage/guestCollect");
+            }
+        },
     },
 }
 </script>
@@ -97,7 +127,7 @@ export default {
 <style lang="scss" scoped>
     .headerWrapper
     {
-        background-color: #EEEFF3;
+        background-color: #545c64;
         height: 40px;
         display: flex;
         justify-content: space-between;
@@ -111,6 +141,7 @@ export default {
         }
         .stateArea
         {
+            color: #fff;
             margin-left: 80px;
         }
         .controlArea
