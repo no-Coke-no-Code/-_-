@@ -25,3 +25,6 @@ npm run build --report
     2.全局安装node-dev(用于后端服务的热更新)
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
+2019-4-29        暂时告一段落，需要补充功能：用户取消订单功能
