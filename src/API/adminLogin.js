@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const mysqlConfig = require("./../../mysql.config.js");
 
 // 实例化express路由
-const route = express.Router();
+const route = express.Router(); 
 
 // 引入方法
 const functions = require("./function.js");

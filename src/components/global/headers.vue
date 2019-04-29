@@ -90,7 +90,14 @@ export default {
             this.$router.push({path:"/"});
         },
         toCouponCenter(){
-            this.$router.push({path:"/couponCenter"});
+            if(this.userName == "未登录" && this.ifLogin == false)
+            {
+                this.$router.push({path:'login'});
+            }
+            else
+            {
+                this.$router.push({path:"/couponCenter"});
+            }
         },
         toCart(){
             if(this.$route.fullPath == "/guestBackStage")
@@ -100,6 +107,16 @@ export default {
             else if(this.$route.fullPath == "/guestBackStage/guestCart")
             {
                 return;
+            }
+            // else
+            // {
+            //     this.$router.push("/guestBackStage/guestCart");
+            // }
+
+            // 需要判断是否登录
+            if(this.userName == "未登录" && this.ifLogin == false)
+            {
+                this.$router.push({path:'login'});
             }
             else
             {
@@ -114,6 +131,16 @@ export default {
             else if(this.$route.fullPath == "/guestBackStage/guestCollect")
             {
                 return;
+            }
+            // else
+            // {
+            //     this.$router.push("/guestBackStage/guestCollect");
+            // }
+
+            // 需要判断是否登录
+            if(this.userName == "未登录" && this.ifLogin == false)
+            {
+                this.$router.push({path:'login'});
             }
             else
             {

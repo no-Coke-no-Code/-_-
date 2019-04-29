@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" v-loading="ifLoading">
+    <div class="OrderWrapper" v-loading="ifLoading">
         <el-form class="searchForm" :inline="true">
             <el-form-item label="生成订单时间段:">
                 <el-date-picker v-model="startTimeRange" type="datetimerange" range-separator="至" value-format="yyyy-M-d H:m:s"></el-date-picker>
@@ -292,10 +292,14 @@ export default {
     {
         width: 400px;
     }
+    .OrderWrapper .el-dialog__body
+    {
+        padding-bottom: 10px;
+    }
 </style>
 
 <style lang="scss" scoped>
-    .wrapper
+    .OrderWrapper
     {
         padding-left: 30px;
         height: 100%;
@@ -358,6 +362,11 @@ export default {
     .orderTabs
     {
         margin-bottom: 30px;
+    }
+
+    .btnGroup
+    {
+        margin-top: 20px;
     }
 </style>
 

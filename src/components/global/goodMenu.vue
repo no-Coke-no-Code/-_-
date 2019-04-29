@@ -46,7 +46,7 @@ export default {
     },
     methods:{
         testing(){
-            alert("哈哈沙雕");
+
         },
         // 这里面的key是导航栏项里面的index
         handleSelect(key){

@@ -1,4 +1,5 @@
 <template>
+<div class="outerWrapper">
     <div class="wrapper">
         <el-form :model="registerForm" ref="registerForm" class="registerForm" :rules="rules">
             <h2 class="registerFormTitle">注册</h2>
@@ -37,6 +38,7 @@
             <el-button @click="backToLogin" class="registerFormBtn">返回</el-button>
         </el-form>
     </div>
+</div>
 </template>
 
 <script>
@@ -169,13 +171,22 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+    .outerWrapper
+    {
+        background: url("../../static/pic/adminLoginBg.jpg") no-repeat;
+        background-size:cover;
+        background-position: -4px -129px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
     .wrapper
     {
+        width: 50%;
+        margin: 0 auto;
+        padding: 20px 10px;
+        background-color: #fff;
         border: 1px solid #c0c0c0;
         border-radius: 5px;
-        width: 50%;
-        margin: 50px auto;
-        padding: 20px 10px;
         .registerForm
         {
             padding-right: 80px;

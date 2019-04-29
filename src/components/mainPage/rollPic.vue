@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="content">
             <h2>网上生鲜超市</h2>
-            <p>让最新鲜的美味立刻送到你手上</p>
+            <p>把最新鲜的美味送到你手上</p>
         </div>
         <el-carousel trigger="click" height="500px">
             <el-carousel-item v-for="item in rollPicList" :key="item.content">
@@ -50,10 +50,21 @@ export default {
     .content
     {
         position: absolute;
-        left: 233px;
-        bottom: 172px;
+        left: 102px;
+        bottom: 195px;
         color: #fff;
         z-index: 3;
+    }
+    .content h2
+    {
+        font-size: 36px;
+    }
+    .content p
+    {
+        font-size: 30px;
+        font-style: italic;
+        margin-left: 54px;
+        margin-top: 20px;
     }
 
     .el-carousel__item

@@ -27,7 +27,7 @@
             <el-tab-pane label="全部">
                 <div class="orderList" v-for="order in responseData" v-if="responseData.length">
                     <h3>订单号:{{order.orderList_id}}</h3>
-                    <el-table :data="order.orderDetail">
+                    <el-table :data="order.orderDetail" style="margin-bottom:20px;">
                         <el-table-column prop="good_imgurl">
                             <template slot-scope="scope">
                                 <img :src="scope.row.good_imgurl" class="orderItemPic"/>
@@ -44,10 +44,16 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>订单总金额:￥{{order.orderList_discountPrice}}</p>
-                    <p>订单状态:{{order.orderList_state=='f'?"已完成":"未完成"}}</p>
-                    <p>生成订单时间:{{order.orderList_startTime}}</p>
-                    <p v-if="order.orderList_state=='f'">完成订单时间:{{order.orderList_finishTime}}</p>
+                    <p class="orderState">
+                        <span>订单总金额:￥{{order.orderList_discountPrice}}</span>
+                        <br/>
+                        <span>订单状态:{{order.orderList_state=='f'?"已完成":"未完成"}}</span>
+                    </p>
+                    <p class="orderState">
+                        <span>生成订单时间:{{order.orderList_startTime}}</span>
+                        <br/>
+                        <span v-if="order.orderList_state=='f'">完成订单时间:{{order.orderList_finishTime}}</span>
+                    </p>
                 </div>
                 <div v-if="!responseData.length">
                     暂时无相关的订单
@@ -250,6 +256,19 @@ export default {
     {
         overflow: unset !important;
     }
+    .guestOrder .el-form-item
+    {
+        width: 496px;
+    }
+    .guestOrder .el-form-item__label
+    {
+        width: 96px;
+        text-align: left;
+    }
+    .guestOrder .el-input,.guestOrder .el-select
+    {
+        width: 400px;
+    }
 </style>
 
 <style lang="scss" scoped>
@@ -299,5 +318,11 @@ export default {
             cursor: pointer;
             text-decoration: underline;
         }
+    }
+    .orderState
+    {
+        display: inline-block;
+        width: 400px;
+        margin-left: 100px;
     }
 </style>

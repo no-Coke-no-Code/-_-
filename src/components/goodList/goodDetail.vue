@@ -10,14 +10,14 @@
             </div>
             <div class="goodInfo">
                 <h2>{{this.goodDetail.good_name}}</h2>
-                <p>售价 : {{this.goodDetail.good_price}}</p>
+                <p>售价 : <span class="goodPrice">￥{{this.goodDetail.good_price}}</span></p>
                 <p>描述 : {{this.goodDetail.good_detail}}</p>
                 <p>单位 : {{this.goodDetail.good_unit}}</p>
                 <p>所属类别 : {{this.goodDetail.category_name}} - {{this.goodDetail.subCatalog_name}}</p>
                 <p>来源地 : {{this.goodDetail.good_from}}</p>
                 <p>累计销量 : {{this.goodDetail.good_saleCount}}</p>
-                <el-button @click="addToCart" type="primary">加入购物车</el-button>
-                <el-button @click="collect" type="warning">收藏</el-button>
+                <el-button @click="addToCart" type="danger">加入购物车</el-button>
+                <el-button @click="collect" type="warning" style="margin-left:30px;">收藏</el-button>
             </div>
         </div>
         <div class="goodComment">
@@ -135,6 +135,11 @@ export default {
                 // 一般，重新刷新页面的话，穿过来的对象会被刷掉
                 if(that.$route.params.goodDetail == undefined)
                 {
+                    // 这里有问题，获取不了
+                    console.log(that.$route.query);
+
+
+
                     return new Promise((resolve,reject)=>{
                         let params = {
                             "goodName":that.$route.query.goodName
@@ -204,6 +209,14 @@ export default {
 }
 </script>
 
+<style>
+    .goodImgs img
+    {
+        width: 400px !important;
+        height: 460px;
+    }
+</style>
+
 <style lang="scss" scoped>
     .goodDetail_wrapper
     {
@@ -213,16 +226,19 @@ export default {
         .goodImgs
         {
             display: inline-block;
+            height: 469px;
             img
             {
                 width: 400px;
-                height: 400px;
+                height: 469px !important;
             }
         }
         .goodInfo
         {
             display: inline-block;
             width: calc(100% - 405px);
+            height:460px;
+            box-sizing: border-box;
             font-size: 16px;
             vertical-align: top;
             margin-left: calc(100% - 800px);
@@ -239,9 +255,11 @@ export default {
             {
                 margin-bottom: 30px;
             }
-            p
+            .goodPrice
             {
-
+                font-size: 22px;
+                color: red;
+                // font-weight: bold;
             }
         }
     }

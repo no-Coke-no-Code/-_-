@@ -129,7 +129,7 @@ route.post('/topGoodMange',(req,res)=>{
                     }
                     sql = _.deleting(sql,",",-1);
                     connection.query(sql,(err)=>{
-                        if(err)
+                        if(err) 
                         {
                             console.log(err);
                             res.json(response.responseFail(err));

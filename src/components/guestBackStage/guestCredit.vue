@@ -183,6 +183,7 @@ export default {
         height: calc(100% - 40px);
         margin-left: 300px;
         padding: 30px;
+        padding-top: 80px;
         .content
         {
             width: 100%;

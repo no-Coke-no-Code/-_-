@@ -59,7 +59,9 @@
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 <el-button style="margin-left: 10px;" size="small" type="success" @click="confirmImg">确定上传</el-button>
             </el-upload>
-            <el-button @click="cancelImg">取消</el-button>
+            <div class="btnGroup">
+                <el-button class="cancelBtn" @click="cancelImg">取消</el-button>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -260,5 +262,15 @@ export default {
             outline: 1px solid #409EFF;
             cursor: pointer;
         }
+    }
+    .btnGroup
+    {
+        overflow: hidden;
+    }
+    .cancelBtn
+    {
+        float: right;
+        margin-right: 50px;
+        margin-top: 30px;
     }
 </style>

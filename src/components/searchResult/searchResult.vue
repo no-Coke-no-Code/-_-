@@ -63,11 +63,11 @@ export default {
             if(goods == "")
             {
                 this.responseData = "无数据";
-                alert("无数据");
+
             }
             else
             {
-                alert("成功搜索:" + goods);
+
             }
         },
         searchDone(val){

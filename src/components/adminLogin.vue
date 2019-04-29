@@ -114,15 +114,29 @@ export default {
     .wrapper
     {
         height: 100%;
+        background: url("../../static/pic/adminLoginBg.jpg") no-repeat;
+        background-size:cover;
+        background-position: -4px -129px;
+        .formArea
+        {
+            height: 100%;
+            position: relative;
+        }
         #form1
         {
             box-sizing: border-box;
-            background-color: #fff;
-            border-radius: 3px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             width: 360px;
             margin: auto;
-            margin-top: 50px;
             height: 425px;
+            padding-top: 30px;
+            background-color: #fff;
+            border-radius: 6px;
+            border: 2px solid #c0c0c0;
             h1
             {
                 text-align: center;

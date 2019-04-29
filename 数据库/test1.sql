@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50559
 File Encoding         : 65001
 
-Date: 2019-04-08 13:12:42
+Date: 2019-04-29 16:48:38
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -92,12 +92,8 @@ CREATE TABLE `category` (
 INSERT INTO `category` VALUES ('6', '水果');
 INSERT INTO `category` VALUES ('4', '河鲜');
 INSERT INTO `category` VALUES ('1', '海鲜');
-INSERT INTO `category` VALUES ('10', '烘培糕点');
 INSERT INTO `category` VALUES ('3', '肉类');
 INSERT INTO `category` VALUES ('2', '蔬菜');
-INSERT INTO `category` VALUES ('9', '豆制品');
-INSERT INTO `category` VALUES ('8', '零食');
-INSERT INTO `category` VALUES ('7', '饮料');
 
 -- ----------------------------
 -- Table structure for collection
@@ -165,13 +161,16 @@ CREATE TABLE `coupon` (
   `coupon_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `couponType` (`coupon_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of coupon
 -- ----------------------------
-INSERT INTO `coupon` VALUES ('15', '代金券', '10', 'coke43', '2019-04-05 00:00:00', '2019-04-25 00:00:00', '0', 'all');
-INSERT INTO `coupon` VALUES ('18', '代金券', '5', null, '2019-04-06 00:00:00', '2019-04-30 23:59:59', '0', '');
+INSERT INTO `coupon` VALUES ('19', '代金券', '5', 'coke43', '2019-04-08 00:00:00', '2019-04-30 23:59:59', '0', 'all');
+INSERT INTO `coupon` VALUES ('20', '代金券', '10', 'coke43', '2019-04-17 00:00:00', '2019-04-30 23:59:59', '0', 'all');
+INSERT INTO `coupon` VALUES ('21', '代金券', '10', 'coke43', '2019-04-17 00:00:00', '2019-04-30 23:59:59', '0', 'all');
+INSERT INTO `coupon` VALUES ('22', '代金券', '10', 'coke43', '2019-04-17 00:00:00', '2019-04-30 23:59:59', '0', 'all');
+INSERT INTO `coupon` VALUES ('24', '代金券', '5', 'coke43', '2019-04-25 00:00:00', '2019-04-30 23:59:59', '0', 'all');
 
 -- ----------------------------
 -- Table structure for credit
@@ -182,15 +181,16 @@ CREATE TABLE `credit` (
   `credit_rank` varchar(100) NOT NULL,
   `credit_mark` int(10) DEFAULT NULL,
   `credit_discount` decimal(10,1) DEFAULT NULL,
+  `credit_level` int(11) NOT NULL,
   PRIMARY KEY (`credit_id`,`credit_rank`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of credit
 -- ----------------------------
-INSERT INTO `credit` VALUES ('1', '普通会员', '100', '0.9');
-INSERT INTO `credit` VALUES ('2', '黄金会员', '300', '0.8');
-INSERT INTO `credit` VALUES ('3', '至尊会员', '500', '0.7');
+INSERT INTO `credit` VALUES ('1', '普通会员', '100', '0.9', '1');
+INSERT INTO `credit` VALUES ('2', '黄金会员', '300', '0.8', '2');
+INSERT INTO `credit` VALUES ('3', '至尊会员', '500', '0.7', '3');
 
 -- ----------------------------
 -- Table structure for foreign_good
@@ -228,28 +228,30 @@ CREATE TABLE `good` (
   `good_unit` varchar(10) NOT NULL,
   `good_from` varchar(255) NOT NULL,
   `subCatalog_name` varchar(100) DEFAULT NULL,
+  `good_saleCount` int(10) DEFAULT '0',
   PRIMARY KEY (`good_id`,`good_name`),
   KEY `good_name` (`good_name`),
   KEY `good_id` (`good_id`),
   KEY `catalog_name11` (`category_name`),
   KEY `subCatalog_name11` (`subCatalog_name`),
+  KEY `good_imgurl` (`good_imgurl`),
   CONSTRAINT `catalog_name11` FOREIGN KEY (`category_name`) REFERENCES `category` (`category_name`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `subCatalog_name11` FOREIGN KEY (`subCatalog_name`) REFERENCES `subcatalog` (`subCatalog_name`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of good
 -- ----------------------------
-INSERT INTO `good` VALUES ('2', '上海青瓜', '10.00', '蔬菜', '@/../static/pic/goodImg/20193181675_上海青瓜.jpg', '新鲜爽口', '斤', '上海', '瓜果');
-INSERT INTO `good` VALUES ('3', '大白菜心', '3.00', '蔬菜', '@/../static/pic/vagetable1/shengcai2.jpg', '河南大白菜', '斤', '河南', '绿叶菜');
-INSERT INTO `good` VALUES ('4', '波士顿龙虾', '360.00', '海鲜', '@/../static/pic/vagetable1/shengcai2.jpg', '新鲜大龙虾', '只', '美国', '虾');
-INSERT INTO `good` VALUES ('5', '土猪肉', '20.00', '肉类', '@/../static/pic/vagetable1/shengcai2.jpg', '新鲜土猪肉', '斤', '广东', '猪');
-INSERT INTO `good` VALUES ('6', '西洋菜', '5.00', '蔬菜', '@/../static/pic/vagetable1/shengcai2.jpg', '鲜美西洋菜', '斤', '广东', '绿叶菜');
-INSERT INTO `good` VALUES ('7', '安格斯牛肉', '50.00', '肉类', '@/../static/pic/goodImg/20192134755_安格斯牛肉.jpg', '鲜嫩的牛肉', '斤', '阿根廷', '牛');
-INSERT INTO `good` VALUES ('12', '鲈鱼', '10.00', '河鲜', '', '新鲜大鲈鱼', '斤', '广东', '河鱼');
-INSERT INTO `good` VALUES ('16', '三黄鸡', '20.00', '肉类', '@/../static/pic/goodImg/20193173010_三黄鸡.jpg', '新鲜的三黄鸡', '斤', '广东', '鸡');
-INSERT INTO `good` VALUES ('17', '草鱼', '10.00', '河鲜', '@/../static/pic/goodImg/20193185950_草鱼.jpg', '新鲜的草鱼', '斤', '广东', '河鱼');
-INSERT INTO `good` VALUES ('18', '猪颈肉', '30.00', '肉类', '', '新鲜猪颈肉', '500克', '广西', '猪');
+INSERT INTO `good` VALUES ('2', '上海青瓜', '10.00', '蔬菜', '@/../static/pic/goodImg/20193181675_上海青瓜.jpg', '新鲜爽口', '斤', '上海', '瓜果', '0');
+INSERT INTO `good` VALUES ('3', '大白菜心', '3.00', '蔬菜', '@/../static/pic/vagetable1/shengcai2.jpg', '河南大白菜', '斤', '河南', '绿叶菜', '6');
+INSERT INTO `good` VALUES ('4', '波士顿龙虾', '360.00', '海鲜', '@/../static/pic/goodImg/20194255043_波士顿龙虾.jpg', '新鲜大龙虾', '只', '美国', '虾', '0');
+INSERT INTO `good` VALUES ('5', '土猪肉', '20.00', '肉类', '@/../static/pic/goodImg/20194255987_土猪肉.jpg', '新鲜土猪肉', '斤', '广东', '猪', '1');
+INSERT INTO `good` VALUES ('6', '西洋菜', '5.00', '蔬菜', '@/../static/pic/goodImg/20194253212_西洋菜.jpg', '鲜美西洋菜', '斤', '广东', '绿叶菜', '1');
+INSERT INTO `good` VALUES ('7', '安格斯牛肉', '50.00', '肉类', '@/../static/pic/goodImg/20194259767_安格斯牛肉.jpg', '鲜嫩的牛肉', '斤', '阿根廷', '牛', '3');
+INSERT INTO `good` VALUES ('12', '鲈鱼', '10.00', '河鲜', '@/../static/pic/goodImg/20194273440_鲈鱼.jpg', '新鲜大鲈鱼', '斤', '广东', '河鱼', '5');
+INSERT INTO `good` VALUES ('16', '三黄鸡', '20.00', '肉类', '@/../static/pic/goodImg/20194258836_三黄鸡.jpg', '新鲜的三黄鸡', '斤', '广东', '鸡', '1');
+INSERT INTO `good` VALUES ('17', '草鱼', '10.00', '河鲜', '@/../static/pic/goodImg/20194251834_草鱼.jpg', '新鲜的草鱼', '斤', '广东', '河鱼', '0');
+INSERT INTO `good` VALUES ('18', '猪颈肉', '30.00', '肉类', '@/../static/pic/goodImg/20194252689_猪颈肉.jpg', '新鲜猪颈肉', '500克', '广西', '猪', '0');
 
 -- ----------------------------
 -- Table structure for newest_good
@@ -285,38 +287,24 @@ CREATE TABLE `orderitem` (
   `orderItem_priceSub` float(10,0) DEFAULT NULL,
   `good_imgurl` varchar(255) DEFAULT NULL,
   `ifComment` int(10) DEFAULT NULL,
+  `good_unit` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`orderItem_id`),
   KEY `orderitem_ibfk_1` (`orderList_id`),
-  KEY `orderitem_ibfk_2` (`good_name`),
+  KEY `order_good` (`good_name`),
+  CONSTRAINT `order_good` FOREIGN KEY (`good_name`) REFERENCES `good` (`good_name`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `orderitem_ibfk_1` FOREIGN KEY (`orderList_id`) REFERENCES `orderlist` (`orderList_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orderitem
 -- ----------------------------
-INSERT INTO `orderitem` VALUES ('34', '上海青瓜', '1', '10.00', '47', '10', '@/../static/pic/vagetable1/shengcai1.jpg', '1');
-INSERT INTO `orderitem` VALUES ('35', '大白菜心', '2', '3.00', '47', '6', '@/../static/pic/vagetable1/shengcai2.jpg', '1');
-INSERT INTO `orderitem` VALUES ('36', '上海青瓜', '1', '10.00', '48', '10', '@/../static/pic/vagetable1/shengcai1.jpg', '1');
-INSERT INTO `orderitem` VALUES ('37', '上海青瓜', '1', '10.00', '49', '10', '@/../static/pic/vagetable1/shengcai1.jpg', '0');
-INSERT INTO `orderitem` VALUES ('38', '上海青瓜', '1', '10.00', '50', '10', '@/../static/pic/vagetable1/shengcai1.jpg', '0');
-INSERT INTO `orderitem` VALUES ('39', '上海青瓜', '1', '10.00', '51', '10', '@/../static/pic/vagetable1/shengcai1.jpg', '1');
-INSERT INTO `orderitem` VALUES ('40', '大白菜心', '1', '3.00', '51', '3', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('41', '土猪肉', '1', '20.00', '52', '20', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('42', '上海青瓜', '1', '10.00', '53', '10', '@/../static/pic/vagetable1/shengcai1.jpg', '0');
-INSERT INTO `orderitem` VALUES ('54', '土猪肉', '1', '20.00', '62', '20', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('55', '西洋菜', '1', '5.00', '62', '5', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('56', '鲈鱼', '1', '10.00', '62', '10', '', '0');
-INSERT INTO `orderitem` VALUES ('57', '安格斯牛肉', '1', '50.00', '63', '50', '@/../static/pic/goodImg/20192134755_安格斯牛肉.jpg', '0');
-INSERT INTO `orderitem` VALUES ('58', '土猪肉', '1', '20.00', '64', '20', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('59', '土猪肉', '1', '20.00', '65', '20', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('60', '鲈鱼', '1', '10.00', '65', '10', '', '0');
-INSERT INTO `orderitem` VALUES ('61', '安格斯牛肉', '1', '50.00', '66', '50', '@/../static/pic/goodImg/20192134755_安格斯牛肉.jpg', '0');
-INSERT INTO `orderitem` VALUES ('62', '土猪肉', '1', '20.00', '67', '20', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('63', '土猪肉', '1', '20.00', '68', '20', '@/../static/pic/vagetable1/shengcai2.jpg', '0');
-INSERT INTO `orderitem` VALUES ('64', '安格斯牛肉', '1', '50.00', '69', '50', '@/../static/pic/goodImg/20192134755_安格斯牛肉.jpg', '0');
-INSERT INTO `orderitem` VALUES ('65', '三黄鸡', '1', '20.00', '70', '20', '@/../static/pic/goodImg/20193173010_三黄鸡.jpg', '0');
-INSERT INTO `orderitem` VALUES ('66', '三黄鸡', '1', '20.00', '71', '20', '@/../static/pic/goodImg/20193173010_三黄鸡.jpg', '0');
-INSERT INTO `orderitem` VALUES ('67', '上海青瓜', '1', '10.00', '72', '10', '@/../static/pic/goodImg/20193181675_上海青瓜.jpg', '1');
+INSERT INTO `orderitem` VALUES ('67', '上海青瓜', '1', '10.00', '72', '10', '@/../static/pic/goodImg/20193181675_上海青瓜.jpg', '1', '斤');
+INSERT INTO `orderitem` VALUES ('77', '大白菜心', '1', '3.00', '81', '3', '@/../static/pic/vagetable1/shengcai2.jpg', '0', '斤');
+INSERT INTO `orderitem` VALUES ('78', '西洋菜', '1', '5.00', '81', '5', '@/../static/pic/goodImg/20194253212_西洋菜.jpg', '0', '斤');
+INSERT INTO `orderitem` VALUES ('79', '三黄鸡', '1', '20.00', '81', '20', '@/../static/pic/goodImg/20194258836_三黄鸡.jpg', '0', '斤');
+INSERT INTO `orderitem` VALUES ('80', '安格斯牛肉', '3', '50.00', '82', '150', '@/../static/pic/goodImg/20194259767_安格斯牛肉.jpg', '0', '斤');
+INSERT INTO `orderitem` VALUES ('81', '大白菜心', '6', '3.00', '83', '18', '@/../static/pic/vagetable1/shengcai2.jpg', '0', '斤');
+INSERT INTO `orderitem` VALUES ('82', '安格斯牛肉', '3', '50.00', '84', '150', '@/../static/pic/goodImg/20194259767_安格斯牛肉.jpg', '0', '斤');
 
 -- ----------------------------
 -- Table structure for orderlist
@@ -336,29 +324,16 @@ CREATE TABLE `orderlist` (
   KEY `user_nickname` (`user_nickname`) USING BTREE,
   KEY `user_address` (`user_address`),
   CONSTRAINT `orderlist_ibfk_1` FOREIGN KEY (`user_nickname`) REFERENCES `user` (`user_nickname`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orderlist
 -- ----------------------------
-INSERT INTO `orderlist` VALUES ('47', 'coke43', 'f', '2019-01-26 14:34:16', '2019-02-04 16:34:34', null, '16', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('48', 'coke34', 'f', '2019-01-31 17:16:30', '2019-02-05 00:47:47', null, '10', '123123', '你猜猜');
-INSERT INTO `orderlist` VALUES ('49', 'coke34', 'b', '2019-01-31 17:21:54', null, null, '10', '123123', '你猜猜');
-INSERT INTO `orderlist` VALUES ('50', 'coke34', 'b', '2019-01-31 17:25:12', null, null, '10', '123123', '你猜猜');
-INSERT INTO `orderlist` VALUES ('51', 'coke34', 'f', '2019-01-31 17:32:41', '2019-03-07 23:34:34', null, '13', '123123', '你猜猜');
-INSERT INTO `orderlist` VALUES ('52', 'coke34', 'b', '2019-01-31 17:37:32', null, null, '20', '123123', '你猜猜');
-INSERT INTO `orderlist` VALUES ('53', 'coke43', 'b', '2019-02-05 17:08:58', null, null, '10', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('62', 'coke43', 'b', '2019-03-19 16:42:31', null, null, '35', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('63', 'coke43', 'b', '2019-03-22 20:05:36', null, null, '50', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('64', 'coke43', 'b', '2019-03-22 20:06:58', null, null, '20', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('65', 'coke43', 'b', '2019-03-22 20:12:11', null, null, '30', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('66', 'coke43', 'b', '2019-03-22 20:41:57', null, null, '50', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('67', 'coke43', 'b', '2019-03-22 20:46:30', null, '14', '20', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('68', 'coke43', 'b', '2019-03-23 16:39:07', null, '20', '20', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('69', 'coke43', 'b', '2019-03-23 16:56:05', null, '50', '50', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('70', 'coke43', 'b', '2019-04-05 17:09:29', null, '8', '10', '13808820102', '广东省广州市荔湾区西华路18号604');
-INSERT INTO `orderlist` VALUES ('71', 'coke43', 'b', '2019-04-05 17:11:13', null, '8', '10', '13808820102', '广东省广州市荔湾区西华路18号604');
 INSERT INTO `orderlist` VALUES ('72', 'coke43', 'f', '2019-04-06 23:11:28', '2019-04-06 23:13:13', '9', '10', '13808820102', '广东省广州市荔湾区西华路18号604');
+INSERT INTO `orderlist` VALUES ('81', 'coke43', 'b', '2019-04-25 16:26:51', null, '15', '18', '13808820102', '广东省广州市荔湾区西华路18号604');
+INSERT INTO `orderlist` VALUES ('82', 'coke43', 'b', '2019-04-25 16:29:43', null, '135', '150', '13808820102', '广东省广州市荔湾区西华路18号604');
+INSERT INTO `orderlist` VALUES ('83', 'coke43', 'b', '2019-04-27 09:23:20', null, '11', '13', '13808820102', '广东省广州市荔湾区西华路18号604');
+INSERT INTO `orderlist` VALUES ('84', 'coke43', 'f', '2019-04-27 09:24:32', '2019-04-27 09:25:25', '135', '150', '13808820102', '广东省广州市荔湾区西华路18号604');
 
 -- ----------------------------
 -- Table structure for salecount
@@ -390,7 +365,7 @@ CREATE TABLE `subcatalog` (
   KEY `subCatalog_name` (`subCatalog_name`),
   KEY `catalog_name1` (`catalog_name`),
   CONSTRAINT `catalog_name1` FOREIGN KEY (`catalog_name`) REFERENCES `category` (`category_name`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of subcatalog
@@ -403,6 +378,8 @@ INSERT INTO `subcatalog` VALUES ('6', '肉类', '猪');
 INSERT INTO `subcatalog` VALUES ('7', '肉类', '牛');
 INSERT INTO `subcatalog` VALUES ('8', '河鲜', '河鱼');
 INSERT INTO `subcatalog` VALUES ('14', '肉类', '鸡');
+INSERT INTO `subcatalog` VALUES ('15', '水果', '苹果');
+INSERT INTO `subcatalog` VALUES ('17', '水果', '雪梨');
 
 -- ----------------------------
 -- Table structure for superior_good
@@ -445,13 +422,14 @@ CREATE TABLE `user` (
   KEY `user_nickname` (`user_nickname`),
   KEY `user_address` (`user_address`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'coke43', '13808820102', '广东省广州市荔湾区西华路18号604', 'm', '1456751226@qq.com', '庾荣亮', 'coke43', '@/../static/pic/userHeadImg/20193189784_headImg.jpg', '106');
+INSERT INTO `user` VALUES ('1', 'coke43', '13808820102', '广东省广州市荔湾区西华路18号604', 'm', '1456751226@qq.com', '庾荣亮', 'coke43', '@/../static/pic/userHeadImg/20194267702_headImg.jpg', '195');
 INSERT INTO `user` VALUES ('2', 'coke34', '12312312345', '你猜猜', 'm', 'wu', 'AK', 'coke34', '', '610');
 INSERT INTO `user` VALUES ('4', 'coke4', '123123', '你猜猜', 'm', '123123', 'yrll', 'coke4', null, '610');
 INSERT INTO `user` VALUES ('5', 'coke42', '123123', 'adsfsad', 'm', '123123', 'YRL', 'coke42', null, '610');
 INSERT INTO `user` VALUES ('6', 'coke44', '12', 'sadfasd', 'f', '12312', 'asd', 'coke44', null, '610');
+INSERT INTO `user` VALUES ('7', 'aaa', 'aaa', 'aaa', 'm', 'aaa', 'aaa', 'aaa', null, '0');
