@@ -46,9 +46,9 @@
                     <div>
                         <p>共计:<span class="totalMoney">￥{{this.total}}</span></p>
                         <button @click="makeOrder" class="ordering">
-                            <router-link :to="targetUrl">
-                            <i class="el-icon-edit"></i>生成订单
-                            </router-link>
+                            <!-- <router-link :to="targetUrl"> -->
+                                <i class="el-icon-edit"></i>生成订单
+                            <!-- </router-link> -->
                         </button>
                     </div>
                 </td>
@@ -216,9 +216,8 @@ export default {
             {
                 if(this.responseData[i].ifChoosing == true)
                 {
-                    // this.selectedGoodList.push(this.responseData[i]);
-                    // this.$set(this.selectedGoodList,i,this.responseData[i]);
                     this.selectedGoodList.push(this.responseData[i]);
+                    this.$set(this.selectedGoodList,i,this.responseData[i]);
                 }
             }
             if(this.selectedGoodList.length == 0)
@@ -234,6 +233,7 @@ export default {
             {
                 window.localStorage.setItem('selectedGoodList',JSON.stringify(this.selectedGoodList));
                 window.localStorage.setItem('totalPrice',this.total);
+                this.$router.push("/makeOrder");
             }
         },
     },
